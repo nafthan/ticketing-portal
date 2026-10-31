@@ -2,6 +2,29 @@
 
 Notable changes to helpdesk. Versions follow [semantic versioning](https://semver.org): a new major version means something needs action when you update, so read its notes first.
 
+## 2.0.0 (2026-10-31)
+
+helpdesk now comes in two editions with the same features.
+
+### Added
+
+- **The app, built with React and TypeScript** (`src/`). Vite builds it into one self-contained `dist/index.html`, so it opens and hosts just like before. Dependencies are kept to React (to run) and Vite and TypeScript (to build); everything else, including the single-file build step, tests and drag and drop, uses what React, the browser and Node already provide.
+- **Unit tests** for the logic (`npm test`, using Node's built-in test runner), including checks that the app's calculations match the single-file edition's.
+- **`ARCHITECTURE.md`**, explaining how the app is organised for contributors.
+- **GitHub Pages workflow** that builds the app and publishes both editions.
+
+### Changed
+
+- **Repository layout.** The original page is now the single-file edition in `single-file/index.html`. Apart from the version number, the stylesheet fix below and a note about where `platform.example.js` now lives, it's unchanged. The root `index.html` is the app's development entry point, so open `dist/index.html` after `npm run build` instead.
+- **`platform.example.js` and `adapter-test.html` moved to `public/`.** They're copied into `dist/` when you build. Your own `platform.js` works with both editions without changes.
+- **Docker** now builds the app and serves it at `/`, with the single-file edition at `/single-file/`.
+- **GitHub Pages** publishes through GitHub Actions instead of from the branch. In Settings → Pages, set the source to **GitHub Actions**.
+- The GitHub check now type-checks, runs the unit tests, builds, and smoke-tests both editions.
+
+### Fixed
+
+- Two Auto-assign layout rules in the stylesheet were being ignored because of a stray escape character (both editions).
+
 ## 1.1.0 (2026-10-31)
 
 ### Added
@@ -10,7 +33,7 @@ Notable changes to helpdesk. Versions follow [semantic versioning](https://semve
 
 ### Changed
 
-- **The adapter hook is now `window.helpdesk.use`.
+- **The adapter hook is now `window.helpdesk.use`.** If you wrote a `platform.js` against 1.0.0, rename the hook there; `platform.example.js` and `adapter-test.html` are updated.
 - Wording throughout the app now refers to "your organisation's sign-in" rather than a specific platform.
 - Without a backend, the "saved in this browser only" banner is gone; the footer still shows "This browser only".
 

@@ -8,7 +8,7 @@ Include what you found, how to reproduce it, and which version you're on (Admin 
 
 ## Supported versions
 
-Fixes go into the latest release. Update to the newest `index.html` to get them; [`CHANGELOG.md`](CHANGELOG.md) lists what changed.
+Fixes go into the latest release. Update to the newest release of whichever edition you use to get them; [`CHANGELOG.md`](CHANGELOG.md) lists what changed.
 
 ## How security works in helpdesk
 
@@ -21,4 +21,4 @@ helpdesk is a front end. Whoever hosts it is responsible for the backend, sign-i
 - **Text is escaped before it's shown.** Ticket and customer content is treated as untrusted and escaped before display, and CSV exports guard against spreadsheet formula injection.
 - **Security headers.** `security-headers.inc` has a Content Security Policy and related headers for nginx. Use them, or the equivalent on your host.
 
-The single-browser mode (opening `index.html` with no backend) keeps data in that browser's local storage, which anyone with access to the computer can read. It's meant for trying the app, not for real customer data.
+The single-browser mode (opening either edition with no backend) keeps data in that browser's local storage, which anyone with access to the computer can read. It's meant for trying the app, not for real customer data.

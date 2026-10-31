@@ -1,6 +1,6 @@
 # Running helpdesk on your own platform
 
-`index.html` never talks to a server directly. Everything it needs from its host goes through one function:
+Neither edition of helpdesk talks to a server directly. Everything it needs from its host goes through one function:
 
 ```js
 const db = await window.helpdesk.use("db");   // "db" | "user" | "assets" | "downloads"
@@ -8,13 +8,13 @@ const db = await window.helpdesk.use("db");   // "db" | "user" | "assets" | "dow
 
 To run helpdesk on your own infrastructure, load a small script **before** the app's own script that defines `window.helpdesk.use` and returns objects with the interfaces below, backed by your own API. Nothing else in the page needs to change to get a working, shared, signed-in system. If `use()` returns `null` for a capability, the page degrades gracefully (with no `db`, it falls back to single-browser mode).
 
-`index.html` has a commented-out tag in `<head>` ready for this:
+Both editions have a commented-out tag in `<head>` ready for this (in `index.html` for the app, which the build copies into `dist/index.html`, and in `single-file/index.html`):
 
 ```html
 <script src="platform.js"></script>   <!-- your adapter, defines window.helpdesk.use -->
 ```
 
-**Start from [`platform.example.js`](platform.example.js).** It's a complete adapter that keeps data in the browser and syncs between tabs, with every part you need to replace marked `REPLACE`. Then open [`adapter-test.html`](adapter-test.html) to check your adapter does everything below. [`DEPLOYMENT.md`](DEPLOYMENT.md) walks through the whole process.
+**Start from [`public/platform.example.js`](public/platform.example.js).** It's a complete adapter that keeps data in the browser and syncs between tabs, with every part you need to replace marked `REPLACE`. Then open [`public/adapter-test.html`](public/adapter-test.html) to check your adapter does everything below. [`DEPLOYMENT.md`](DEPLOYMENT.md) walks through the whole process.
 
 ## 1. `db`: shared document store
 

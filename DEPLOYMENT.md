@@ -11,7 +11,7 @@ The page connects to your backend through a small adapter script, `platform.js`.
 ```
  browser                                   your systems
 ┌──────────────────────────────┐         ┌──────────────────────────┐
-│ index.html (the app)         │         │ API + database           │
+│ index.html (either edition)  │         │ API + database           │
 │ ↓ window.helpdesk.use("db")  │  HTTPS  │ live updates (WebSocket) │
 │ platform.js (your adapter) ──┼────────►│ sign-in (OIDC / SAML)    │
 └──────────────────────────────┘         │ file storage (/_blob/)   │
@@ -34,8 +34,8 @@ The page connects to your backend through a small adapter script, `platform.js`.
 
 ## 1. Try it first
 
-- **On its own:** open `index.html`. It runs in single-browser mode, saving to that browser.
-- **As if shared:** copy `platform.example.js` to `platform.js`, uncomment `<script src="platform.js"></script>` in the `<head>` of `index.html`, and serve the folder (for example `python3 -m http.server`). Open it in two tabs: changes in one appear in the other. Add `?as=agent` or `?as=viewer` to the address to see the other roles.
+- **On its own:** open `single-file/index.html`, or run `npm install && npm run build` and open `dist/index.html`. It runs in single-browser mode, saving to that browser.
+- **As if shared:** copy `public/platform.example.js` to `platform.js` next to the page you're using, uncomment `<script src="platform.js"></script>` in the page's `<head>`, and serve the folder (for example `python3 -m http.server`). For the app you can uncomment it in the root `index.html` and run `npm run dev` instead. Open it in two tabs: changes in one appear in the other. Add `?as=agent` or `?as=viewer` to the address to see the other roles.
 
 The example adapter keeps everything in the browser. It is not shared between computers and not secure, so it's for trying things out only.
 
@@ -58,7 +58,7 @@ Whatever you pick, plan for:
 
 ## 3. Write your adapter
 
-Copy `platform.example.js` to `platform.js` and work through the sections marked `REPLACE`:
+Copy `public/platform.example.js` to `platform.js` and work through the sections marked `REPLACE`:
 
 1. **Who is signed in:** return `{id, name, avatarUrl, role}` from your sign-in system. `id` must never change for a person (an Entra ID object id, for example).
 2. **Storage:** turn `get`, `set`, `update`, `delete` and queries into calls to your API, and feed change notifications from your server into the `listeners` so `onSnapshot` callbacks fire.
@@ -74,7 +74,7 @@ Behaviours that are easy to miss:
 
 ## 4. Check it with the adapter test
 
-Serve `adapter-test.html` next to your adapter and open it. It runs about 20 checks: reading and writing, merging updates, rejecting bad updates, ordered and filtered queries, live updates, unsubscribing, locking, file storage and role rules.
+Serve `adapter-test.html` (from `public/`, or `dist/` after a build) next to your adapter and open it. It runs about 20 checks: reading and writing, merging updates, rejecting bad updates, ordered and filtered queries, live updates, unsubscribing, locking, file storage and role rules.
 
 - Run it once **signed in as a manager** and once **as an agent**. The role check expects managers to be able to write settings and agents not to.
 - It writes to a temporary `_adaptertest` collection and deletes what it creates, so allow that collection while testing.
@@ -84,11 +84,11 @@ Admin → **System** inside the app shows the same picture from the app's side: 
 
 ## 5. Serve the page
 
-The page is static: `index.html` plus your `platform.js`. Any of these work:
+Either edition is a static page: `dist/index.html` (after `npm run build`) or `single-file/index.html`, plus your `platform.js`. Any of these work:
 
-- **Docker:** `docker build -t helpdesk . && docker run -p 8080:8080 helpdesk`. The image is nginx with the config in `nginx.conf`, which adds security headers from `security-headers.inc`, stops caching of `index.html` so updates show straight away, and hides `platform.example.js`.
+- **Docker:** `docker build -t helpdesk . && docker run -p 8080:8080 helpdesk`. The image builds the app and serves it at `/`, with the single-file edition at `/single-file/`. It's nginx with the config in `nginx.conf`, which adds security headers from `security-headers.inc`, stops caching of `index.html` so updates show straight away, and hides `platform.example.js`.
 - **Your existing web server or CDN:** copy the files across and add the headers from `security-headers.inc`.
-- **The same app as your API:** serve `index.html` from your backend, which avoids cross-origin setup entirely.
+- **The same app as your API:** serve the page from your backend, which avoids cross-origin setup entirely.
 
 Serve it over **HTTPS**. If your API is on a different domain, add it to `connect-src` in the Content Security Policy and allow the page's origin in your API's CORS settings.
 
@@ -115,20 +115,20 @@ All settings below live in `config/settings`.
 | **Auto-assign retries** | `routing.on` and `routing.retry` are on, and an active ticket has no assignee | Walk `routing.cats[ticket.category]` in order and assign the first person who is clocked in, available and under `rules.maxActive`. Append `{type:"assignee", auto:true, reason:...}` to `history`. |
 | **Customer emails** | An entry in `tickets[].emails` has `status: "pending"` | Optional: send it from a shared mailbox (for example through Microsoft Graph) and set `status: "sent"`. Otherwise agents send them from their own mail client. |
 
-The exact logic is in `runSweep()` and `routeWaiting()` in `index.html` if you want to mirror it line for line. Have the server write `history` and `events` entries itself, and refuse edits to old ones, so the audit trail can't be rewritten from a browser.
+The exact logic is in `runSweep()` (`src/core/tickets.ts`) and `routeWaiting()` (`src/core/routing.ts`), and under the same names in `single-file/index.html`, if you want to mirror it line for line. Have the server write `history` and `events` entries itself, and refuse edits to old ones, so the audit trail can't be rewritten from a browser.
 
 ## Backups and updates
 
 - **Back up your database** with its own tools on a schedule. Admin → Access and data → **Download full backup** is a handy extra: one portable JSON file you can restore into any helpdesk (format in [PLATFORM.md](PLATFORM.md#backup-file-format)).
 - **Before updating**, read [`CHANGELOG.md`](CHANGELOG.md) for anything that needs action, and take a backup.
-- **To update**, replace `index.html` and keep your `platform.js`. The version shows in Admin → System.
+- **To update**, rebuild the app (or replace `single-file/index.html`) and keep your `platform.js`. The version shows in Admin → System.
 
 ## Self-hosting the fonts
 
 The page loads Bricolage Grotesque, Geist and Geist Mono from Google Fonts and falls back to system fonts without them. To serve them yourself (for privacy rules or networks without internet access):
 
 1. Download the fonts (all are under the SIL Open Font License) as `woff2` files into a `fonts/` folder.
-2. Replace the Google Fonts `<link>` tags in `index.html` with `@font-face` rules pointing at those files.
+2. Replace the Google Fonts `<link>` tags in the page's `<head>` (the root `index.html` for the app, or `single-file/index.html`) with `@font-face` rules pointing at those files.
 3. Remove `fonts.googleapis.com` and `fonts.gstatic.com` from `security-headers.inc`.
 
 ## Troubleshooting

@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>helpdesk adapter test</title>
+<style>
+:root{--bg:#FFF1E3;--surface:#FFFAF4;--line:#EDD3BD;--ink:#2A1820;--muted:#75595C;--good:#1F7A55;--bad:#C9381A;--warn:#A86200;--accent:#C2255C;color-scheme:light}
+@media (prefers-color-scheme:dark){:root{--bg:#1E1512;--surface:#2A1E19;--line:#4B382E;--ink:#FBEBDD;--muted:#C4A898;--good:#9AD6A6;--bad:#FF8A5B;--warn:#FFC857;--accent:#FF8FAB;color-scheme:dark}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+main{max-width:880px;margin:0 auto;padding:40px 16px 64px}
+h1{font-size:30px;line-height:1.15;margin:0 0 8px;letter-spacing:-.5px}
+p{margin:0 0 12px;color:var(--muted)}
+code{font:13px ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;background:var(--surface);border:1px solid var(--line);border-radius:6px;padding:1px 5px}
+.bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:20px 0}
+input{font:inherit;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:10px;height:38px;padding:0 12px;min-width:240px}
+button{font:inherit;color:inherit;background:var(--surface);border:1px solid var(--line);border-radius:10px;height:38px;padding:0 14px;cursor:pointer}
+button.primary{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:600}
+button:disabled{opacity:.5;cursor:default}
+.sum{display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 16px}
+.pill{border-radius:99px;padding:3px 12px;font-size:13px;font-weight:600;background:var(--surface);border:1px solid var(--line)}
+.pill.pass{color:var(--good)}.pill.fail{color:var(--bad)}.pill.warn{color:var(--warn)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:16px;overflow:hidden}
+.t{display:grid;grid-template-columns:28px 1fr;gap:10px;padding:12px 16px;border-top:1px solid var(--line)}
+.t:first-child{border-top:0}
+.t .m{font-weight:800;text-align:center}
+.t.pass .m{color:var(--good)}.t.fail .m{color:var(--bad)}.t.warn .m{color:var(--warn)}.t.run .m{color:var(--muted)}
+.t b{display:block;font-weight:600}
+.t small{display:block;color:var(--muted);font-size:13px;overflow-wrap:anywhere}
+.note{border:1px dashed var(--line);border-radius:12px;padding:12px 14px;margin-top:16px;font-size:14px;color:var(--muted)}
+</style>
+</head>
+<body>
+<main>
+  <h1>Adapter test</h1>
+  <p>Checks that your backend adapter gives the helpdesk everything it needs (see <code>PLATFORM.md</code>). Run it once signed in as a manager and once as an agent.</p>
+  <p>It writes a few documents to a <code>_adaptertest</code> collection and deletes them afterwards. Allow that collection while testing.</p>
+  <div class="bar">
+    <label for="ad" style="font-weight:600">Adapter</label>
+    <input id="ad" value="platform.js" spellcheck="false" aria-label="Adapter script">
+    <button class="primary" id="go">Run tests</button>
+    <button id="copy" disabled>Copy results</button>
+  </div>
+  <div class="sum" id="sum"></div>
+  <div class="card" id="out" hidden></div>
+  <div class="note" id="tip">Tip: to try the built-in demo adapter, set the adapter to <code>platform.example.js</code>. Add <code>&amp;as=agent</code> to this page's address to test as an agent.</div>
+</main>
+<script>
+(function(){
+"use strict";
+const $=id=>document.getElementById(id);
+const qs=new URLSearchParams(location.search);
+if(qs.get("adapter"))$("ad").value=qs.get("adapter");
+const results=[];
+function esc(s){return String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));}
+function draw(){
+  const out=$("out");out.hidden=!results.length;
+  out.innerHTML=results.map(r=>'<div class="t '+r.state+'"><span class="m">'+({pass:"✓",fail:"✕",warn:"!",run:"…"}[r.state])+"</span><div><b>"+esc(r.name)+"</b>"+(r.detail?"<small>"+esc(r.detail)+"</small>":"")+"</div></div>").join("");
+  const c=k=>results.filter(r=>r.state===k).length;
+  $("sum").innerHTML=results.length?'<span class="pill pass">'+c("pass")+' passed</span><span class="pill fail">'+c("fail")+' failed</span><span class="pill warn">'+c("warn")+" warnings</span>":"";
+}
+const wait=ms=>new Promise(r=>setTimeout(r,ms));
+function timeout(p,ms,what){return Promise.race([p,new Promise((_,rej)=>setTimeout(()=>rej(new Error(what+" took longer than "+ms/1000+"s")),ms))]);}
+async function test(name,fn){
+  const r={name,state:"run",detail:""};results.push(r);draw();
+  try{const v=await timeout(Promise.resolve().then(fn),8000,"This check");
+    if(v&&v.warn){r.state="warn";r.detail=v.warn;}else{r.state="pass";r.detail=typeof v==="string"?v:"";}}
+  catch(e){r.state="fail";r.detail=e&&e.message?e.message:(e&&e.code?"Rejected with code "+e.code:String(e));}
+  draw();return r.state==="pass"||r.state==="warn";
+}
+function assert(c,msg){if(!c)throw new Error(msg);}
+function loadScript(src){return new Promise((res,rej)=>{const s=document.createElement("script");s.src=src+(src.includes("?")?"&":"?")+"t="+Date.now();s.onload=res;s.onerror=()=>rej(new Error("Couldn't load "+src+". Check the file name and that it's served next to this page."));document.head.appendChild(s);});}
+function nextSnap(subscribe,match){return new Promise((res,rej)=>{let un=null,done=false;const t=setTimeout(()=>{if(un)un();if(!done)rej(new Error("No update arrived within 5 seconds"));},5000);
+  un=subscribe(s=>{if(!done&&match(s)){done=true;clearTimeout(t);setTimeout(()=>un&&un(),0);res(s);}},e=>{clearTimeout(t);rej(e);});});}
+
+async function run(){
+  results.length=0;draw();$("go").disabled=true;$("copy").disabled=true;
+  const src=$("ad").value.trim();
+  const ns="_adaptertest",tag="t"+Date.now().toString(36);
+  let db=null,user=null,me=null,mgr=false,writer=false;const made=[];
+  await test("Adapter script loads",async()=>{if(!window.helpdesk||!window.helpdesk.use)await loadScript(src);assert(window.helpdesk&&typeof window.helpdesk.use==="function","The script loaded but didn't define window.helpdesk.use");});
+  if(!window.helpdesk||!window.helpdesk.use){finish();return;}
+  await test("Database service (db)",async()=>{db=await window.helpdesk.use("db");assert(db&&typeof db.collection==="function"&&typeof db.doc==="function","use(\"db\") must return an object with collection() and doc()");});
+  await test("Signed-in user service (user)",async()=>{user=await window.helpdesk.use("user");assert(user&&typeof user.me==="function","use(\"user\") must return an object with me()");
+    me=await user.me();assert(me&&me.id&&typeof me.id==="string","me() must return a string id");assert(typeof me.name==="string","me() must return a name");
+    writer=await user.can("data.write");assert(typeof writer==="boolean",'can("data.write") must return true or false');
+    mgr=await user.canEdit();assert(typeof mgr==="boolean","canEdit() must return true or false");
+    return "Signed in as "+me.name+" ("+(mgr?"manager":writer?"agent":"viewer")+")";});
+  if(user){
+    await test("Profiles lookup",async()=>{const p=await user.profiles([me.id]);assert(p&&typeof p==="object","profiles() must return an object keyed by id");assert(p[me.id]&&p[me.id].name,"profiles([myId]) should include you with a name");});
+    await test("People search",async()=>{assert(typeof user.search==="function","search() is missing");const r=await user.search("");assert(Array.isArray(r),"search() must return an array");return r.length+" people returned";});
+  }
+  if(!db){finish();return;}
+  const ref=id=>db.collection(ns).doc(id);
+  if(!writer){results.push({name:"Write checks skipped",state:"warn",detail:"You're signed in as a viewer, who can't write. Run again as an agent or manager."});draw();}
+  else{
+    await test("Create and read a document",async()=>{const r=ref(tag+"-a");made.push(r);await r.set({n:1,nested:{a:1,b:{c:"x"}},list:[1,2,3],made:new Date().toISOString()});
+      const s=await r.get();assert(s.exists===true,"get() after set() should report exists: true");const d=s.data();
+      assert(d.n===1&&d.nested&&d.nested.b&&d.nested.b.c==="x"&&Array.isArray(d.list)&&d.list.length===3,"The data read back didn't match what was saved (nested objects and arrays must survive)");});
+    await test("Update merges fields",async()=>{const r=ref(tag+"-a");await r.update({m:2});const d=(await r.get()).data();assert(d.n===1&&d.m===2,"update() must keep existing fields and add new ones");});
+    await test("Update rejects a missing document",async()=>{let e=null;try{await ref(tag+"-missing").update({x:1});}catch(x){e=x;}
+      assert(e,"update() on a document that doesn't exist must reject");assert(e.code==="invalid_argument","It rejected, but with code "+(e.code||"(none)")+" instead of invalid_argument");});
+    await test("Delete removes a document",async()=>{const r=ref(tag+"-del");await r.set({x:1});await r.delete();const s=await r.get();assert(s.exists===false,"get() after delete() should report exists: false");});
+    await test("Ordered, limited queries",async()=>{
+      for(const [i,at] of [["q1","2999-01-01T10:00:00.000Z"],["q2","2999-01-03T10:00:00.000Z"],["q3","2999-01-02T10:00:00.000Z"]]){const r=ref(tag+"-"+i);made.push(r);await r.set({at,tag});}
+      const s=await db.collection(ns).orderBy("at","desc").limit(2).get();const ids=s.docs.map(d=>d.id);
+      assert(ids.length===2,"limit(2) returned "+ids.length+" documents");
+      assert(ids[0]===tag+"-q2"&&ids[1]===tag+"-q3","orderBy(\"at\",\"desc\") returned them in the wrong order: "+ids.join(", "));});
+    await test("Filtered queries (used by History)",async()=>{const q=db.collection(ns);if(typeof q.where!=="function")return {warn:"where() isn't supported, so History can't load closed tickets older than the newest 1,000."};
+      const s=await q.where("tag","==",tag).where("at","<","2999-01-03T00:00:00.000Z").orderBy("at","desc").limit(10).get();const ids=s.docs.map(d=>d.id).sort();
+      assert(ids.join()===[tag+"-q1",tag+"-q3"].sort().join(),"where(\"==\") with where(\"<\") returned "+(ids.join(", ")||"nothing"));});
+    await test("Live updates on a collection",async()=>{const q=db.collection(ns).orderBy("at","desc").limit(50);let first=false;
+      const p=nextSnap((ok,bad)=>q.onSnapshot(s=>{if(!first){first=true;ok({initial:true,s});return;}ok({s});},bad),x=>x.s&&x.s.docs.some(d=>d.id===tag+"-live"));
+      await wait(300);assert(first,"onSnapshot() must call back straight away with the current documents");
+      const r=ref(tag+"-live");made.push(r);await r.set({at:"2999-01-04T00:00:00.000Z",tag});await p;});
+    await test("Live updates on a document",async()=>{const r=ref(tag+"-a");let n=0;
+      const p=nextSnap((ok,bad)=>r.onSnapshot(s=>{n++;ok({s,n});},bad),x=>x.n>=2&&x.s.data()&&x.s.data().m===3);
+      await wait(300);assert(n>=1,"onSnapshot() on a document must call back straight away");await r.update({m:3});await p;});
+    await test("Live updates on a document that doesn't exist yet",async()=>{const r=ref(tag+"-later");made.push(r);let calls=[];
+      const p=nextSnap((ok,bad)=>r.onSnapshot(s=>{calls.push(s.exists);ok({s});},bad),x=>x.s.exists);
+      await wait(300);assert(calls.length>=1&&calls[0]===false,"onSnapshot() must call back straight away with exists: false when the document is missing (the app waits for this to load its settings)");
+      await r.set({at:"2999-01-05T00:00:00.000Z"});await p;});
+    await test("Unsubscribing stops updates",async()=>{const r=ref(tag+"-a");let n=0;const un=r.onSnapshot(()=>{n++;});assert(typeof un==="function","onSnapshot() must return an unsubscribe function");
+      await wait(300);un();const before=n;await r.update({m:4});await wait(600);assert(n===before,"Updates kept arriving after unsubscribing");});
+    await test("Locking (optional)",async()=>{const r=ref(tag+"-a");if(typeof r.acquire!=="function")return {warn:"acquire() isn't supported. The app still works, with a small chance of two browsers handing out the same ticket number at once."};
+      const a=await r.acquire({holder:"tester-1",ttlMs:5000});assert(a&&a.acquired===true,"The first acquire() should succeed");
+      const b=await r.acquire({holder:"tester-2",ttlMs:5000});assert(b&&b.acquired===false,"A second holder got the lease while the first still held it");});
+    await test("Manager-only areas are protected",async()=>{const r=db.collection("config").doc("_adaptertest");let e=null;
+      try{await r.set({probe:true,at:new Date().toISOString()});}catch(x){e=x;}
+      if(mgr){assert(!e,"Managers must be able to write to config, but it was rejected"+(e&&e.code?" ("+e.code+")":""));await r.delete();return "Managers can write settings. Run again as an agent to check they can't.";}
+      if(!e){try{await r.delete();}catch(x){}throw new Error("An agent was able to write to config. Your server must reject this.");}
+      assert(e.code==="invalid_argument","Rejected, but with code "+(e.code||"(none)")+" instead of invalid_argument");return "Agents can't write settings.";});
+  }
+  await test("File storage (optional)",async()=>{const a=await window.helpdesk.use("assets");if(!a)return {warn:"Not provided, so logo and photo uploads are hidden."};
+    assert(typeof a.upload==="function"&&typeof a.delete==="function","assets needs upload() and delete()");
+    const png=await (await fetch("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=")).blob();
+    const r=await a.upload(png);assert(r&&/^[0-9a-f]{32}$/.test(r.id),"upload() must resolve {id} with 32 lowercase hex characters");
+    const res=await fetch("/_blob/"+r.id).catch(()=>null);await a.delete(r.id);
+    if(!res||!res.ok)return {warn:"Uploaded, but /_blob/"+r.id+" didn't load. The page shows images from that path, so your server must serve it."};});
+  await test("Downloads (optional)",async()=>{const d=await window.helpdesk.use("downloads");if(!d)return {warn:"Not provided. The app falls back to a normal browser download."};assert(typeof d.save==="function","downloads needs save()");});
+  for(const r of made){try{await r.delete();}catch(e){}}
+  finish();
+}
+function finish(){$("go").disabled=false;$("copy").disabled=!results.length;}
+$("go").addEventListener("click",run);
+$("copy").addEventListener("click",()=>{const txt="helpdesk adapter test, "+new Date().toISOString()+"\n"+results.map(r=>({pass:"PASS",fail:"FAIL",warn:"WARN",run:"...."}[r.state])+"  "+r.name+(r.detail?" — "+r.detail:"")).join("\n");
+  navigator.clipboard&&navigator.clipboard.writeText(txt).then(()=>{$("copy").textContent="Copied";setTimeout(()=>{$("copy").textContent="Copy results";},1500);});});
+if(qs.get("run")==="1")run();
+})();
+</script>
+</body>
+</html>
