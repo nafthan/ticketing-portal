@@ -79,10 +79,10 @@ async function run(){
   const src=$("ad").value.trim();
   const ns="_adaptertest",tag="t"+Date.now().toString(36);
   let db=null,user=null,me=null,mgr=false,writer=false;const made=[];
-  await test("Adapter script loads",async()=>{if(!window.claude||!window.claude.use)await loadScript(src);assert(window.claude&&typeof window.claude.use==="function","The script loaded but didn't define window.claude.use");});
-  if(!window.claude||!window.claude.use){finish();return;}
-  await test("Database service (db)",async()=>{db=await window.claude.use("db");assert(db&&typeof db.collection==="function"&&typeof db.doc==="function","use(\"db\") must return an object with collection() and doc()");});
-  await test("Signed-in user service (user)",async()=>{user=await window.claude.use("user");assert(user&&typeof user.me==="function","use(\"user\") must return an object with me()");
+  await test("Adapter script loads",async()=>{if(!window.helpdesk||!window.helpdesk.use)await loadScript(src);assert(window.helpdesk&&typeof window.helpdesk.use==="function","The script loaded but didn't define window.helpdesk.use");});
+  if(!window.helpdesk||!window.helpdesk.use){finish();return;}
+  await test("Database service (db)",async()=>{db=await window.helpdesk.use("db");assert(db&&typeof db.collection==="function"&&typeof db.doc==="function","use(\"db\") must return an object with collection() and doc()");});
+  await test("Signed-in user service (user)",async()=>{user=await window.helpdesk.use("user");assert(user&&typeof user.me==="function","use(\"user\") must return an object with me()");
     me=await user.me();assert(me&&me.id&&typeof me.id==="string","me() must return a string id");assert(typeof me.name==="string","me() must return a name");
     writer=await user.can("data.write");assert(typeof writer==="boolean",'can("data.write") must return true or false');
     mgr=await user.canEdit();assert(typeof mgr==="boolean","canEdit() must return true or false");
@@ -132,13 +132,13 @@ async function run(){
       if(!e){try{await r.delete();}catch(x){}throw new Error("An agent was able to write to config. Your server must reject this.");}
       assert(e.code==="invalid_argument","Rejected, but with code "+(e.code||"(none)")+" instead of invalid_argument");return "Agents can't write settings.";});
   }
-  await test("File storage (optional)",async()=>{const a=await window.claude.use("assets");if(!a)return {warn:"Not provided, so logo and photo uploads are hidden."};
+  await test("File storage (optional)",async()=>{const a=await window.helpdesk.use("assets");if(!a)return {warn:"Not provided, so logo and photo uploads are hidden."};
     assert(typeof a.upload==="function"&&typeof a.delete==="function","assets needs upload() and delete()");
     const png=await (await fetch("data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=")).blob();
     const r=await a.upload(png);assert(r&&/^[0-9a-f]{32}$/.test(r.id),"upload() must resolve {id} with 32 lowercase hex characters");
     const res=await fetch("/_blob/"+r.id).catch(()=>null);await a.delete(r.id);
     if(!res||!res.ok)return {warn:"Uploaded, but /_blob/"+r.id+" didn't load. The page shows images from that path, so your server must serve it."};});
-  await test("Downloads (optional)",async()=>{const d=await window.claude.use("downloads");if(!d)return {warn:"Not provided. The app falls back to a normal browser download."};assert(typeof d.save==="function","downloads needs save()");});
+  await test("Downloads (optional)",async()=>{const d=await window.helpdesk.use("downloads");if(!d)return {warn:"Not provided. The app falls back to a normal browser download."};assert(typeof d.save==="function","downloads needs save()");});
   for(const r of made){try{await r.delete();}catch(e){}}
   finish();
 }
