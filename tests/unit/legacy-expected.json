@@ -1,0 +1,2572 @@
+{
+ "format": {
+  "dur": [
+   "0m",
+   "0m",
+   "1m",
+   "59m",
+   "1h 00m",
+   "1h 05m",
+   "23h 59m",
+   "1d 0h",
+   "2d 1h",
+   "1h 30m"
+  ],
+  "fmtMin": [
+   "0m",
+   "0m",
+   "5m",
+   "1h",
+   "1h",
+   "1h 15m",
+   "2h 5m",
+   "10h"
+  ],
+  "parseMin": [
+   0,
+   0,
+   45,
+   90,
+   "NaN",
+   120,
+   90,
+   75,
+   65,
+   90,
+   180,
+   20,
+   "NaN",
+   "NaN",
+   "NaN",
+   "NaN"
+  ],
+  "rel": [
+   "Just now",
+   "45m ago",
+   "10h ago",
+   "3d ago",
+   "2026-10-01"
+  ],
+  "abs": [
+   "2026-03-05 07:08",
+   ""
+  ],
+  "initials": [
+   "JB",
+   "TW",
+   "C",
+   "?",
+   "AC"
+  ],
+  "slug": [
+   "acme-ltd",
+   "x",
+   "n-code-name"
+  ],
+  "median": [
+   null,
+   3,
+   4,
+   2.5
+  ],
+  "tone": [
+   [
+    "#C5E3F6",
+    "#1B4F72"
+   ],
+   [
+    "#FFD8B8",
+    "#7A3A0C"
+   ]
+  ]
+ },
+ "normCfg": [
+  {
+   "routing": {
+    "on": true,
+    "retry": true,
+    "cats": {}
+   },
+   "name": "helpdesk",
+   "idPrefix": "HD",
+   "defaults": {
+    "severity": "S3",
+    "channel": "phone",
+    "team": ""
+   },
+   "announce": null,
+   "rules": {
+    "noteToResolve": false,
+    "timeToResolve": false,
+    "maxActive": 0,
+    "soonHours": 4,
+    "autoCloseDays": 0,
+    "maxShiftHours": 0,
+    "graceDays": 3
+   },
+   "email": {
+    "app": "outlook",
+    "templates": {
+     "opened": {
+      "on": true,
+      "subject": "[{ticket}] We've received your request: {subject}",
+      "body": "Hi {contact},\n\nThanks for getting in touch. We've logged your request as {ticket} and the team is on it.\n\nSubject: {subject}\nPriority: {severity}\n\nWe'll keep you updated. Just reply to this email if anything changes.\n\n{helpdesk}"
+     },
+     "resolved": {
+      "on": true,
+      "subject": "[{ticket}] Resolved: {subject}",
+      "body": "Hi {contact},\n\nGood news: we've resolved {ticket}.\n\n{resolution}\n\nIf the problem comes back, reply to this email and we'll pick it straight back up.\n\n{helpdesk}"
+     },
+     "closing": {
+      "on": true,
+      "subject": "[{ticket}] Closing soon: {subject}",
+      "body": "Hi {contact},\n\nWe're closing {ticket}. If you still need help with it, reply by {closingDate} and we'll reopen it. After that it will be closed for good, and anything new will need a new ticket.\n\n{helpdesk}"
+     },
+     "closed": {
+      "on": false,
+      "subject": "[{ticket}] Closed: {subject}",
+      "body": "Hi {contact},\n\n{ticket} is now closed. Thanks for your patience, and get in touch any time you need us.\n\n{helpdesk}"
+     }
+    }
+   },
+   "teams": [
+    "Service desk",
+    "Networking",
+    "Security",
+    "Infrastructure"
+   ],
+   "categories": [
+    "Access and accounts",
+    "Hardware",
+    "Software",
+    "Email",
+    "Network",
+    "VPN and remote access",
+    "Firewall",
+    "Security incident",
+    "Phishing",
+    "Endpoint and malware",
+    "Backup and recovery",
+    "Servers and cloud"
+   ],
+   "requireShift": true,
+   "tz": "Europe/London",
+   "days": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "start": "08:00",
+   "end": "18:00",
+   "holidays": [
+    "2026-01-01",
+    "2026-04-03",
+    "2026-04-06",
+    "2026-05-04",
+    "2026-05-25",
+    "2026-08-31",
+    "2026-12-25",
+    "2026-12-28",
+    "2027-01-01",
+    "2027-03-26",
+    "2027-03-29",
+    "2027-05-03",
+    "2027-05-31",
+    "2027-08-30",
+    "2027-12-27",
+    "2027-12-28"
+   ],
+   "targets": {
+    "S1": {
+     "hours": 4,
+     "always": true
+    },
+    "S2": {
+     "hours": 8,
+     "always": false
+    },
+    "S3": {
+     "hours": 16,
+     "always": false
+    },
+    "S4": {
+     "hours": 40,
+     "always": false
+    }
+   }
+  },
+  {
+   "routing": {
+    "on": true,
+    "retry": true,
+    "cats": {}
+   },
+   "name": "helpdesk",
+   "idPrefix": "HD",
+   "defaults": {
+    "severity": "S3",
+    "channel": "phone",
+    "team": ""
+   },
+   "announce": null,
+   "rules": {
+    "noteToResolve": false,
+    "timeToResolve": false,
+    "maxActive": 0,
+    "soonHours": 4,
+    "autoCloseDays": 0,
+    "maxShiftHours": 0,
+    "graceDays": 3
+   },
+   "email": {
+    "app": "outlook",
+    "templates": {
+     "opened": {
+      "on": true,
+      "subject": "[{ticket}] We've received your request: {subject}",
+      "body": "Hi {contact},\n\nThanks for getting in touch. We've logged your request as {ticket} and the team is on it.\n\nSubject: {subject}\nPriority: {severity}\n\nWe'll keep you updated. Just reply to this email if anything changes.\n\n{helpdesk}"
+     },
+     "resolved": {
+      "on": true,
+      "subject": "[{ticket}] Resolved: {subject}",
+      "body": "Hi {contact},\n\nGood news: we've resolved {ticket}.\n\n{resolution}\n\nIf the problem comes back, reply to this email and we'll pick it straight back up.\n\n{helpdesk}"
+     },
+     "closing": {
+      "on": true,
+      "subject": "[{ticket}] Closing soon: {subject}",
+      "body": "Hi {contact},\n\nWe're closing {ticket}. If you still need help with it, reply by {closingDate} and we'll reopen it. After that it will be closed for good, and anything new will need a new ticket.\n\n{helpdesk}"
+     },
+     "closed": {
+      "on": false,
+      "subject": "[{ticket}] Closed: {subject}",
+      "body": "Hi {contact},\n\n{ticket} is now closed. Thanks for your patience, and get in touch any time you need us.\n\n{helpdesk}"
+     }
+    }
+   },
+   "teams": [
+    "Service desk",
+    "Networking",
+    "Security",
+    "Infrastructure"
+   ],
+   "categories": [
+    "Access and accounts",
+    "Hardware",
+    "Software",
+    "Email",
+    "Network",
+    "VPN and remote access",
+    "Firewall",
+    "Security incident",
+    "Phishing",
+    "Endpoint and malware",
+    "Backup and recovery",
+    "Servers and cloud"
+   ],
+   "requireShift": true,
+   "tz": "Europe/London",
+   "days": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "start": "08:00",
+   "end": "18:00",
+   "holidays": [
+    "2026-01-01",
+    "2026-04-03",
+    "2026-04-06",
+    "2026-05-04",
+    "2026-05-25",
+    "2026-08-31",
+    "2026-12-25",
+    "2026-12-28",
+    "2027-01-01",
+    "2027-03-26",
+    "2027-03-29",
+    "2027-05-03",
+    "2027-05-31",
+    "2027-08-30",
+    "2027-12-27",
+    "2027-12-28"
+   ],
+   "targets": {
+    "S1": {
+     "hours": 4,
+     "always": true
+    },
+    "S2": {
+     "hours": 8,
+     "always": false
+    },
+    "S3": {
+     "hours": 16,
+     "always": false
+    },
+    "S4": {
+     "hours": 40,
+     "always": false
+    }
+   }
+  },
+  {
+   "routing": {
+    "on": true,
+    "retry": true,
+    "cats": {}
+   },
+   "name": "helpdesk",
+   "idPrefix": "HD",
+   "defaults": {
+    "severity": "S3",
+    "channel": "phone",
+    "team": ""
+   },
+   "announce": null,
+   "rules": {
+    "noteToResolve": false,
+    "timeToResolve": false,
+    "maxActive": 0,
+    "soonHours": 4,
+    "autoCloseDays": 0,
+    "maxShiftHours": 0,
+    "graceDays": 3
+   },
+   "email": {
+    "app": "outlook",
+    "templates": {
+     "opened": {
+      "on": true,
+      "subject": "[{ticket}] We've received your request: {subject}",
+      "body": "Hi {contact},\n\nThanks for getting in touch. We've logged your request as {ticket} and the team is on it.\n\nSubject: {subject}\nPriority: {severity}\n\nWe'll keep you updated. Just reply to this email if anything changes.\n\n{helpdesk}"
+     },
+     "resolved": {
+      "on": true,
+      "subject": "[{ticket}] Resolved: {subject}",
+      "body": "Hi {contact},\n\nGood news: we've resolved {ticket}.\n\n{resolution}\n\nIf the problem comes back, reply to this email and we'll pick it straight back up.\n\n{helpdesk}"
+     },
+     "closing": {
+      "on": true,
+      "subject": "[{ticket}] Closing soon: {subject}",
+      "body": "Hi {contact},\n\nWe're closing {ticket}. If you still need help with it, reply by {closingDate} and we'll reopen it. After that it will be closed for good, and anything new will need a new ticket.\n\n{helpdesk}"
+     },
+     "closed": {
+      "on": false,
+      "subject": "[{ticket}] Closed: {subject}",
+      "body": "Hi {contact},\n\n{ticket} is now closed. Thanks for your patience, and get in touch any time you need us.\n\n{helpdesk}"
+     }
+    }
+   },
+   "teams": [
+    "Service desk",
+    "Networking",
+    "Security",
+    "Infrastructure"
+   ],
+   "categories": [
+    "Access and accounts",
+    "Hardware",
+    "Software",
+    "Email",
+    "Network",
+    "VPN and remote access",
+    "Firewall",
+    "Security incident",
+    "Phishing",
+    "Endpoint and malware",
+    "Backup and recovery",
+    "Servers and cloud"
+   ],
+   "requireShift": true,
+   "tz": "Europe/London",
+   "days": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "start": "08:00",
+   "end": "18:00",
+   "holidays": [
+    "2026-01-01",
+    "2026-04-03",
+    "2026-04-06",
+    "2026-05-04",
+    "2026-05-25",
+    "2026-08-31",
+    "2026-12-25",
+    "2026-12-28",
+    "2027-01-01",
+    "2027-03-26",
+    "2027-03-29",
+    "2027-05-03",
+    "2027-05-31",
+    "2027-08-30",
+    "2027-12-27",
+    "2027-12-28"
+   ],
+   "targets": {
+    "S1": {
+     "hours": 4,
+     "always": true
+    },
+    "S2": {
+     "hours": 8,
+     "always": false
+    },
+    "S3": {
+     "hours": 16,
+     "always": false
+    },
+    "S4": {
+     "hours": 40,
+     "always": false
+    }
+   },
+   "shareUrl": ""
+  },
+  {
+   "routing": {
+    "on": true,
+    "retry": true,
+    "cats": {}
+   },
+   "name": "helpdesk",
+   "idPrefix": "HD",
+   "defaults": {
+    "severity": "S3",
+    "channel": "phone",
+    "team": ""
+   },
+   "announce": null,
+   "rules": {
+    "noteToResolve": false,
+    "timeToResolve": false,
+    "maxActive": 0,
+    "soonHours": 4,
+    "autoCloseDays": 0,
+    "maxShiftHours": 0,
+    "graceDays": 3
+   },
+   "email": {
+    "app": "outlook",
+    "templates": {
+     "opened": {
+      "on": true,
+      "subject": "[{ticket}] We've received your request: {subject}",
+      "body": "Hi {contact},\n\nThanks for getting in touch. We've logged your request as {ticket} and the team is on it.\n\nSubject: {subject}\nPriority: {severity}\n\nWe'll keep you updated. Just reply to this email if anything changes.\n\n{helpdesk}"
+     },
+     "resolved": {
+      "on": true,
+      "subject": "[{ticket}] Resolved: {subject}",
+      "body": "Hi {contact},\n\nGood news: we've resolved {ticket}.\n\n{resolution}\n\nIf the problem comes back, reply to this email and we'll pick it straight back up.\n\n{helpdesk}"
+     },
+     "closing": {
+      "on": true,
+      "subject": "[{ticket}] Closing soon: {subject}",
+      "body": "Hi {contact},\n\nWe're closing {ticket}. If you still need help with it, reply by {closingDate} and we'll reopen it. After that it will be closed for good, and anything new will need a new ticket.\n\n{helpdesk}"
+     },
+     "closed": {
+      "on": false,
+      "subject": "[{ticket}] Closed: {subject}",
+      "body": "Hi {contact},\n\n{ticket} is now closed. Thanks for your patience, and get in touch any time you need us.\n\n{helpdesk}"
+     }
+    }
+   },
+   "teams": [
+    "Service desk",
+    "Networking",
+    "Security",
+    "Infrastructure"
+   ],
+   "categories": [
+    "Access and accounts",
+    "Hardware",
+    "Software",
+    "Email",
+    "Network",
+    "VPN and remote access",
+    "Firewall",
+    "Security incident",
+    "Phishing",
+    "Endpoint and malware",
+    "Backup and recovery",
+    "Servers and cloud"
+   ],
+   "requireShift": true,
+   "tz": "Europe/London",
+   "days": [
+    0,
+    1,
+    3
+   ],
+   "start": "08:00",
+   "end": "18:00",
+   "holidays": [
+    "2026-01-01",
+    "2026-12-25"
+   ],
+   "targets": {
+    "S1": {
+     "hours": 2,
+     "always": true
+    },
+    "S2": {
+     "hours": 8,
+     "always": false
+    },
+    "S3": {
+     "hours": 16,
+     "always": false
+    },
+    "S4": {
+     "hours": 40,
+     "always": false
+    }
+   },
+   "shareUrl": ""
+  },
+  {
+   "routing": {
+    "on": false,
+    "retry": true,
+    "cats": {
+     "Network": [
+      "u:a",
+      "l:Eve"
+     ]
+    }
+   },
+   "name": "My desk",
+   "idPrefix": "AB1",
+   "defaults": {
+    "severity": "S3",
+    "channel": "chat",
+    "team": ""
+   },
+   "announce": {
+    "text": "Outage",
+    "tone": "info",
+    "until": null,
+    "at": "2026-10-27T10:00:00Z",
+    "by": "ana",
+    "byLabel": null
+   },
+   "rules": {
+    "noteToResolve": true,
+    "timeToResolve": false,
+    "maxActive": 13,
+    "soonHours": 4,
+    "autoCloseDays": 0,
+    "maxShiftHours": 8,
+    "graceDays": 3
+   },
+   "email": {
+    "app": "mailto",
+    "templates": {
+     "opened": {
+      "on": false,
+      "subject": "[{ticket}] We've received your request: {subject}",
+      "body": "Hi"
+     },
+     "resolved": {
+      "on": true,
+      "subject": "[{ticket}] Resolved: {subject}",
+      "body": "Hi {contact},\n\nGood news: we've resolved {ticket}.\n\n{resolution}\n\nIf the problem comes back, reply to this email and we'll pick it straight back up.\n\n{helpdesk}"
+     },
+     "closing": {
+      "on": true,
+      "subject": "[{ticket}] Closing soon: {subject}",
+      "body": "Hi {contact},\n\nWe're closing {ticket}. If you still need help with it, reply by {closingDate} and we'll reopen it. After that it will be closed for good, and anything new will need a new ticket.\n\n{helpdesk}"
+     },
+     "closed": {
+      "on": true,
+      "subject": "[{ticket}] Closed: {subject}",
+      "body": "Hi {contact},\n\n{ticket} is now closed. Thanks for your patience, and get in touch any time you need us.\n\n{helpdesk}"
+     }
+    }
+   },
+   "teams": [
+    "A",
+    "B",
+    "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+   ],
+   "categories": [
+    "Access and accounts",
+    "Hardware",
+    "Software",
+    "Email",
+    "Network",
+    "VPN and remote access",
+    "Firewall",
+    "Security incident",
+    "Phishing",
+    "Endpoint and malware",
+    "Backup and recovery",
+    "Servers and cloud"
+   ],
+   "requireShift": false,
+   "tz": "America/New_York",
+   "days": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "start": "07:30",
+   "end": "19:00",
+   "holidays": [
+    "2026-01-01",
+    "2026-04-03",
+    "2026-04-06",
+    "2026-05-04",
+    "2026-05-25",
+    "2026-08-31",
+    "2026-12-25",
+    "2026-12-28",
+    "2027-01-01",
+    "2027-03-26",
+    "2027-03-29",
+    "2027-05-03",
+    "2027-05-31",
+    "2027-08-30",
+    "2027-12-27",
+    "2027-12-28"
+   ],
+   "targets": {
+    "S1": {
+     "hours": 4,
+     "always": true
+    },
+    "S2": {
+     "hours": 8,
+     "always": false
+    },
+    "S3": {
+     "hours": 16,
+     "always": false
+    },
+    "S4": {
+     "hours": 40,
+     "always": false
+    }
+   },
+   "shareUrl": ""
+  },
+  {
+   "routing": {
+    "on": true,
+    "retry": true,
+    "cats": {}
+   },
+   "name": "helpdesk",
+   "idPrefix": "HD",
+   "defaults": {
+    "severity": "S3",
+    "channel": "phone",
+    "team": ""
+   },
+   "announce": null,
+   "rules": {
+    "noteToResolve": false,
+    "timeToResolve": false,
+    "maxActive": 0,
+    "soonHours": 4,
+    "autoCloseDays": 0,
+    "maxShiftHours": 0,
+    "graceDays": 3
+   },
+   "email": {
+    "app": "outlook",
+    "templates": {
+     "opened": {
+      "on": true,
+      "subject": "[{ticket}] We've received your request: {subject}",
+      "body": "Hi {contact},\n\nThanks for getting in touch. We've logged your request as {ticket} and the team is on it.\n\nSubject: {subject}\nPriority: {severity}\n\nWe'll keep you updated. Just reply to this email if anything changes.\n\n{helpdesk}"
+     },
+     "resolved": {
+      "on": true,
+      "subject": "[{ticket}] Resolved: {subject}",
+      "body": "Hi {contact},\n\nGood news: we've resolved {ticket}.\n\n{resolution}\n\nIf the problem comes back, reply to this email and we'll pick it straight back up.\n\n{helpdesk}"
+     },
+     "closing": {
+      "on": true,
+      "subject": "[{ticket}] Closing soon: {subject}",
+      "body": "Hi {contact},\n\nWe're closing {ticket}. If you still need help with it, reply by {closingDate} and we'll reopen it. After that it will be closed for good, and anything new will need a new ticket.\n\n{helpdesk}"
+     },
+     "closed": {
+      "on": false,
+      "subject": "[{ticket}] Closed: {subject}",
+      "body": "Hi {contact},\n\n{ticket} is now closed. Thanks for your patience, and get in touch any time you need us.\n\n{helpdesk}"
+     }
+    }
+   },
+   "teams": [
+    "Service desk",
+    "Networking",
+    "Security",
+    "Infrastructure"
+   ],
+   "categories": [
+    "Access and accounts",
+    "Hardware",
+    "Software",
+    "Email",
+    "Network",
+    "VPN and remote access",
+    "Firewall",
+    "Security incident",
+    "Phishing",
+    "Endpoint and malware",
+    "Backup and recovery",
+    "Servers and cloud"
+   ],
+   "requireShift": true,
+   "tz": "Europe/London",
+   "days": [
+    1,
+    2,
+    3,
+    4,
+    5
+   ],
+   "start": "08:00",
+   "end": "18:00",
+   "holidays": [
+    "2026-01-01",
+    "2026-04-03",
+    "2026-04-06",
+    "2026-05-04",
+    "2026-05-25",
+    "2026-08-31",
+    "2026-12-25",
+    "2026-12-28",
+    "2027-01-01",
+    "2027-03-26",
+    "2027-03-29",
+    "2027-05-03",
+    "2027-05-31",
+    "2027-08-30",
+    "2027-12-27",
+    "2027-12-28"
+   ],
+   "targets": {
+    "S1": {
+     "hours": 4,
+     "always": true
+    },
+    "S2": {
+     "hours": 8,
+     "always": false
+    },
+    "S3": {
+     "hours": 16,
+     "always": false
+    },
+    "S4": {
+     "hours": 40,
+     "always": false
+    }
+   },
+   "shareUrl": "https://help.example.com/x"
+  }
+ ],
+ "work": {
+  "default": {
+   "between": [
+    [
+     "fri evening to mon morning",
+     14400000
+    ],
+    [
+     "across the end of BST",
+     7200000
+    ],
+    [
+     "christmas holidays",
+     7200000
+    ],
+    [
+     "inside one day",
+     9000000
+    ],
+    [
+     "weekend only",
+     0
+    ],
+    [
+     "two weeks",
+     360000000
+    ],
+    [
+     "around the clock",
+     237600000
+    ],
+    [
+     "backwards",
+     0
+    ]
+   ],
+   "add": [
+    [
+     "into monday",
+     1793613600000
+    ],
+    [
+     "before the day starts",
+     1793095200000
+    ],
+    [
+     "exactly to close",
+     1793124000000
+    ],
+    [
+     "over christmas",
+     1798542000000
+    ],
+    [
+     "a long target",
+     1793296800000
+    ],
+    [
+     "around the clock",
+     1793390400000
+    ]
+   ],
+   "windows": [
+    [
+     1793001600000,
+     1793037600000
+    ],
+    null,
+    null,
+    [
+     1774854000000,
+     1774890000000
+    ],
+    [
+     1795680000000,
+     1795716000000
+    ],
+    [
+     1773043200000,
+     1773079200000
+    ]
+   ],
+   "wall": [
+    1774747800000,
+    1782892800000,
+    3600000
+   ]
+  },
+  "ny": {
+   "between": [
+    [
+     "fri evening to mon morning",
+     50400000
+    ],
+    [
+     "across the end of BST",
+     50400000
+    ],
+    [
+     "christmas holidays",
+     111600000
+    ],
+    [
+     "inside one day",
+     0
+    ],
+    [
+     "weekend only",
+     30600000
+    ],
+    [
+     "two weeks",
+     367200000
+    ],
+    [
+     "around the clock",
+     237600000
+    ],
+    [
+     "backwards",
+     0
+    ]
+   ],
+   "add": [
+    [
+     "into monday",
+     1793390400000
+    ],
+    [
+     "before the day starts",
+     1793113200000
+    ],
+    [
+     "exactly to close",
+     1793124000000
+    ],
+    [
+     "over christmas",
+     1798146000000
+    ],
+    [
+     "a long target",
+     1793386800000
+    ],
+    [
+     "around the clock",
+     1793390400000
+    ]
+   ],
+   "windows": [
+    [
+     1793019600000,
+     1793050200000
+    ],
+    [
+     1793451600000,
+     1793482200000
+    ],
+    [
+     1798207200000,
+     1798237800000
+    ],
+    [
+     1774875600000,
+     1774906200000
+    ],
+    null,
+    [
+     1773061200000,
+     1773091800000
+    ]
+   ],
+   "wall": [
+    1774762200000,
+    1782910800000,
+    -14400000
+   ]
+  }
+ },
+ "sla": {
+  "default": [
+   [
+    "T-pend",
+    {
+     "state": "ok",
+     "text": "Due Wed 28 Oct, 13:00",
+     "over": false,
+     "paused": false,
+     "key": 1793192400000,
+     "due": 1793192400000,
+     "el": 18000000,
+     "T": 57600000
+    },
+    {
+     "hours": 16,
+     "always": false,
+     "custom": false
+    }
+   ],
+   [
+    "T-paused",
+    {
+     "state": "paused",
+     "text": "Paused, 7h 00m left",
+     "over": false,
+     "paused": true,
+     "key": 8000000025200000,
+     "el": 3600000,
+     "T": 28800000
+    },
+    {
+     "hours": 8,
+     "always": false,
+     "custom": false
+    }
+   ],
+   [
+    "T-breach",
+    {
+     "state": "breached",
+     "text": "Breached 3h 00m",
+     "over": true,
+     "paused": false,
+     "key": 1793091600000,
+     "el": 25200000,
+     "T": 14400000
+    },
+    {
+     "hours": 4,
+     "always": true,
+     "custom": false
+    }
+   ],
+   [
+    "T-soon",
+    {
+     "state": "soon",
+     "text": "0m left",
+     "over": false,
+     "paused": false,
+     "key": 1793102400000,
+     "due": 1793102400000,
+     "el": 28800000,
+     "T": 28800000
+    },
+    {
+     "hours": 8,
+     "always": false,
+     "custom": false
+    }
+   ],
+   [
+    "T-met",
+    {
+     "state": "met",
+     "text": "Met",
+     "over": false,
+     "paused": false,
+     "key": 9000000000000000,
+     "el": 10800000,
+     "T": 57600000
+    },
+    {
+     "hours": 16,
+     "always": false,
+     "custom": false
+    }
+   ],
+   [
+    "T-missed",
+    {
+     "state": "missed",
+     "text": "Missed by 1d 18h",
+     "over": false,
+     "paused": false,
+     "key": 9000000000000000,
+     "el": 295200000,
+     "T": 144000000
+    },
+    {
+     "hours": 40,
+     "always": false,
+     "custom": false
+    }
+   ],
+   [
+    "T-custsla",
+    {
+     "state": "soon",
+     "text": "1h 00m left",
+     "over": false,
+     "paused": false,
+     "key": 1793106000000,
+     "due": 1793106000000,
+     "el": 10800000,
+     "T": 14400000
+    },
+    {
+     "hours": 4,
+     "always": false,
+     "custom": true
+    }
+   ],
+   [
+    "T-247",
+    {
+     "state": "breached",
+     "text": "Breached 1d 11h",
+     "over": true,
+     "paused": false,
+     "key": 1792976400000,
+     "el": 183600000,
+     "T": 57600000
+    },
+    {
+     "hours": 16,
+     "always": true,
+     "custom": false
+    }
+   ],
+   [
+    "T-reopen",
+    {
+     "state": "soon",
+     "text": "0m left",
+     "over": false,
+     "paused": false,
+     "key": 1793102400000,
+     "due": 1793102400000,
+     "el": 57600000,
+     "T": 57600000
+    },
+    {
+     "hours": 16,
+     "always": false,
+     "custom": false
+    }
+   ]
+  ],
+  "ny": [
+   [
+    "T-pend",
+    {
+     "state": "ok",
+     "text": "Due Wed 28 Oct, 20:30",
+     "over": false,
+     "paused": false,
+     "key": 1793219400000,
+     "due": 1793219400000,
+     "el": 0,
+     "T": 57600000
+    },
+    {
+     "hours": 16,
+     "always": false,
+     "custom": false
+    }
+   ],
+   [
+    "T-paused",
+    {
+     "state": "paused",
+     "text": "Paused, 8h 00m left",
+     "over": false,
+     "paused": true,
+     "key": 8000000028800000,
+     "el": 0,
+     "T": 28800000
+    },
+    {
+     "hours": 8,
+     "always": false,
+     "custom": false
+    }
+   ],
+   [
+    "T-breach",
+    {
+     "state": "breached",
+     "text": "Breached 3h 00m",
+     "over": true,
+     "paused": false,
+     "key": 1793091600000,
+     "el": 25200000,
+     "T": 14400000
+    },
+    {
+     "hours": 4,
+     "always": true,
+     "custom": false
+    }
+   ],
+   [
+    "T-soon",
+    {
+     "state": "soon",
+     "text": "1h 30m left",
+     "over": false,
+     "paused": false,
+     "key": 1793107800000,
+     "due": 1793107800000,
+     "el": 27000000,
+     "T": 28800000
+    },
+    {
+     "hours": 8,
+     "always": false,
+     "custom": false
+    }
+   ],
+   [
+    "T-met",
+    {
+     "state": "met",
+     "text": "Met",
+     "over": false,
+     "paused": false,
+     "key": 9000000000000000,
+     "el": 50400000,
+     "T": 57600000
+    },
+    {
+     "hours": 16,
+     "always": false,
+     "custom": false
+    }
+   ],
+   [
+    "T-missed",
+    {
+     "state": "missed",
+     "text": "Missed by 1d 12h",
+     "over": false,
+     "paused": false,
+     "key": 9000000000000000,
+     "el": 275400000,
+     "T": 144000000
+    },
+    {
+     "hours": 40,
+     "always": false,
+     "custom": false
+    }
+   ],
+   [
+    "T-custsla",
+    {
+     "state": "ok",
+     "text": "5h 00m left",
+     "over": false,
+     "paused": false,
+     "key": 1793120400000,
+     "due": 1793120400000,
+     "el": 0,
+     "T": 14400000
+    },
+    {
+     "hours": 4,
+     "always": false,
+     "custom": true
+    }
+   ],
+   [
+    "T-247",
+    {
+     "state": "breached",
+     "text": "Breached 1d 11h",
+     "over": true,
+     "paused": false,
+     "key": 1792976400000,
+     "el": 183600000,
+     "T": 57600000
+    },
+    {
+     "hours": 16,
+     "always": true,
+     "custom": false
+    }
+   ],
+   [
+    "T-reopen",
+    {
+     "state": "ok",
+     "text": "8h 30m left",
+     "over": false,
+     "paused": false,
+     "key": 1793133000000,
+     "due": 1793133000000,
+     "el": 30600000,
+     "T": 57600000
+    },
+    {
+     "hours": 16,
+     "always": false,
+     "custom": false
+    }
+   ]
+  ],
+  "soon8": [
+   [
+    "T-pend",
+    {
+     "state": "ok",
+     "text": "Due Wed 28 Oct, 13:00",
+     "over": false,
+     "paused": false,
+     "key": 1793192400000,
+     "due": 1793192400000,
+     "el": 18000000,
+     "T": 57600000
+    },
+    {
+     "hours": 16,
+     "always": false,
+     "custom": false
+    }
+   ],
+   [
+    "T-paused",
+    {
+     "state": "paused",
+     "text": "Paused, 7h 00m left",
+     "over": false,
+     "paused": true,
+     "key": 8000000025200000,
+     "el": 3600000,
+     "T": 28800000
+    },
+    {
+     "hours": 8,
+     "always": false,
+     "custom": false
+    }
+   ],
+   [
+    "T-breach",
+    {
+     "state": "breached",
+     "text": "Breached 3h 00m",
+     "over": true,
+     "paused": false,
+     "key": 1793091600000,
+     "el": 25200000,
+     "T": 14400000
+    },
+    {
+     "hours": 4,
+     "always": true,
+     "custom": false
+    }
+   ],
+   [
+    "T-soon",
+    {
+     "state": "soon",
+     "text": "0m left",
+     "over": false,
+     "paused": false,
+     "key": 1793102400000,
+     "due": 1793102400000,
+     "el": 28800000,
+     "T": 28800000
+    },
+    {
+     "hours": 8,
+     "always": false,
+     "custom": false
+    }
+   ],
+   [
+    "T-met",
+    {
+     "state": "met",
+     "text": "Met",
+     "over": false,
+     "paused": false,
+     "key": 9000000000000000,
+     "el": 10800000,
+     "T": 57600000
+    },
+    {
+     "hours": 16,
+     "always": false,
+     "custom": false
+    }
+   ],
+   [
+    "T-missed",
+    {
+     "state": "missed",
+     "text": "Missed by 1d 18h",
+     "over": false,
+     "paused": false,
+     "key": 9000000000000000,
+     "el": 295200000,
+     "T": 144000000
+    },
+    {
+     "hours": 40,
+     "always": false,
+     "custom": false
+    }
+   ],
+   [
+    "T-custsla",
+    {
+     "state": "soon",
+     "text": "1h 00m left",
+     "over": false,
+     "paused": false,
+     "key": 1793106000000,
+     "due": 1793106000000,
+     "el": 10800000,
+     "T": 14400000
+    },
+    {
+     "hours": 4,
+     "always": false,
+     "custom": true
+    }
+   ],
+   [
+    "T-247",
+    {
+     "state": "breached",
+     "text": "Breached 1d 11h",
+     "over": true,
+     "paused": false,
+     "key": 1792976400000,
+     "el": 183600000,
+     "T": 57600000
+    },
+    {
+     "hours": 16,
+     "always": true,
+     "custom": false
+    }
+   ],
+   [
+    "T-reopen",
+    {
+     "state": "soon",
+     "text": "0m left",
+     "over": false,
+     "paused": false,
+     "key": 1793102400000,
+     "due": 1793102400000,
+     "el": 57600000,
+     "T": 57600000
+    },
+    {
+     "hours": 16,
+     "always": false,
+     "custom": false
+    }
+   ]
+  ]
+ },
+ "ids": {
+  "next": 4,
+  "none": 1,
+  "noPrefix": 1,
+  "max": 3,
+  "idStart": 10,
+  "counter": 15,
+  "alloc1": "ACME4",
+  "counters1": {
+   "ACME": {
+    "next": 5
+   }
+  },
+  "alloc2": "ACME6",
+  "counters2": {
+   "ACME": {
+    "next": 7
+   }
+  },
+  "genShape": true,
+  "genPrefix": "ZZ9-"
+ },
+ "csv": {
+  "rows": [
+   [
+    [
+     "a",
+     "b",
+     "c"
+    ],
+    [
+     "1",
+     "2",
+     "3"
+    ]
+   ],
+   [
+    [
+     "Name",
+     "Email",
+     "Notes"
+    ],
+    [
+     "Jo",
+     "jo@x.example",
+     "likes; semicolons"
+    ],
+    [
+     "Sam",
+     "sam@x.example",
+     "said \"hi\""
+    ]
+   ],
+   [
+    [
+     "x",
+     "y"
+    ],
+    [
+     "multi\nline",
+     "2"
+    ]
+   ],
+   [
+    [
+     "id",
+     "subject"
+    ],
+    [
+     "A1",
+     "quoted, comma"
+    ]
+   ],
+   [],
+   [
+    [
+     "only"
+    ]
+   ]
+  ],
+  "objects": {
+   "head": [
+    "id",
+    "subject",
+    null
+   ],
+   "list": [
+    {
+     "_row": 2,
+     "id": "A1",
+     "subject": "Hello"
+    },
+    {
+     "_row": 3,
+     "subject": "World"
+    }
+   ],
+   "unknown": [
+    "Colour"
+   ]
+  }
+ },
+ "plans": {
+  "conv": {
+   "sev": [
+    "S2",
+    "S4",
+    "S3",
+    "S1",
+    "S1",
+    "S2",
+    "S3",
+    "S4",
+    null,
+    null
+   ],
+   "status": [
+    "closed",
+    "closed",
+    "resolved",
+    "pending",
+    "new",
+    "open",
+    null,
+    null
+   ],
+   "tier": [
+    "C",
+    "H",
+    "L",
+    "N",
+    "N",
+    null
+   ],
+   "chan": [
+    "email",
+    "phone",
+    "portal",
+    "chat",
+    "monitoring",
+    null
+   ],
+   "date": [
+    "2026-01-12T09:30:00.000Z",
+    "2026-02-01T00:00:00.000Z",
+    "2026-02-05T08:00:00.000Z",
+    "2026-02-05T08:00:00.000Z",
+    null,
+    null
+   ]
+  },
+  "customers": {
+   "unknown": [
+    "Colour"
+   ],
+   "plan": {
+    "groups": [
+     {
+      "name": "Acme Ltd",
+      "existing": {
+       "id": "c-acme",
+       "name": "Acme Ltd",
+       "priority": "N",
+       "contacts": [
+        {
+         "id": "k1",
+         "name": "Jo Bloggs",
+         "email": "jo@acme.example",
+         "phone": "01632 960000",
+         "siteId": "s1"
+        }
+       ],
+       "sites": [
+        {
+         "id": "s1",
+         "name": "Head office",
+         "address": ""
+        }
+       ],
+       "idPrefix": "ACME",
+       "idStart": 2,
+       "updatedAt": "2026-01-01T00:00:00Z"
+      },
+      "contacts": [
+       {
+        "name": "New Person",
+        "email": "new@acme.example",
+        "phone": "",
+        "role": "",
+        "site": "Warehouse"
+       },
+       {
+        "name": "Bad Mail",
+        "email": "not-an-email",
+        "phone": "",
+        "role": "",
+        "site": ""
+       }
+      ],
+      "sites": [
+       {
+        "name": "Warehouse",
+        "address": "1 Dock Road"
+       }
+      ],
+      "priority": "H",
+      "prefix": "ACME",
+      "notes": null
+     },
+     {
+      "name": "Brand New Co",
+      "existing": null,
+      "contacts": [
+       {
+        "name": "Ann Other",
+        "email": "ann@new.example",
+        "phone": "",
+        "role": "",
+        "site": "Main"
+       }
+      ],
+      "sites": [
+       {
+        "name": "Main",
+        "address": ""
+       }
+      ],
+      "priority": "C",
+      "prefix": "BNC",
+      "notes": "Big account"
+     },
+     {
+      "name": "Other Co",
+      "existing": null,
+      "contacts": [],
+      "sites": [],
+      "priority": null,
+      "prefix": null,
+      "notes": null
+     },
+     {
+      "name": "Third Co",
+      "existing": null,
+      "contacts": [
+       {
+        "name": "Tom",
+        "email": "",
+        "phone": "",
+        "role": "",
+        "site": ""
+       }
+      ],
+      "sites": [],
+      "priority": null,
+      "prefix": null,
+      "notes": null
+     }
+    ],
+    "warn": [
+     "Row 4: not-an-email doesn't look like an email address; kept anyway.",
+     "Row 5: no customer name, skipped.",
+     "Row 8: priority Purple isn't Critical, High, Normal or Low; ignored.",
+     "Row 8: prefix ACME is already used by another customer; ignored.",
+     "Row 9: prefix toolongprefix must be 1 to 6 letters or numbers; ignored."
+    ],
+    "skipped": 1,
+    "sum": [
+     [
+      3,
+      "new customer"
+     ],
+     [
+      1,
+      "existing customer with new details",
+      "existing customers with new details"
+     ],
+     [
+      4,
+      "contact"
+     ],
+     [
+      2,
+      "site"
+     ]
+    ],
+    "preview": {
+     "head": [
+      "Customer",
+      "",
+      "Contacts",
+      "Sites",
+      "Prefix"
+     ],
+     "rows": [
+      [
+       "Acme Ltd",
+       "Existing",
+       "2",
+       "1",
+       "ACME"
+      ],
+      [
+       "Brand New Co",
+       "New",
+       "1",
+       "1",
+       "BNC"
+      ],
+      [
+       "Other Co",
+       "New",
+       "0",
+       "0",
+       ""
+      ],
+      [
+       "Third Co",
+       "New",
+       "1",
+       "0",
+       ""
+      ]
+     ]
+    }
+   }
+  },
+  "tickets": {
+   "unknown": [],
+   "plan": {
+    "rows": [
+     {
+      "id": "ACME1",
+      "r": {
+       "_row": 2,
+       "id": "ACME1",
+       "subject": "Printer offline",
+       "description": "Reception printer",
+       "customer": "Acme Ltd",
+       "requester": "Jo Bloggs",
+       "email": "jo@acme.example",
+       "category": "Hardware",
+       "team": "Service desk",
+       "severity": "P2",
+       "status": "Done",
+       "assignee": "Ana Ames",
+       "channel": "E-mail",
+       "opened": "12/01/2026 09:30",
+       "resolved": "12/01/2026 11:05",
+       "closed": "15/01/2026 09:00",
+       "resolution": "Re-added the queue"
+      },
+      "sev": "S2",
+      "st": "closed",
+      "opened": "2026-01-12T09:30:00.000Z",
+      "resolvedAt": "2026-01-12T11:05:00.000Z",
+      "closedAt": "2026-01-15T09:00:00.000Z",
+      "customer": "Acme Ltd",
+      "cat": "Hardware",
+      "team": "Service desk",
+      "asg": {
+       "uid": "ana",
+       "label": null
+      },
+      "chan": "email"
+     },
+     {
+      "id": null,
+      "r": {
+       "_row": 3,
+       "subject": "No id here",
+       "customer": "Unknown Customer",
+       "category": "Mystery",
+       "team": "Night team",
+       "severity": "whatever",
+       "status": "limbo",
+       "assignee": "Zed Unknown",
+       "channel": "phone call",
+       "opened": "2026-02-01 10:00"
+      },
+      "sev": "S3",
+      "st": "open",
+      "opened": "2026-02-01T10:00:00.000Z",
+      "resolvedAt": null,
+      "closedAt": null,
+      "customer": "Unknown Customer",
+      "cat": "Mystery",
+      "team": "Night team",
+      "asg": {
+       "uid": null,
+       "label": "Zed Unknown"
+      },
+      "chan": "phone"
+     },
+     {
+      "id": null,
+      "r": {
+       "_row": 4,
+       "id": "bad id!",
+       "subject": "Odd id",
+       "customer": "Acme Ltd",
+       "severity": "S4",
+       "status": "pending",
+       "assignee": "Eve Label",
+       "channel": "web form",
+       "opened": "2026-02-02"
+      },
+      "sev": "S4",
+      "st": "pending",
+      "opened": "2026-02-02T00:00:00.000Z",
+      "resolvedAt": null,
+      "closedAt": null,
+      "customer": "Acme Ltd",
+      "cat": "Access and accounts",
+      "team": "Service desk",
+      "asg": {
+       "uid": null,
+       "label": "Eve Label"
+      },
+      "chan": "portal"
+     },
+     {
+      "id": "NEW-7",
+      "r": {
+       "_row": 7,
+       "id": "NEW-7",
+       "subject": "Resolved only",
+       "customer": "Fastlane",
+       "category": "Email",
+       "severity": "high",
+       "assignee": "dev",
+       "channel": "chat",
+       "opened": "2026-02-05 08:00",
+       "resolved": "2026-02-05 09:00"
+      },
+      "sev": "S2",
+      "st": "resolved",
+      "opened": "2026-02-05T08:00:00.000Z",
+      "resolvedAt": "2026-02-05T09:00:00.000Z",
+      "closedAt": null,
+      "customer": "Fastlane",
+      "cat": "Email",
+      "team": "Service desk",
+      "asg": {
+       "uid": null,
+       "label": "dev"
+      },
+      "chan": "chat"
+     }
+    ],
+    "newCust": [
+     "Unknown Customer"
+    ],
+    "warn": [
+     "Assignees not on your team list are kept as names: Zed Unknown, dev. Add them in Admin, Agents to link them.",
+     "Teams not in your list, kept as written: Night team.",
+     "Categories not in your list, kept as written: Mystery. Add them in Admin, Categories if you want them in the menus.",
+     "1 customer not found will be created: Unknown Customer.",
+     "Row 3: severity whatever not recognised; set to S3.",
+     "Row 3: status limbo not recognised; set to Open.",
+     "Row 4: ID bad id! has characters IDs can't use; a new ID will be given.",
+     "Row 5: R1 already exists, skipped.",
+     "Row 6: no subject, skipped."
+    ],
+    "skipped": 2,
+    "sum": [
+     [
+      4,
+      "ticket"
+     ],
+     [
+      1,
+      "closed",
+      "closed"
+     ],
+     [
+      3,
+      "open or resolved",
+      "open or resolved"
+     ],
+     [
+      1,
+      "new customer"
+     ]
+    ],
+    "preview": {
+     "head": [
+      "ID",
+      "Subject",
+      "Customer",
+      "Status",
+      "Opened"
+     ],
+     "rows": [
+      [
+       "ACME1",
+       "Printer offline",
+       "Acme Ltd",
+       "Closed",
+       "2026-01-12"
+      ],
+      [
+       "New ID",
+       "No id here",
+       "Unknown Customer",
+       "Open",
+       "2026-02-01"
+      ],
+      [
+       "New ID",
+       "Odd id",
+       "Acme Ltd",
+       "Pending",
+       "2026-02-02"
+      ],
+      [
+       "NEW-7",
+       "Resolved only",
+       "Fastlane",
+       "Resolved",
+       "2026-02-05"
+      ]
+     ]
+    }
+   }
+  }
+ },
+ "routing": {
+  "shift": {
+   "states": [
+    [
+     "u-ana",
+     "ok"
+    ],
+    [
+     "u-ben",
+     "away"
+    ],
+    [
+     "u-cat",
+     "leave"
+    ],
+    [
+     "u-dev",
+     "off"
+    ],
+    [
+     "l-eve",
+     "ok"
+    ],
+    [
+     "u-fay",
+     "ok"
+    ],
+    [
+     "gone",
+     "gone"
+    ]
+   ],
+   "tickets": [
+    [
+     "R1",
+     "u-ana"
+    ],
+    [
+     "R2",
+     "u-fay"
+    ],
+    [
+     "R3",
+     "u-ana"
+    ],
+    [
+     "R4",
+     "l-eve"
+    ],
+    [
+     "R5",
+     "u-ana"
+    ],
+    [
+     "R6",
+     null
+    ],
+    [
+     "R7",
+     null
+    ],
+    [
+     "R8",
+     "u-ana"
+    ]
+   ],
+   "cats": [
+    [
+     "Network",
+     "u-ana"
+    ],
+    [
+     "Email",
+     "l-eve"
+    ],
+    [
+     "Firewall",
+     "u-fay"
+    ],
+    [
+     "Hardware",
+     null
+    ],
+    [
+     "Software",
+     null
+    ]
+   ],
+   "events": [
+    {
+     "at": "2026-10-27T12:00:00Z",
+     "type": "assignee",
+     "from": null,
+     "fromLabel": null,
+     "to": "ana",
+     "toLabel": null,
+     "auto": true,
+     "reason": "Network auto-assign order"
+    },
+    {
+     "at": "2026-10-27T12:00:00Z",
+     "type": "status",
+     "from": "new",
+     "to": "open",
+     "auto": true
+    }
+   ]
+  },
+  "limit2": {
+   "states": [
+    [
+     "u-ana",
+     "ok"
+    ],
+    [
+     "u-ben",
+     "away"
+    ],
+    [
+     "u-cat",
+     "leave"
+    ],
+    [
+     "u-dev",
+     "off"
+    ],
+    [
+     "l-eve",
+     "ok"
+    ],
+    [
+     "u-fay",
+     "full"
+    ],
+    [
+     "gone",
+     "gone"
+    ]
+   ],
+   "tickets": [
+    [
+     "R1",
+     "u-ana"
+    ],
+    [
+     "R2",
+     "u-ana"
+    ],
+    [
+     "R3",
+     "u-ana"
+    ],
+    [
+     "R4",
+     "l-eve"
+    ],
+    [
+     "R5",
+     "u-ana"
+    ],
+    [
+     "R6",
+     null
+    ],
+    [
+     "R7",
+     null
+    ],
+    [
+     "R8",
+     "u-ana"
+    ]
+   ],
+   "cats": [
+    [
+     "Network",
+     "u-ana"
+    ],
+    [
+     "Email",
+     "l-eve"
+    ],
+    [
+     "Firewall",
+     "u-ana"
+    ],
+    [
+     "Hardware",
+     null
+    ],
+    [
+     "Software",
+     null
+    ]
+   ],
+   "events": [
+    {
+     "at": "2026-10-27T12:00:00Z",
+     "type": "assignee",
+     "from": null,
+     "fromLabel": null,
+     "to": "ana",
+     "toLabel": null,
+     "auto": true,
+     "reason": "Network auto-assign order"
+    },
+    {
+     "at": "2026-10-27T12:00:00Z",
+     "type": "status",
+     "from": "new",
+     "to": "open",
+     "auto": true
+    }
+   ]
+  },
+  "noShift": {
+   "states": [
+    [
+     "u-ana",
+     "ok"
+    ],
+    [
+     "u-ben",
+     "away"
+    ],
+    [
+     "u-cat",
+     "leave"
+    ],
+    [
+     "u-dev",
+     "ok"
+    ],
+    [
+     "l-eve",
+     "ok"
+    ],
+    [
+     "u-fay",
+     "ok"
+    ],
+    [
+     "gone",
+     "gone"
+    ]
+   ],
+   "tickets": [
+    [
+     "R1",
+     "u-dev"
+    ],
+    [
+     "R2",
+     "u-fay"
+    ],
+    [
+     "R3",
+     "u-ana"
+    ],
+    [
+     "R4",
+     "l-eve"
+    ],
+    [
+     "R5",
+     "u-dev"
+    ],
+    [
+     "R6",
+     null
+    ],
+    [
+     "R7",
+     null
+    ],
+    [
+     "R8",
+     "u-dev"
+    ]
+   ],
+   "cats": [
+    [
+     "Network",
+     "u-dev"
+    ],
+    [
+     "Email",
+     "l-eve"
+    ],
+    [
+     "Firewall",
+     "u-fay"
+    ],
+    [
+     "Hardware",
+     null
+    ],
+    [
+     "Software",
+     null
+    ]
+   ],
+   "events": [
+    {
+     "at": "2026-10-27T12:00:00Z",
+     "type": "assignee",
+     "from": null,
+     "fromLabel": null,
+     "to": "ana",
+     "toLabel": null,
+     "auto": true,
+     "reason": "Network auto-assign order"
+    },
+    {
+     "at": "2026-10-27T12:00:00Z",
+     "type": "status",
+     "from": "new",
+     "to": "open",
+     "auto": true
+    }
+   ]
+  }
+ },
+ "dispatch": {
+  "auto": [
+   "R5",
+   "R3",
+   "R7",
+   "R6",
+   "R4"
+  ],
+  "custom": [
+   "R5",
+   "R7",
+   "R6",
+   "R4",
+   "R3"
+  ],
+  "colNone": [
+   "R5",
+   "R7",
+   "R6",
+   "R4",
+   "R3"
+  ],
+  "colFay": [
+   "R1",
+   "R2"
+  ],
+  "keys": [
+   "u-a_b_c",
+   "l-eve-label",
+   "none",
+   "x_y_z"
+  ],
+  "moves": [
+   null,
+   {
+    "order": [
+     "R5",
+     "R7",
+     "R4",
+     "R6",
+     "R3"
+    ],
+    "pos": 4
+   },
+   {
+    "order": [
+     "R4",
+     "R5",
+     "R7",
+     "R6",
+     "R3"
+    ],
+    "pos": 1
+   },
+   {
+    "order": [
+     "R5",
+     "R7",
+     "R3",
+     "R6",
+     "R4"
+    ],
+    "pos": 3
+   },
+   {
+    "order": [
+     "R7",
+     "R6",
+     "R4",
+     "R3",
+     "R5"
+    ],
+    "pos": 5
+   },
+   null,
+   null,
+   {
+    "order": [
+     "R2",
+     "R1"
+    ],
+    "pos": 1
+   }
+  ]
+ },
+ "similar": {
+  "toks": [
+   "printer",
+   "keep",
+   "jamm",
+   "stopp",
+   "help"
+  ],
+  "results": [
+   [
+    [
+     "S2",
+     1
+    ],
+    [
+     "S1",
+     0.515715048
+    ]
+   ],
+   [
+    [
+     "S2",
+     1.05
+    ],
+    [
+     "S1",
+     0.665715048
+    ]
+   ],
+   [
+    [
+     "S6",
+     1
+    ]
+   ],
+   [],
+   [
+    [
+     "S4",
+     0.452389355
+    ]
+   ]
+  ]
+ },
+ "hist": {
+  "hits": [
+   {
+    "ok": true
+   },
+   {
+    "ok": true
+   },
+   {
+    "ok": true
+   },
+   {
+    "ok": true
+   },
+   {
+    "ok": true
+   },
+   {
+    "ok": true,
+    "where": "Description",
+    "text": "The laptop case is bulging near the trackpad.\nUser stopped using it."
+   },
+   {
+    "ok": true,
+    "where": "Note",
+    "text": "Courier booked for Friday"
+   },
+   {
+    "ok": true,
+    "where": "Internal note",
+    "text": "Ordered a replacement battery"
+   },
+   {
+    "ok": true,
+    "where": "Timeline",
+    "text": "Isolated the device in the comms room"
+   },
+   {
+    "ok": false
+   }
+  ],
+  "close": [
+   {
+    "at": "2026-10-04T00:00:00Z",
+    "ms": 1791072000000,
+    "byLabel": "x",
+    "auto": true
+   },
+   {
+    "at": "2026-10-09T00:00:00Z",
+    "ms": 1791504000000,
+    "by": null,
+    "byLabel": null,
+    "auto": false
+   }
+  ],
+  "keys": [
+   "u:ana",
+   "l:Eve",
+   "none"
+  ]
+ },
+ "pins": {
+  "mgr": {
+   "queue": [
+    [
+     "p4",
+     false
+    ],
+    [
+     "p2",
+     false
+    ],
+    [
+     "p5",
+     true
+    ],
+    [
+     "p1",
+     true
+    ]
+   ],
+   "dispatch": [
+    [
+     "p4",
+     false
+    ],
+    [
+     "p3",
+     false
+    ],
+    [
+     "p1",
+     true
+    ]
+   ]
+  },
+  "agent": {
+   "queue": [
+    [
+     "p4",
+     false
+    ],
+    [
+     "p2",
+     false
+    ]
+   ],
+   "dispatch": [
+    [
+     "p4",
+     false
+    ],
+    [
+     "p3",
+     false
+    ]
+   ]
+  }
+ },
+ "text": {
+  "ev": [
+   "Ticket opened",
+   "Open → Closing, automatically. The grace period ended",
+   "Marked as sent to jo@x: Hi",
+   "Skipped: ",
+   "S3 Medium → S1 Critical",
+   "A → B",
+   "Not recorded → Chat",
+   "Ana Ames → Eve, automatically (Network auto-assign order)",
+   "Eve → Unassigned",
+   "Internal note, 1h 15m non-billable",
+   "Time logged, 30m billable",
+   "Incident timeline started",
+   "Timeline entry, Analysis",
+   ""
+  ],
+  "wev": [
+   "Contact added: Jo",
+   "Customer created",
+   "Ana Ames updated: teams A",
+   "Eve added to Security",
+   "Unresolved user status: Available → On leave",
+   "Someone now on call",
+   "Ana Ames clocked out automatically after 2h 5m",
+   "Someone clocked in",
+   "Ana Ames's list went back to automatic order",
+   "R1 to position 2 moved in The Unassigned list",
+   "Ben Bell asked: asks to take R1",
+   "Declined a request from Someone: x",
+   "Settings changed",
+   "Unpinned: Old",
+   "Shared",
+   ""
+  ]
+ }
+}
