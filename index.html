@@ -467,6 +467,26 @@ dialog.dlg.mid{width:min(680px,calc(100vw - 32px))}
 .secnote{background:var(--bg);border-radius:12px;padding:14px 16px;line-height:1.5;margin-bottom:12px}
 .secnote b{display:block;font-weight:600;margin-bottom:4px}
 .su-m svg{width:64px;height:auto;display:block}
+.pins{margin-bottom:20px}.pins:empty{display:none}
+.pins-h{display:flex;align-items:center;gap:10px;margin-bottom:10px;flex-wrap:wrap}
+.pins-h .t{display:inline-flex;align-items:center;gap:7px;font-weight:600;font-size:14px}
+.pins-h .t svg{width:16px;height:16px;color:var(--accent)}
+.pins-h .num{font-weight:400;color:var(--muted)}
+.pins-h .sp{flex:1}
+.pin-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:12px}
+.pin{position:relative;background:var(--surface);border:1px solid var(--line);border-left:5px solid var(--faint);border-radius:14px;padding:12px 14px;display:flex;flex-direction:column;gap:6px;min-width:0}
+.pin.t-info{border-left-color:var(--accent)}.pin.t-warning{border-left-color:var(--amber);background:color-mix(in srgb,var(--amber) 7%,var(--surface))}.pin.t-critical{border-left-color:var(--warn);background:color-mix(in srgb,var(--warn) 7%,var(--surface))}
+.pin.expired{opacity:.6;border-style:dashed}
+.pin .ph{display:flex;align-items:flex-start;gap:8px}
+.pin .ph b{flex:1;min-width:0;font-weight:600;overflow-wrap:anywhere}
+.pin .tx{white-space:pre-wrap;overflow-wrap:anywhere;line-height:1.5;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden}
+.pin.open .tx{display:block}
+.pin .tx a{color:var(--accent);text-decoration:underline}
+.pin .pm{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;color:var(--muted);margin-top:auto;padding-top:4px}
+.pin .pm .sp{flex:1}
+.pin .acts{display:flex;gap:10px;flex:none}
+.pin .acts .linkbtn{font-size:12.5px}
+.pin-add{display:flex;align-items:center;gap:10px;color:var(--muted);font-size:13px}
 .svc{display:grid;grid-template-columns:22px 150px 1fr;gap:10px;align-items:start;padding:10px 0;border-top:1px solid var(--line)}
 .svc:first-of-type{border-top:0}
 .svc .ok{color:var(--good);font-weight:700}.svc .no{color:var(--faint);font-weight:700}.svc .wn{color:var(--amber);font-weight:700}
@@ -694,6 +714,7 @@ td.r,th.r{text-align:right}
   <section id="v-queue">
     <div class="hero" id="hero"><div class="mwrap"><div class="m squishy" id="hero-m" role="button" tabindex="0" aria-label="Squish Ping" title="Squish me"></div><span class="sq-hint" id="sq-hint" hidden>psst, squish me</span></div><div><h1 id="greet">Hello</h1><div class="bubble" id="bubble" aria-live="polite"></div></div></div>
     <div id="banner"></div>
+    <div id="pins-q" class="pins"></div>
     <div class="tiles card" id="q-tiles"></div>
     <div class="toolbar">
       <div class="searchbox" id="q-sb"><input class="field" id="q-text" type="search" placeholder="Search ID, subject, customer, requester" aria-label="Search tickets"></div>
@@ -745,6 +766,7 @@ td.r,th.r{text-align:right}
         <select class="field" id="disp-team" aria-label="Team"></select>
       </div>
     </div>
+    <div id="pins-d" class="pins"></div>
     <div id="disp-body"></div>
   </section>
 
@@ -825,7 +847,7 @@ td.r,th.r{text-align:right}
     <div class="toolbar">
       <div class="searchbox" id="a-sb"><input class="field" id="a-text" type="search" placeholder="Search ticket ID, subject, customer" aria-label="Search audit log"></div>
       <select class="field" id="a-type" aria-label="Event type">
-        <option value="">All events</option><option value="created">Ticket opened</option><option value="status">Status changes</option><option value="severity">Severity changes</option><option value="assignee">Assignments</option><option value="team">Team changes</option><option value="category">Category changes</option><option value="note">Notes and time</option><option value="email">Emails</option><option value="channel">Channel changes</option><option value="timeline">Incident timeline</option><option value="customer">Customer records</option><option value="staff">Team changes</option><option value="settings">Settings</option><option value="shift">Shifts</option><option value="request">Requests</option><option value="queue">Dispatch order</option><option value="share">Shared to Teams</option>
+        <option value="">All events</option><option value="created">Ticket opened</option><option value="status">Status changes</option><option value="severity">Severity changes</option><option value="assignee">Assignments</option><option value="team">Team changes</option><option value="category">Category changes</option><option value="note">Notes and time</option><option value="email">Emails</option><option value="channel">Channel changes</option><option value="timeline">Incident timeline</option><option value="customer">Customer records</option><option value="staff">Team changes</option><option value="settings">Settings</option><option value="shift">Shifts</option><option value="request">Requests</option><option value="queue">Dispatch order</option><option value="share">Shared to Teams</option><option value="pin">Pinned messages</option>
       </select>
       <select class="field" id="a-range" aria-label="Period">
         <option value="0">All time</option><option value="1">Last 24 hours</option><option value="7">Last 7 days</option><option value="30">Last 30 days</option>
@@ -938,6 +960,21 @@ td.r,th.r{text-align:right}
   </div>
 </dialog>
 
+<dialog class="dlg mid" id="pin" aria-labelledby="pin-h">
+  <div class="d-top"><span class="lbl">Pinned message</span><button class="x" data-act="pin-cancel" aria-label="Close"></button></div>
+  <h2 id="pin-h">Pin a message</h2>
+  <p class="muted">Pinned messages stay at the top of the Queue or Dispatch until you unpin them. For something urgent that has to be on every page, post an announcement in Admin, General instead.</p>
+  <div class="form" style="margin-top:14px">
+    <label class="full"><span class="lbl">Title (optional)</span><input class="field" id="pn-title" maxlength="80" autocomplete="off" placeholder="e.g. Acme on-call number"></label>
+    <label class="full"><span class="lbl">Message</span><textarea class="field" id="pn-text" rows="5" maxlength="1000" placeholder="What the team needs to know. Links are clickable."></textarea><span class="muted" style="font-size:12.5px" id="pn-count"></span></label>
+    <label><span class="lbl">Style</span><select class="field" id="pn-tone"><option value="note">Note</option><option value="info">Information</option><option value="warning">Warning</option><option value="critical">Critical</option></select></label>
+    <label><span class="lbl">Show on</span><select class="field" id="pn-show"><option value="both">Queue and Dispatch</option><option value="queue">Queue only</option><option value="dispatch">Dispatch only</option></select></label>
+    <label class="full"><span class="lbl">Unpin automatically (optional)</span><input class="field" type="datetime-local" id="pn-until" style="max-width:260px"></label>
+    <div class="full err" id="pn-err"></div>
+  </div>
+  <div class="actions" style="margin-top:18px"><button class="btn" data-act="pin-cancel">Cancel</button><button class="btn primary" data-act="pin-save" id="pn-save">Pin it</button></div>
+</dialog>
+
 <dialog class="dlg mid" id="bk" aria-labelledby="bk-h">
   <div class="d-top"><span class="lbl" id="bk-k"></span><button class="x" data-act="bk-cancel" aria-label="Close"></button></div>
   <h2 id="bk-h"></h2>
@@ -1000,8 +1037,8 @@ const ST_LABEL={new:"New",open:"Open",pending:"Pending",resolved:"Resolved",clos
 const ACTIVE=new Set(["new","open","pending"]);
 const TEAMS=["Service desk","Networking","Security","Infrastructure"];
 const CATEGORIES=["Access and accounts","Hardware","Software","Email","Network","VPN and remote access","Firewall","Security incident","Phishing","Endpoint and malware","Backup and recovery","Servers and cloud"];
-const EV_LABEL={created:"Ticket opened",status:"Status changed",severity:"Severity changed",assignee:"Assignment changed",team:"Team changed",category:"Category changed",note:"Note or time",channel:"Channel changed",timeline:"Incident timeline",customer:"Customer record",staff:"Team",settings:"Settings",shift:"Shift",request:"Request",queue:"Dispatch order",share:"Shared",email:"Email"};
-const APP_VERSION="1.0.0";
+const EV_LABEL={created:"Ticket opened",status:"Status changed",severity:"Severity changed",assignee:"Assignment changed",team:"Team changed",category:"Category changed",note:"Note or time",channel:"Channel changed",timeline:"Incident timeline",customer:"Customer record",staff:"Team",settings:"Settings",shift:"Shift",request:"Request",queue:"Dispatch order",share:"Shared",email:"Email",pin:"Pinned message"};
+const APP_VERSION="1.1.0";
 const LS_KEY="helpdesk.local.v1",LS_PREF="helpdesk.prefs.v1";
 const SKINS=[["daylight","Daylight","#F4F6FA","#2F5BEA","light"],["peach","Peach","#FFF1E3","#C2255C","light"],["matcha","Matcha","#EFF4E1","#2F6B3A","light"],["cocoa","Cocoa","#1E1512","#FF8FAB","dark"],["midnight","Midnight","#101010","#ee6018","dark"]];
 const skinKind=id=>(SKINS.find(s=>s[0]===id)||[])[4];
@@ -1022,7 +1059,7 @@ const DEF_CFG={routing:{on:true,retry:true,cats:{}},name:"helpdesk",idPrefix:"HD
     closed:{on:false,subject:"[{ticket}] Closed: {subject}",body:"Hi {contact},\n\n{ticket} is now closed. Thanks for your patience, and get in touch any time you need us.\n\n{helpdesk}"}}},teams:TEAMS.slice(),categories:CATEGORIES.slice(),requireShift:true,tz:"Europe/London",days:[1,2,3,4,5],start:"08:00",end:"18:00",
   holidays:["2026-01-01","2026-04-03","2026-04-06","2026-05-04","2026-05-25","2026-08-31","2026-12-25","2026-12-28","2027-01-01","2027-03-26","2027-03-29","2027-05-03","2027-05-31","2027-08-30","2027-12-27","2027-12-28"],
   targets:{S1:{hours:4,always:true},S2:{hours:8,always:false},S3:{hours:16,always:false},S4:{hours:40,always:false}}};
-const LS_COL={queues:"helpdesk.local.queues",shifts:"helpdesk.local.shifts",customers:"helpdesk.local.customers",staff:"helpdesk.local.staff",events:"helpdesk.local.events",config:"helpdesk.local.config"};
+const LS_COL={pins:"helpdesk.local.pins",queues:"helpdesk.local.queues",shifts:"helpdesk.local.shifts",customers:"helpdesk.local.customers",staff:"helpdesk.local.staff",events:"helpdesk.local.events",config:"helpdesk.local.config"};
 const TONES=[["#FFD8B8","#7A3A0C"],["#FFC9D9","#8A1C45"],["#FFE28A","#6B4A00"],["#C4EBCF","#1E5E3A"],["#DCCFF7","#47308A"],["#C5E3F6","#1B4F72"]];
 
 /* ---------- icons ---------- */
@@ -1035,6 +1072,7 @@ const IC={
   adn:'<path d="M12 5v14M6 13l6 6 6-6"/>',
   share:'<circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><path d="m8.6 13.5 6.8 4M15.4 6.5l-6.8 4"/>',
   teams:'<path d="M14 7h6a1 1 0 0 1 1 1v5a4 4 0 0 1-4 4h-1"/><rect x="3" y="6" width="12" height="12" rx="2"/><path d="M6.500 9.500h5M9 9.500V15"/><circle cx="18" cy="4" r="1.600"/>',
+  tack:'<path d="M12 17v5"/><path d="M9 10.76a2 2 0 0 1-1.11 1.79l-1.78.9A2 2 0 0 0 5 15.24V16a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-.76a2 2 0 0 0-1.11-1.79l-1.78-.9A2 2 0 0 1 15 10.76V7a1 1 0 0 1 1-1 2 2 0 0 0 0-4H8a2 2 0 0 0 0 4 1 1 0 0 1 1 1z"/>',
   pin:'<path d="M12 21s-7-6.500-7-12a7 7 0 0 1 14 0c0 5.500-7 12-7 12z"/><circle cx="12" cy="9" r="2.500"/>',
   mail:'<rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/>',
   bell:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.9 1.9 0 0 0 3.4 0"/>',
@@ -1110,7 +1148,7 @@ function mascot(mood,live){
 /* ---------- state ---------- */
 const VIEWS=["queue","mine","dispatch","history","customers","reports","audit","admin"],TICKET_VIEWS=["queue","mine","dispatch","history"];
 const P={mode:"system",lightTheme:"peach",darkTheme:"cocoa",board:"board",mineView:"list",histView:"list",histGroup:"month",density:"cosy",mascot:true,squeak:false,notifyDecisions:true,notifyNew:true,notifySound:false,avatars:true,exact:false,start:"queue",mine:false,team:"",noteInternal:true};
-const S={counters:{},siteForm:null,rmSite:null,shareId:null,queues:[],reqDocs:[],decisions:{},rqDraft:null,rqDecline:null,acctTab:"profile",chForm:null,online:navigator.onLine!==false,hb:true,reqFilter:"pending",agEdit:null,agAdd:false,agQ:"",tmNew:false,tmRm:null,rsFor:null,heroMood:"happy",shifts:[],adTab:"general",adRm:null,customers:[],custById:new Map(),custByName:new Map(),staff:[],events:[],cfg:null,cfgVer:0,selCust:null,cuText:"",isEditor:false,assets:null,noteMin:"",noteBill:true,tl:{text:"",phase:"",at:""},wsTab:"team",staffQ:"",rmStaff:null,conForm:null,rmContact:null,view:"queue",tickets:[],byId:new Map(),loaded:false,mode:"connecting",sel:null,
+const S={pins:[],pinRm:null,pinOpen:new Set(),pinEdit:null,counters:{},siteForm:null,rmSite:null,shareId:null,queues:[],reqDocs:[],decisions:{},rqDraft:null,rqDecline:null,acctTab:"profile",chForm:null,online:navigator.onLine!==false,hb:true,reqFilter:"pending",agEdit:null,agAdd:false,agQ:"",tmNew:false,tmRm:null,rsFor:null,heroMood:"happy",shifts:[],adTab:"general",adRm:null,customers:[],custById:new Map(),custByName:new Map(),staff:[],events:[],cfg:null,cfgVer:0,selCust:null,cuText:"",isEditor:false,assets:null,noteMin:"",noteBill:true,tl:{text:"",phase:"",at:""},wsTab:"team",staffQ:"",rmStaff:null,conForm:null,rmContact:null,view:"queue",tickets:[],byId:new Map(),loaded:false,mode:"connecting",sel:null,
   meId:null,meName:"",meAvatar:"",isOwner:false,canWrite:true,user:null,downloads:null,names:{},avatars:{},
   q:{text:"",status:"active",customer:"",sev:"",team:"",category:"",assignee:"",sla:"",sort:"sla",dir:"asc"},
   disp:{team:""},rep:{range:30,team:""},aud:{text:"",type:"",range:0,who:"",limit:200},
@@ -1778,6 +1816,7 @@ function renderQueue(){
       :m+"<b>No tickets match these filters</b>Change the status tab or clear the filters.";
   }
   renderBanner();
+  renderPins("queue");
 }
 function prio(a,b){const d=(SEV[b.severity]||SEV.S3).level-(SEV[a.severity]||SEV.S3).level;return d||sla(a).key-sla(b).key;}
 function moveOptions(t){
@@ -1819,7 +1858,7 @@ function renderMine(){
   const sleepy=P.mascot?mascot("sleepy").replace('class="mascot"','class="mascot mm"'):"";
   if(!S.meId){
     tiles.hidden=true;$("mine-sub").textContent="";
-    body.innerHTML='<div class="card empty">'+sleepy+(S.mode==="connecting"?"Checking who you are":"<b>Your desk needs a sign-in</b>Open the helpdesk from Claude while signed in and the tickets assigned to you appear here.")+"</div>";
+    body.innerHTML='<div class="card empty">'+sleepy+(S.mode==="connecting"?"Checking who you are":"<b>Your desk needs a sign-in</b>Once the helpdesk is connected to your organisation's sign-in, the tickets assigned to you appear here.")+"</div>";
     return;
   }
   const mine=S.tickets.filter(t=>t.assigneeId===S.meId),act=orderCol(mine.filter(t=>ACTIVE.has(t.status)),qKey(S.meId,null));
@@ -1886,6 +1925,7 @@ function ticketCard(t,i,drag,mv){
     '<span class="r3">'+sevMini(t.severity)+'<span class="num">'+slaHtml(t)+"</span></span></div>";
 }
 function renderDispatch(){
+  renderPins("dispatch");
   setSelect($("disp-team"),"All teams",S.cfg.teams,S.disp.team);
   document.querySelectorAll("#disp-layout button").forEach(b=>b.setAttribute("aria-pressed",String(P.board===b.dataset.val)));
   const groups=dispatchGroups(),total=groups.reduce((n,g)=>n+g.list.length,0),agents=groups.filter(g=>g.key!=="none"&&g.list.length).length;
@@ -1919,7 +1959,7 @@ function tile(label,val,extra,act,sub,hot){
 }
 function renderBanner(){
   const n=S.tickets.filter(t=>t.sample).length;let h="";
-  if(S.mode==="local")h+='<div class="note"><span class="dot"></span><span>Running on its own, outside Claude. Everything you do is saved in this browser only.</span>'+(S.tickets.length?"":'<button class="btn" data-act="load-demo">Load sample data</button>')+"</div>";
+  if(S.mode==="local"&&!S.tickets.length)h+='<div class="note"><span>No tickets yet. Want to look around first?</span><button class="btn" data-act="load-demo">Load sample data</button></div>';
   if(n&&isMgr())h+='<div class="note"><span>'+n+' sample tickets, plus sample customers and team members, are loaded so every page has something to show.</span>'+
     (S.confirmSample?'<button class="btn dark" data-act="sample-yes">Remove all '+n+'</button><button class="btn" data-act="sample-no">Keep them</button>'
       :'<button class="btn" data-act="sample-ask">Remove sample tickets</button>')+"</div>";
@@ -2272,7 +2312,7 @@ function routeLine(cat){
 function renderRouteLine(){const el=$("f-route");if(el)el.innerHTML=routeLine($("f-category").value);}
 
 /* ---------- share to Teams ---------- */
-function standalone(){return !window.claude||S.mode==="local";}
+function standalone(){return !window.helpdesk||S.mode==="local";}
 function ticketLink(t){
   if(standalone()){const b=location.href.split("#")[0];return /^https:/.test(b)?b+"#ticket="+encodeURIComponent(t.id):"";}
   return S.cfg.shareUrl||"";
@@ -2526,18 +2566,18 @@ function renderAccount(){
       "<dt>Job title</dt><dd>"+esc(me.title||"Not set")+reqBtn("title")+"</dd>"+
       "<dt>Teams</dt><dd>"+esc(mTeams(me).join(", ")||"No team")+reqBtn("teams")+"</dd>"+
       "<dt>Availability</dt><dd>"+esc(AVAIL[me.avail||"available"])+(me.oncall?", on call":"")+reqBtn("avail")+"</dd>"+
-      "<dt>Profile photo</dt><dd>"+(photoOf(S.meId)?"Set by a manager":"Using your Claude account photo")+
+      "<dt>Profile photo</dt><dd>"+(photoOf(S.meId)?"Set by a manager":"Using your sign-in photo")+
         (req?' <label class="linkbtn" style="font-size:12.5px;margin-left:8px">Request a new photo<input type="file" accept="image/png,image/jpeg,image/webp" data-act-file="reqphoto" hidden></label>':"")+
         (mgr&&S.assets?' <label class="linkbtn" style="font-size:12.5px;margin-left:8px">Change photo<input type="file" accept="image/png,image/jpeg,image/webp" data-act-file="myphoto" hidden></label>':"")+"</dd>"+
       "</dl>"+
       (mgr?'<div class="actions" style="margin-top:14px"><button class="btn" data-act="acct-admin">Edit my details in Admin</button></div>'
         :req?'<div class="actions" style="margin-top:14px"><button class="btn" data-act="ch-open" data-f="other">Ask for something else</button></div><p class="muted" style="font-size:12.5px;margin-top:10px">Your profile is managed by your managers, so changes go to them for approval.</p>':"")
-    :'<div class="note"><span>'+(db&&S.meId?"You're not set up as an agent yet. Ask a manager to add you under Admin, Agents.":"Profiles are only available when the helpdesk is open inside Claude.")+"</span></div>"));
+    :'<div class="note"><span>'+(db&&S.meId?"You're not set up as an agent yet. Ask a manager to add you under Admin, Agents.":"Profiles need the helpdesk to be connected to your organisation's sign-in.")+"</span></div>"));
   const nm=$("acct-name");if(nm)nm.textContent=S.meName||(S.meId?"You":"Guest");
   renderChForm();
   setHtml($("acct-security"),
-    '<div class="secnote"><b>Signing in</b>You sign in to the helpdesk with your Claude account'+(S.meName?", as "+esc(S.meName):"")+'. The helpdesk has no passwords of its own. To sign out or switch accounts, use the account menu in Claude.</div>'+
-    '<div class="secnote"><b>Multi-factor authentication</b>Because the helpdesk uses your Claude sign-in, MFA is set up wherever that sign-in is managed, not in the helpdesk. If your organisation signs in to Claude through Microsoft 365 single sign-on, your Microsoft 365 MFA rules apply here too. Your Claude administrator can confirm how it\'s set up.</div>'+
+    '<div class="secnote"><b>Signing in</b>'+(S.meId?"You're signed in through your organisation's sign-in"+(S.meName?", as "+esc(S.meName):"")+". The helpdesk has no passwords of its own, so sign out or switch accounts there.":"No sign-in is connected, so anyone using this browser has full access. Whoever hosts the helpdesk can connect one.")+"</div>"+
+    '<div class="secnote"><b>Multi-factor authentication</b>MFA is set up in your organisation\'s sign-in system, not in the helpdesk. If you sign in with Microsoft 365, your Microsoft 365 MFA rules apply here too. Your IT administrator can confirm how it\'s set up.</div>'+
     '<div class="secnote"><b>Your Office 365 account</b>'+(me&&me.m365?esc(me.m365)+" is linked to your agent profile as a record for matching tickets and reports. It isn't used to sign in.":"Managers can link your Office 365 account to your agent profile as a record. It isn't used to sign in.")+'</div>'+
     '<div class="secnote" style="margin-bottom:0"><b>Access</b>Your role is <b style="display:inline;margin:0">'+esc(role)+"</b>. It comes from how this page is shared with you: Editors are managers, Contributors are agents and Viewers can only look.</div>");
   const mine=myRequests();
@@ -2645,7 +2685,7 @@ function adGeneral(){
   adminSwap("general"+S.cfgVer,'<div class="adgrid">'+
    '<div class="card adcard"><h3>Helpdesk</h3><p class="muted">How the helpdesk introduces itself, and what new tickets start with.</p><div class="form" style="margin-top:0">'+
      '<label class="full"><span class="lbl">Helpdesk name</span><input class="field" id="g-name" maxlength="40" autocomplete="off"></label>'+
-     '<label class="full"><span class="lbl">Link used when sharing tickets</span><input class="field" id="g-share" type="url" maxlength="500" placeholder="https://claude.ai/artifact/…" autocomplete="off"><span class="muted" style="font-size:12.5px">The address people open the helpdesk at. It\'s added to tickets shared to Teams.</span></label>'+
+     '<label class="full"><span class="lbl">Link used when sharing tickets</span><input class="field" id="g-share" type="url" maxlength="500" placeholder="https://helpdesk.example.com" autocomplete="off"><span class="muted" style="font-size:12.5px">The address people open the helpdesk at. It\'s added to tickets shared to Teams.</span></label>'+
      '<label><span class="lbl">Default ticket ID prefix</span><input class="field" id="g-prefix" maxlength="6" autocomplete="off"></label>'+
      '<div><span class="lbl" style="display:block;margin-bottom:6px">New tickets look like</span><span class="tid" id="g-preview" style="line-height:36px"></span></div>'+
      '<label><span class="lbl">Default severity</span><select class="field" id="g-sev">'+opts(Object.keys(SEV),c.defaults.severity,o=>o+" "+SEV[o].label)+"</select></label>"+
@@ -2778,7 +2818,7 @@ function adAgents(){
       "</div>":"")+"</div>";};
   const add=S.agAdd?'<div class="agedit" style="margin:4px 0 14px">'+
       (S.user?'<div class="full"><span class="lbl" style="display:block;margin-bottom:6px">Someone in your organisation</span><div class="picker"><input class="field" id="staff-q" style="width:100%" placeholder="Search by name" autocomplete="off"><div class="pop" id="staff-pop" hidden></div></div>'+
-        '<p class="muted" style="font-size:12.5px;margin-top:6px">Their name and photo come from their Claude account, and they can clock in and take tickets themselves.</p></div>':"")+
+        '<p class="muted" style="font-size:12.5px;margin-top:6px">Their name and photo come from your sign-in system, and they can clock in and take tickets themselves.</p></div>':"")+
       '<div class="full"><span class="lbl" style="display:block;margin-bottom:6px">'+(S.user?"Or add a name only":"Name")+'</span><div class="addrow" style="margin:0"><input class="field" id="staff-label" placeholder="e.g. Sam Patel" maxlength="60" aria-label="Agent name"><button class="btn dark" data-act="staff-add-label">Add</button></div>'+
         '<p class="muted" style="font-size:12.5px;margin-top:6px">For someone without access yet. Managers clock them in and assign their tickets.</p></div>'+
       '<div class="full note" style="margin:0"><span>Adding someone here doesn\'t give them access. Share this page with them as a <b>Contributor</b> to make them an agent, or as an <b>Editor</b> to make them a manager.</span></div>'+
@@ -3000,7 +3040,7 @@ function renderReports(){
 
 /* ---------- audit ---------- */
 function auditRows(){
-  const a=S.aud,from=a.range?Date.now()-a.range*864e5:0,n=a.text.toLowerCase(),tt=a.type,out=[],other=["customer","staff","settings","shift","request","queue","share"];
+  const a=S.aud,from=a.range?Date.now()-a.range*864e5:0,n=a.text.toLowerCase(),tt=a.type,out=[],other=["customer","staff","settings","shift","request","queue","share","pin"];
   const ok=e=>!(from&&new Date(e.at).getTime()<from)&&!(a.who==="me"&&(!S.meId||e.by!==S.meId));
   if(!other.includes(tt))for(const t of S.tickets){
     if(n&&!(t.id+" "+t.subject+" "+custName(t)).toLowerCase().includes(n))continue;
@@ -3024,6 +3064,7 @@ function eventText(e,html){
   if(e.type==="request"){const p=e.target?w(e.target,null):"Someone";
     return e.action==="created"?p+x(" asked: "+(e.detail||"")):x((e.action==="approved"?"Approved ":"Declined ")+"a request from ")+p+x(": "+(e.detail||""));}
   if(e.type==="settings")return x(e.detail||"Settings changed");
+  if(e.type==="pin")return x(({created:"Pinned: ",updated:"Edited pinned message: ",removed:"Unpinned: "}[e.action]||"")+(e.detail||""));
   return "";
 }
 function renderAudit(){
@@ -3032,7 +3073,7 @@ function renderAudit(){
     (t?'<button class="linkbtn tid" style="border-bottom-color:var(--line)" data-act="goto" data-id="'+esc(t.id)+'">'+esc(t.id)+"</button>"
       :e.type==="share"&&e.ref?'<button class="linkbtn tid" style="border-bottom-color:var(--line)" data-act="goto" data-id="'+esc(e.ref)+'">'+esc(e.ref)+"</button>"
       :e.type==="customer"?'<button class="linkbtn" style="border-bottom-color:var(--line)" data-act="cust-goto" data-cid="'+esc(e.ref||"")+'" data-name="'+esc(e.name||"")+'">'+esc(e.name||"Customer")+"</button>"
-      :'<span class="muted">'+({staff:"Team",shift:"Shift",request:"Request",queue:"Dispatch"}[e.type]||"Settings")+"</span>")+
+      :'<span class="muted">'+({staff:"Team",shift:"Shift",request:"Request",queue:"Dispatch",pin:"Pinned"}[e.type]||"Settings")+"</span>")+
     "</td><td>"+esc(EV_LABEL[e.type]||e.type)+'</td><td class="wrap muted">'+(t?(e.type==="created"?esc(t.subject)+", "+esc(custName(t)):evText(e,true)):eventText(e,true))+"</td></tr>").join("");
   $("a-empty").hidden=rows.length>0;
   $("a-empty").innerHTML=!S.loaded?"Loading":(S.tickets.length||S.events.length)?"<b>No events match these filters</b>Widen the period or clear the search.":"<b>Nothing recorded yet</b>Events appear here as tickets, customers and settings change.";
@@ -3170,7 +3211,7 @@ function exportTickets(){
 }
 function exportAudit(){
   const rows=[["Time (UTC)","Who","Record","Customer","Event","Detail"]];
-  for(const {t,e} of auditRows())rows.push([e.at,whoText(e.by,e.byLabel),t?t.id:e.type==="share"?e.ref||"":e.type==="customer"?e.name||"":({staff:"Team",shift:"Shift",request:"Request",queue:"Dispatch"}[e.type]||"Settings"),t?custName(t):e.type==="customer"?e.name||"":"",
+  for(const {t,e} of auditRows())rows.push([e.at,whoText(e.by,e.byLabel),t?t.id:e.type==="share"?e.ref||"":e.type==="customer"?e.name||"":({staff:"Team",shift:"Shift",request:"Request",queue:"Dispatch",pin:"Pinned"}[e.type]||"Settings"),t?custName(t):e.type==="customer"?e.name||"":"",
     EV_LABEL[e.type]||e.type,t?(e.type==="created"?t.subject:evText(e,false)):eventText(e,false)]);
   save("helpdesk-audit-"+new Date().toISOString().slice(0,10)+".csv",csv(rows));
 }
@@ -3205,7 +3246,7 @@ function renderChrome(){
     (shiftOn?'<div class="grp"><span class="lbl">Shift</span><p style="margin:0 0 8px">'+(on?"Clocked in at "+esc(hm(me.since))+".":"You're clocked out, so you can't take new tickets.")+'</p><button class="btn'+(on?"":" primary")+'" style="width:100%;justify-content:center" data-act="'+(on?"clock-out":"clock-in")+'">'+(on?"Clock out":"Clock in")+"</button></div>":"")+
     (mgr&&db?'<div class="grp"><button class="btn" style="width:100%;justify-content:center" data-act="view" data-v="admin">Open admin</button></div>':"")+
     '<div class="grp"><button class="btn" style="width:100%;justify-content:center" data-act="account">Account settings</button></div>'+
-    '<p class="small">'+(signed?"You're signed in with your Claude account, so there's no separate helpdesk password. To sign out or switch accounts, use the account menu in Claude.":"The helpdesk signs you in with your Claude account. Open it from Claude while signed in to join the shared queue and have changes recorded under your name.")+"</p>";
+    '<p class="small">'+(signed?"You're signed in through your organisation's sign-in, so there's no separate helpdesk password. To sign out or switch accounts, use your sign-in system.":"No sign-in is connected, so changes here aren't recorded under anyone's name.")+"</p>";
   const m=$("m-profile");setHtml(m,h);const mn=$("me-name");if(mn)mn.textContent=S.meName||(signed?"You":"Guest");
   document.querySelectorAll(".x").forEach(b=>{if(!b.firstChild)b.innerHTML=icon("x");});
   ["q-sb","a-sb","cu-sb","h-sb"].forEach(i=>{const e=$(i);if(!e.querySelector("svg"))e.insertAdjacentHTML("afterbegin",icon("search"));});
@@ -3434,6 +3475,15 @@ document.addEventListener("click",e=>{
     case "im-go":runImport();break;
     case "diag-copy":copyDiagnostics();break;
     case "su-skip":setupSkip();break;
+    case "pin-new":openPin(null);break;
+    case "pin-edit":openPin(el.dataset.id);break;
+    case "pin-cancel":closeDlg("pin");break;
+    case "pin-save":savePin();break;
+    case "pin-rm":S.pinRm=el.dataset.id;refresh();break;
+    case "pin-rm-no":S.pinRm=null;refresh();break;
+    case "pin-rm-yes":removePin(el.dataset.id);break;
+    case "pin-more":{const id=el.dataset.id;if(S.pinOpen.has(id))S.pinOpen.delete(id);else S.pinOpen.add(id);refresh();break;}
+    case "pin-hide":try{localStorage.setItem("helpdesk.pinsHidden",localStorage.getItem("helpdesk.pinsHidden")==="1"?"0":"1");}catch(e){}refresh();break;
     case "su-save":setupSave();break;
     case "su-sample":setupSkip();if(typeof loadDemo==="function")loadDemo();break;
     case "su-restore":setupSkip();S.view="admin";S.adTab="access";refresh();break;
@@ -3489,6 +3539,7 @@ document.addEventListener("input",e=>{
   else if(t.id==="f-subject"||t.id==="f-desc"){renderSimilar();}
   else if(t.id&&t.id.startsWith("sf-")&&S.siteForm){S.siteForm.f[t.id.slice(3)]=t.value;}
   else if(t.id==="ag-q"){S.agQ=t.value.trim();renderAdmin();}
+  else if(t.id==="pn-text"){$("pn-count").textContent=t.value.length>800?(1000-t.value.length)+" characters left":"";}
   else if(t.id==="su-prefix"){$("su-prev").textContent=(t.value.trim()||"?").toUpperCase()+"-7K2QM";}
   else if(t.id==="g-prefix"){$("g-preview").textContent=(t.value.trim()||"?").toUpperCase()+"-7K2QM";}
   else if(t.id==="tl-t"){S.tl.text=t.value;}
@@ -3827,7 +3878,7 @@ async function makeBackup(){
     else{tickets=objOf([...S.byId.values()]);events=objOf(S.events);}
     for(const t of S.byId.values())if(!tickets[t.id]){const o=Object.assign({},t);delete o.id;tickets[t.id]=o;}
     const data={format:"helpdesk-backup",formatVersion:1,app:APP_VERSION,exportedAt:new Date().toISOString(),exportedBy:whoText(S.meId,null,"Unknown"),
-      collections:{config:S.cfgExists?{settings:S.cfg}:{},tickets,customers:objOf(S.customers),staff:objOf(S.staff),queues:objOf(S.queues),shifts:objOf(S.shifts),events,
+      collections:{config:S.cfgExists?{settings:S.cfg}:{},tickets,pins:objOf(S.pins),customers:objOf(S.customers),staff:objOf(S.staff),queues:objOf(S.queues),shifts:objOf(S.shifts),events,
         counters:Object.fromEntries(Object.entries(S.counters||{}).map(([k,v])=>{const o=Object.assign({},v);delete o.id;return [k,o];})),
         requests:objOf(S.reqDocs||[]),decisions:Object.assign({},S.decisions||{})}};
     const n=Object.keys(tickets).length;
@@ -3836,8 +3887,8 @@ async function makeBackup(){
   }catch(e){toast("The backup couldn't be made. Try again in a moment.","worried");}
 }
 let RESTORE=null;
-const BK_COLS=["config","customers","staff","queues","shifts","counters","requests","decisions","events","tickets"];
-const BK_NAMES={config:"settings",customers:"customers",staff:"agents",queues:"Dispatch orders",shifts:"shifts",counters:"ID counters",requests:"requests",decisions:"decisions",events:"audit entries",tickets:"tickets"};
+const BK_COLS=["config","pins","customers","staff","queues","shifts","counters","requests","decisions","events","tickets"];
+const BK_NAMES={config:"settings",pins:"pinned messages",customers:"customers",staff:"agents",queues:"Dispatch orders",shifts:"shifts",counters:"ID counters",requests:"requests",decisions:"decisions",events:"audit entries",tickets:"tickets"};
 function readRestore(f){
   if(!isMgr()){toast("Only managers can restore a backup.","worried");return;}
   f.text().then(text=>{
@@ -3922,6 +3973,58 @@ function adSystem(){
    "</div></div>");
 }
 
+/* ---------- pinned messages ---------- */
+function linkify(h){return h.replace(/(https?:\/\/[^\s<]+[^\s<.,;:!?)\]'"])/g,'<a href="$1" target="_blank" rel="noopener noreferrer">$1</a>');}
+function pinsFor(where){
+  const now=Date.now(),mgr=isMgr()&&S.canWrite;
+  return S.pins.filter(p=>(p.show||"both")==="both"||p.show===where)
+    .map(p=>Object.assign({},p,{expired:!!(p.until&&new Date(p.until).getTime()<=now)}))
+    .filter(p=>!p.expired||mgr)
+    .sort((a,b)=>(a.expired-b.expired)||String(b.createdAt||"").localeCompare(String(a.createdAt||"")));
+}
+function renderPins(where){
+  const el=$(where==="queue"?"pins-q":"pins-d");if(!el)return;
+  const mgr=isMgr()&&S.canWrite,list=pinsFor(where);let hidden=false;try{hidden=localStorage.getItem("helpdesk.pinsHidden")==="1";}catch(e){}
+  if(!list.length){setHtml(el,mgr&&S.loaded?'<div class="pin-add">'+icon("tack")+'<span>Nothing pinned.</span><button class="linkbtn" data-act="pin-new">Pin a message for the team</button></div>':"");return;}
+  const live=list.filter(p=>!p.expired).length;
+  const card=p=>{const long=(p.text||"").length>260||(p.text||"").split("\n").length>5,open=S.pinOpen.has(p.id);
+    return '<article class="pin t-'+esc(p.tone||"note")+(p.expired?" expired":"")+(open?" open":"")+'">'+
+      '<div class="ph"><b>'+esc(p.title||"")+"</b>"+(mgr?'<span class="acts">'+(S.pinRm===p.id?'<span class="muted" style="font-size:12.5px">Unpin?</span><button class="linkbtn" data-act="pin-rm-yes" data-id="'+esc(p.id)+'">Yes</button><button class="linkbtn" data-act="pin-rm-no">No</button>'
+        :'<button class="linkbtn" data-act="pin-edit" data-id="'+esc(p.id)+'">Edit</button><button class="linkbtn" data-act="pin-rm" data-id="'+esc(p.id)+'">Unpin</button>')+"</span>":"")+"</div>"+
+      '<div class="tx">'+linkify(esc(p.text||""))+"</div>"+
+      (long?'<button class="linkbtn" style="align-self:flex-start;font-size:12.5px" data-act="pin-more" data-id="'+esc(p.id)+'">'+(open?"Show less":"Show more")+"</button>":"")+
+      '<div class="pm">'+(p.by||p.byLabel?person(p.by,p.byLabel,16):"")+"<span>"+esc(rel(p.updatedAt||p.createdAt))+'</span><span class="sp"></span>'+
+        (p.expired?'<span class="pill">Expired</span>':p.until?"<span>Until "+esc(shortDate(new Date(p.until).getTime()))+"</span>":"")+"</div></article>";};
+  setHtml(el,'<div class="pins-h"><span class="t">'+icon("tack")+'Pinned <span class="num">'+live+'</span></span><span class="sp"></span>'+
+    (mgr?'<button class="btn" style="height:30px" data-act="pin-new">'+icon("plus")+"Pin a message</button>":"")+
+    '<button class="linkbtn" data-act="pin-hide">'+(hidden?"Show":"Hide")+"</button></div>"+
+    (hidden?"":'<div class="pin-grid">'+list.map(card).join("")+"</div>"));
+}
+function openPin(id){
+  if(!isMgr()||!S.canWrite)return;
+  const p=id?S.pins.find(x=>x.id===id):null;S.pinEdit=p?p.id:null;
+  $("pin-h").textContent=p?"Edit pinned message":"Pin a message";$("pn-save").textContent=p?"Save":"Pin it";$("pn-err").textContent="";$("pn-count").textContent="";
+  $("pn-title").value=p?p.title||"":"";$("pn-text").value=p?p.text||"":"";$("pn-tone").value=p?p.tone||"note":"note";
+  $("pn-show").value=p?p.show||"both":(S.view==="dispatch"?"both":"both");$("pn-until").value=p&&p.until?toLocalInput(p.until):"";
+  openDlg("pin");setTimeout(()=>$(p?"pn-text":"pn-title").focus(),30);
+}
+async function savePin(){
+  const title=$("pn-title").value.trim().slice(0,80),text=$("pn-text").value.trim().slice(0,1000),u=$("pn-until").value,err=$("pn-err");err.textContent="";
+  if(!text){err.textContent="Write the message you want to pin.";$("pn-text").focus();return;}
+  let until=null;if(u){const d=new Date(u);if(isNaN(d)){err.textContent="That date isn't valid.";return;}if(d.getTime()<=Date.now()){err.textContent="Choose a time in the future, or leave it empty to keep it pinned.";return;}until=d.toISOString();}
+  const now=new Date().toISOString(),old=S.pinEdit?S.pins.find(x=>x.id===S.pinEdit):null,id=old?old.id:"p"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+  const body=Object.assign({},old||{},{title,text,tone:["note","info","warning","critical"].includes($("pn-tone").value)?$("pn-tone").value:"note",show:["both","queue","dispatch"].includes($("pn-show").value)?$("pn-show").value:"both",until,updatedAt:now},
+    old?{}:Object.assign({createdAt:now},actor()));delete body.id;delete body.expired;
+  $("pn-save").disabled=true;
+  try{await putDoc("pins",id,body);logEvent({type:"pin",action:old?"updated":"created",ref:id,detail:title||text.slice(0,80)});closeDlg("pin");toast(old?"Pinned message updated.":"Pinned for the team.","happy");}
+  catch(e){writeFailed(e);}
+  $("pn-save").disabled=false;
+}
+async function removePin(id){
+  const p=S.pins.find(x=>x.id===id);S.pinRm=null;if(!p){refresh();return;}
+  try{await delDoc("pins",id);logEvent({type:"pin",action:"removed",ref:id,detail:p.title||String(p.text||"").slice(0,80)});toast("Unpinned.","happy");}catch(e){writeFailed(e);}
+}
+
 /* ---------- first-run setup ---------- */
 let setupShown=false;
 function setupSkipped(){try{return localStorage.getItem("helpdesk.setupSkipped")==="1";}catch(e){return false;}}
@@ -3967,7 +4070,7 @@ const BROWSER_DL={browser:true,async save({filename,data}){
 /* ---------- start ---------- */
 refresh();tickFooter();
 (async function boot(){
-  const use=n=>{try{return window.claude&&window.claude.use?window.claude.use(n):Promise.resolve(null);}catch(e){return Promise.resolve(null);}};
+  const use=n=>{try{return window.helpdesk&&window.helpdesk.use?window.helpdesk.use(n):Promise.resolve(null);}catch(e){return Promise.resolve(null);}};
   use("downloads").then(d=>{S.downloads=d||BROWSER_DL;refresh();});
   use("assets").then(a=>{S.assets=a;refresh();});
   const [d,u]=await Promise.all([use("db"),use("user")]);
@@ -3977,7 +4080,7 @@ refresh();tickFooter();
       const cw=await u.can("data.write");if(cw===false)S.canWrite=false;S.isEditor=!!(await u.canEdit());}catch(e){}
   }
   if(P.mine&&S.meId)S.q.assignee="me";
-  if(!d){S.mode="local";S.shifts=loadCol("shifts")||[];S.queues=loadCol("queues")||[];S.customers=loadCol("customers")||[];indexCust();S.staff=loadCol("staff")||[];S.events=loadCol("events")||[];{const lc=loadCol("config");S.cfgExists=!!lc;S.cfgKnown=true;setCfg(lc);}index(loadLocal());refresh();return;}
+  if(!d){S.mode="local";S.pins=loadCol("pins")||[];S.shifts=loadCol("shifts")||[];S.queues=loadCol("queues")||[];S.customers=loadCol("customers")||[];indexCust();S.staff=loadCol("staff")||[];S.events=loadCol("events")||[];{const lc=loadCol("config");S.cfgExists=!!lc;S.cfgKnown=true;setCfg(lc);}index(loadLocal());refresh();return;}
   db=d;col=db.collection("tickets");S.mode="shared";refresh();
   if(S.meId){db.doc("data/users/"+S.meId+"/prefs").get().then(s=>{
     if(!s.exists)return;const startWas=P.start;Object.assign(P,cleanPrefs(s.data()));applyPrefs();
@@ -3988,6 +4091,7 @@ refresh();tickFooter();
   const docs=sn=>sn.docs.map(x=>Object.assign({},x.data(),{id:x.id}));
   db.collection("customers").onSnapshot(sn=>{S.customers=docs(sn);indexCust();if(S.selCust&&!S.custById.has(S.selCust))S.selCust=null;refresh();},()=>{});
   db.collection("counters").onSnapshot(sn=>{const o={};for(const d of docs(sn))o[d.id]=d;S.counters=o;},()=>{});
+  db.collection("pins").onSnapshot(sn=>{S.pins=docs(sn);if(S.view==="queue"||S.view==="dispatch")refresh();},()=>{});
   db.collection("queues").onSnapshot(sn=>{S.queues=docs(sn);if(S.view==="dispatch"||S.view==="mine")refresh();},()=>{});
   db.collection("requests").onSnapshot(sn=>{S.reqDocs=docs(sn);noticeChanges();refresh();},()=>{});
   db.collection("decisions").onSnapshot(sn=>{const o={};for(const x of sn.docs)o[x.id]=x.data();S.decisions=o;noticeChanges();refresh();},()=>{});
