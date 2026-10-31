@@ -1462,7 +1462,7 @@ function custField(k,v){
     if(k==="priority"){if(v===c.priority)return null;return {changes:{priority:v},event:{action:"updated",detail:"Priority "+(TIERS[c.priority]||"Normal")+" → "+TIERS[v]}};}
     if(k==="allHours"){const b=v==="1";if(b===!!c.allHours)return null;return {changes:{allHours:b},event:{action:"updated",detail:b?"Support hours set to 24/7":"Support hours set to working hours"}};}
     if(k==="idPrefix"){v=v.trim().toUpperCase();if(v===(c.idPrefix||""))return null;
-      if(v&&!/^[A-Z0-9]{1,6}$/.test(v)){toast("The prefix can be 1 to 6 letters or numbers, like FAI.","worried");return null;}
+      if(v&&!/^[A-Z0-9]{1,6}$/.test(v)){toast("The prefix can be 1 to 6 letters or numbers, like HD.","worried");return null;}
       const dup=v&&S.customers.find(x=>x.id!==c.id&&(x.idPrefix||"")===v);if(dup){toast(dup.name+" already uses "+v+". Each customer needs its own prefix.","worried");return null;}
       return {changes:{idPrefix:v||null},event:{action:"updated",detail:v?"Ticket ID prefix "+(c.idPrefix?c.idPrefix+" → ":"set to ")+v:"Ticket ID prefix removed"}};}
     if(k==="idStart"){if(!c.idPrefix)return null;const n=parseInt(String(v).trim(),10);
@@ -2006,10 +2006,10 @@ function renderCustPanel(el){
     '<label style="grid-column:1/-1"><span class="lbl">Name</span><input class="field" id="cf-name" data-cf="name" maxlength="80" autocomplete="off"'+ro+"></label>"+
     '<label><span class="lbl">Customer priority</span><select class="field" id="cf-pri" data-cf="priority"'+ro+">"+opts(Object.keys(TIERS),c.priority||"N",k=>k+", "+TIERS[k])+"</select></label>"+
     '<label><span class="lbl">Support hours</span><select class="field" id="cf-hrs" data-cf="allHours"'+ro+'><option value="">Working hours</option><option value="1"'+(c.allHours?" selected":"")+">Around the clock (24/7)</option></select></label>"+
-    '<label><span class="lbl">Ticket ID prefix</span><input class="field" id="cf-pre" data-cf="idPrefix" maxlength="6" placeholder="e.g. FAI" autocomplete="off" style="text-transform:uppercase"'+ro+"></label>"+
+    '<label><span class="lbl">Ticket ID prefix</span><input class="field" id="cf-pre" data-cf="idPrefix" maxlength="6" placeholder="e.g. HD" autocomplete="off" style="text-transform:uppercase"'+ro+"></label>"+
     '<label><span class="lbl">Next ticket number</span><input class="field" id="cf-start" data-cf="idStart" inputmode="numeric" maxlength="7" autocomplete="off"'+(c.idPrefix?"":" disabled")+ro+"></label>"+
     '<p class="muted" style="grid-column:1/-1;font-size:12.5px;margin-top:-6px">'+(c.idPrefix?"New tickets for this customer are numbered <b class=\"tid\">"+esc(c.idPrefix+nextIdNum(c))+"</b>, <b class=\"tid\">"+esc(c.idPrefix+(nextIdNum(c)+1))+"</b> and so on. Existing tickets keep their IDs."
-      :"Leave blank to use the workspace prefix ("+esc(S.cfg.idPrefix)+"-…). Set one, like FAI, to number this customer's tickets FAI1, FAI2 and so on.")+"</p>"+
+      :"Leave blank to use the workspace prefix ("+esc(S.cfg.idPrefix)+"-…). Set one, like HD, to number this customer's tickets HD1, HD2 and so on.")+"</p>"+
     '<div style="grid-column:1/-1"><span class="lbl" style="display:block;margin-bottom:6px">Resolution targets in hours</span><div class="slagrid">'+
       Object.keys(SEV).map(k=>'<label><span class="lbl">'+k+'</span><input class="field" id="cs-'+k+'" inputmode="decimal" data-cs="'+k+'" placeholder="'+S.cfg.targets[k].hours+'"'+ro+"></label>").join("")+
       '</div><span class="muted" style="font-size:12.5px">Leave blank to use the workspace default shown in grey.</span></div>'+
