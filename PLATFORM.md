@@ -3,15 +3,15 @@
 `index.html` never talks to a server directly. Everything it needs from its host goes through one function:
 
 ```js
-const db = await window.claude.use("db");   // "db" | "user" | "assets" | "downloads"
+const db = await window.helpdesk.use("db");   // "db" | "user" | "assets" | "downloads"
 ```
 
-(The name comes from where the app started, as a Claude artifact; nothing else about it is Claude-specific.) To run helpdesk on your own infrastructure, load a small script **before** the app's own script that defines `window.claude.use` and returns objects with the interfaces below, backed by your own API. Nothing else in the page needs to change to get a working, shared, signed-in system. If `use()` returns `null` for a capability, the page degrades gracefully (with no `db`, it falls back to single-browser mode).
+To run helpdesk on your own infrastructure, load a small script **before** the app's own script that defines `window.helpdesk.use` and returns objects with the interfaces below, backed by your own API. Nothing else in the page needs to change to get a working, shared, signed-in system. If `use()` returns `null` for a capability, the page degrades gracefully (with no `db`, it falls back to single-browser mode).
 
 `index.html` has a commented-out tag in `<head>` ready for this:
 
 ```html
-<script src="platform.js"></script>   <!-- your adapter, defines window.claude.use -->
+<script src="platform.js"></script>   <!-- your adapter, defines window.helpdesk.use -->
 ```
 
 **Start from [`platform.example.js`](platform.example.js).** It's a complete adapter that keeps data in the browser and syncs between tabs, with every part you need to replace marked `REPLACE`. Then open [`adapter-test.html`](adapter-test.html) to check your adapter does everything below. [`DEPLOYMENT.md`](DEPLOYMENT.md) walks through the whole process.
@@ -47,6 +47,7 @@ Errors are rejected as `{code, message}` with `code` one of `invalid_argument` (
 | `events/{id}` | Audit entries for non-ticket changes | Agents and managers (append only) |
 | `config/settings` | Workspace settings: teams, categories, hours, SLA, rules, email templates | Managers only |
 | `staff/{id}` | Agent records: teams, title, availability, photo, Office 365 address | Managers only |
+| `pins/{id}` | Messages managers pin to the top of the Queue and Dispatch | Managers only (everyone reads) |
 | `queues/{key}` | Manual Dispatch order per agent | Managers only |
 | `shifts/{key}` | Clock-in state | Managers; each person their own (`shifts/{uid}`) |
 | `requests/{uid}` | An agent's requests to managers | Each agent their own; only managers read all |
@@ -73,11 +74,12 @@ Admin → Access and data → **Download full backup** writes one JSON file:
 {
   "format": "helpdesk-backup",
   "formatVersion": 1,
-  "app": "1.0.0",
+  "app": "1.1.0",
   "exportedAt": "2026-10-31T09:00:00.000Z",
   "exportedBy": "Morgan Manager",
   "collections": {
     "config":   { "settings": { } },
+    "pins":     { "<id>": { } },
     "tickets":  { "<id>": { } },
     "customers": { }, "staff": { }, "queues": { }, "shifts": { },
     "events": { }, "counters": { }, "requests": { }, "decisions": { }
