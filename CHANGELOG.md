@@ -2,6 +2,18 @@
 
 Notable changes to helpdesk. Versions follow [semantic versioning](https://semver.org): a new major version means something needs action when you update, so read its notes first.
 
+## 1.1.0 (2026-10-31)
+
+### Added
+
+- **Pinned messages.** Managers can pin notes to the top of the Queue, Dispatch or both, with a style (note, information, warning, critical) and an optional time to unpin automatically. Everyone can hide the pinned strip for themselves. Pins are stored in a new `pins` collection (managers write, everyone reads), included in backups, and recorded in the audit log.
+
+### Changed
+
+- **The adapter hook is now `window.helpdesk.use`.
+- Wording throughout the app now refers to "your organisation's sign-in" rather than a specific platform.
+- Without a backend, the "saved in this browser only" banner is gone; the footer still shows "This browser only".
+
 ## 1.0.0 (2026-10-31)
 
 First public release.
