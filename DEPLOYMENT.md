@@ -12,7 +12,7 @@ The page connects to your backend through a small adapter script, `platform.js`.
  browser                                   your systems
 ┌──────────────────────────────┐         ┌──────────────────────────┐
 │ index.html (the app)         │         │ API + database           │
-│   ↓ window.claude.use("db")  │  HTTPS  │ live updates (WebSocket) │
+│ ↓ window.helpdesk.use("db")  │  HTTPS  │ live updates (WebSocket) │
 │ platform.js (your adapter) ──┼────────►│ sign-in (OIDC / SAML)    │
 └──────────────────────────────┘         │ file storage (/_blob/)   │
                                          └──────────────────────────┘
