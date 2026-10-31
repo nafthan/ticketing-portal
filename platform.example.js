@@ -1,7 +1,7 @@
 /*
  * helpdesk platform adapter: starter and reference implementation
  * ---------------------------------------------------------------
- * The helpdesk page reaches its backend only through `window.claude.use(name)`,
+ * The helpdesk page reaches its backend only through `window.helpdesk.use(name)`,
  * which returns four services: "db", "user", "assets" and "downloads".
  * PLATFORM.md describes exactly what each must do.
  *
@@ -65,7 +65,7 @@
     const [col, id, sub] = path.split("/");
     if (col === "data") return id === "users" && sub === user.id; // data/users/{uid}/prefs: owner only
     if (user.role === "manager") return true;
-    if (["config", "staff", "queues", "decisions"].includes(col)) return false;
+    if (["config", "staff", "queues", "decisions", "pins"].includes(col)) return false;
     if (col === "shifts" || col === "requests") return id === user.id; // agents: their own only
     return true; // tickets, customers, events, counters, _adaptertest
   }
@@ -294,7 +294,7 @@
 
   /* ---------------------------------------------------------------------- */
   const services = { db, user, assets, downloads };
-  window.claude = Object.assign(window.claude || {}, {
+  window.helpdesk = Object.assign(window.helpdesk || {}, {
     use: async (name) => (Object.prototype.hasOwnProperty.call(services, name) ? services[name] : null),
   });
 })();
