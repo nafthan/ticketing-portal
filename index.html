@@ -466,6 +466,17 @@ dialog.dlg.mid{width:min(680px,calc(100vw - 32px))}
 .kv>dd{margin:0;overflow-wrap:anywhere}
 .secnote{background:var(--bg);border-radius:12px;padding:14px 16px;line-height:1.5;margin-bottom:12px}
 .secnote b{display:block;font-weight:600;margin-bottom:4px}
+.su-m svg{width:64px;height:auto;display:block}
+.svc{display:grid;grid-template-columns:22px 150px 1fr;gap:10px;align-items:start;padding:10px 0;border-top:1px solid var(--line)}
+.svc:first-of-type{border-top:0}
+.svc .ok{color:var(--good);font-weight:700}.svc .no{color:var(--faint);font-weight:700}.svc .wn{color:var(--amber);font-weight:700}
+.svc .muted{font-size:12.5px}
+.imp-tbl{max-height:240px;overflow:auto;border:1px solid var(--line);border-radius:10px;margin-top:12px}
+.imp-tbl table{font-size:12.5px;width:100%}.imp-tbl td,.imp-tbl th{padding:6px 10px;white-space:normal;min-width:0}
+.imp-sum{display:flex;gap:10px;flex-wrap:wrap;margin:6px 0 4px}
+.imp-warn{font-size:12.5px;color:var(--amber);margin-top:8px;line-height:1.5}
+.bk-prog{height:8px;border-radius:99px;background:var(--well);overflow:hidden;margin-top:14px}.bk-prog i{display:block;height:100%;background:var(--accent);width:0;transition:width .2s}
+@media (max-width:640px){.svc{grid-template-columns:22px 1fr}.svc>:last-child{grid-column:2}}
 .dot.bad{background:var(--warn)}
 .conn.down{color:var(--warn);font-weight:500}
 @media (max-width:640px){.kv{grid-template-columns:1fr}.kv>dt{border-bottom:0;padding-bottom:0}.menu.wide{width:calc(100vw - 32px)}}
@@ -615,7 +626,7 @@ td.r,th.r{text-align:right}
 }
 @media (max-width:820px){
   .bar-in{padding:0 16px;gap:12px;flex-wrap:wrap}
-  nav.tabs{order:3;width:100%;padding-bottom:10px}
+  nav.tabs{order:3;width:100%;padding-bottom:10px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}nav.tabs::-webkit-scrollbar{display:none}
   main{padding:24px 16px 72px}
   .conn span:last-child,.c-asg,.c-id{display:none}
   .grid2{grid-template-columns:minmax(0,1fr)}
@@ -626,6 +637,10 @@ td.r,th.r{text-align:right}
 @media (max-width:560px){.c-sla,.lg{display:none}td.wrap{min-width:200px}td,th{padding-left:10px;padding-right:10px}.sm{display:inline-flex}.btn.primary.new{padding:0 10px}}
 @media (prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 </style>
+<!-- To share one helpdesk across a team, load your backend adapter here, before the app script.
+     Start from platform.example.js and see DEPLOYMENT.md.
+<script src="platform.js"></script>
+-->
 </head>
 <body>
 <header class="bar"><div class="bar-in">
@@ -832,7 +847,7 @@ td.r,th.r{text-align:right}
   <section id="v-admin" hidden>
     <div class="pagehead"><div><h1>Admin</h1><p>Settings for the whole helpdesk. Only managers can see this page.</p></div></div>
     <div class="seg" id="ad-tabs" role="group" aria-label="Admin sections">
-      <button data-act="ad-tab" data-t="general">General</button><button data-act="ad-tab" data-t="requests" id="ad-req-tab">Requests</button><button data-act="ad-tab" data-t="agents">Agents</button><button data-act="ad-tab" data-t="teams">Teams</button><button data-act="ad-tab" data-t="shifts">Shifts</button><button data-act="ad-tab" data-t="rules">Rules</button><button data-act="ad-tab" data-t="routing">Auto-assign</button><button data-act="ad-tab" data-t="emails">Emails</button><button data-act="ad-tab" data-t="lists">Categories</button><button data-act="ad-tab" data-t="hours">Hours and SLA</button><button data-act="ad-tab" data-t="access">Access and data</button>
+      <button data-act="ad-tab" data-t="general">General</button><button data-act="ad-tab" data-t="requests" id="ad-req-tab">Requests</button><button data-act="ad-tab" data-t="agents">Agents</button><button data-act="ad-tab" data-t="teams">Teams</button><button data-act="ad-tab" data-t="shifts">Shifts</button><button data-act="ad-tab" data-t="rules">Rules</button><button data-act="ad-tab" data-t="routing">Auto-assign</button><button data-act="ad-tab" data-t="emails">Emails</button><button data-act="ad-tab" data-t="lists">Categories</button><button data-act="ad-tab" data-t="hours">Hours and SLA</button><button data-act="ad-tab" data-t="access">Access and data</button><button data-act="ad-tab" data-t="system">System</button>
     </div>
     <div id="ad-body" style="margin-top:12px"></div>
   </section>
@@ -923,6 +938,34 @@ td.r,th.r{text-align:right}
   </div>
 </dialog>
 
+<dialog class="dlg mid" id="bk" aria-labelledby="bk-h">
+  <div class="d-top"><span class="lbl" id="bk-k"></span><button class="x" data-act="bk-cancel" aria-label="Close"></button></div>
+  <h2 id="bk-h"></h2>
+  <div id="bk-body"></div>
+  <div class="err" id="bk-err"></div>
+  <div class="actions" style="margin-top:18px" id="bk-acts"></div>
+</dialog>
+
+<dialog class="dlg mid" id="su" aria-labelledby="su-h">
+  <div class="d-top"><span class="lbl">Welcome</span><button class="x" data-act="su-skip" aria-label="Close"></button></div>
+  <div style="display:flex;gap:14px;align-items:center;margin-bottom:6px"><span class="su-m" id="su-m"></span><h2 id="su-h" style="margin:0">Let's set up your helpdesk</h2></div>
+  <p class="muted">A few basics so the first tickets land in the right place. You can change all of this later in Admin.</p>
+  <div class="form" style="margin-top:14px">
+    <label><span class="lbl">Helpdesk name</span><input class="field" id="su-name" maxlength="40" autocomplete="off"></label>
+    <label><span class="lbl">Ticket ID prefix</span><input class="field" id="su-prefix" maxlength="6" autocomplete="off"><span class="muted" style="font-size:12.5px">Tickets look like <span class="tid" id="su-prev"></span></span></label>
+    <label><span class="lbl">Teams, one per line</span><textarea class="field" id="su-teams" rows="5"></textarea></label>
+    <label><span class="lbl">Categories, one per line</span><textarea class="field" id="su-cats" rows="5"></textarea></label>
+    <label><span class="lbl">Time zone</span><select class="field" id="su-tz"></select></label>
+    <div><span class="lbl" style="display:block;margin-bottom:6px">Working hours</span><div style="display:flex;gap:8px;align-items:center"><input class="field" type="time" id="su-start" style="width:120px" aria-label="Start"><span class="muted">to</span><input class="field" type="time" id="su-end" style="width:120px" aria-label="End"></div></div>
+    <div class="full"><span class="lbl" style="display:block;margin-bottom:6px">Working days</span><div class="daypick" id="su-days"></div></div>
+    <div class="full err" id="su-err"></div>
+  </div>
+  <div class="actions" style="margin-top:18px;justify-content:space-between;flex-wrap:wrap">
+    <span style="display:flex;gap:14px;flex-wrap:wrap"><button class="linkbtn" data-act="su-restore">Restore a backup instead</button><button class="linkbtn" data-act="su-sample" id="su-sample" hidden>Explore with sample data</button></span>
+    <span style="display:flex;gap:10px"><button class="btn" data-act="su-skip">Skip for now</button><button class="btn primary" data-act="su-save">Save and start</button></span>
+  </div>
+</dialog>
+
 <dialog class="dlg narrow" id="co" aria-labelledby="co-h">
   <div class="d-top"><span class="lbl">Clock out</span><button class="x" data-act="co-cancel" aria-label="Close"></button></div>
   <h2 id="co-h">Before you go</h2>
@@ -958,6 +1001,7 @@ const ACTIVE=new Set(["new","open","pending"]);
 const TEAMS=["Service desk","Networking","Security","Infrastructure"];
 const CATEGORIES=["Access and accounts","Hardware","Software","Email","Network","VPN and remote access","Firewall","Security incident","Phishing","Endpoint and malware","Backup and recovery","Servers and cloud"];
 const EV_LABEL={created:"Ticket opened",status:"Status changed",severity:"Severity changed",assignee:"Assignment changed",team:"Team changed",category:"Category changed",note:"Note or time",channel:"Channel changed",timeline:"Incident timeline",customer:"Customer record",staff:"Team",settings:"Settings",shift:"Shift",request:"Request",queue:"Dispatch order",share:"Shared",email:"Email"};
+const APP_VERSION="1.0.0";
 const LS_KEY="helpdesk.local.v1",LS_PREF="helpdesk.prefs.v1";
 const SKINS=[["daylight","Daylight","#F4F6FA","#2F5BEA","light"],["peach","Peach","#FFF1E3","#C2255C","light"],["matcha","Matcha","#EFF4E1","#2F6B3A","light"],["cocoa","Cocoa","#1E1512","#FF8FAB","dark"],["midnight","Midnight","#101010","#ee6018","dark"]];
 const skinKind=id=>(SKINS.find(s=>s[0]===id)||[])[4];
@@ -1462,7 +1506,7 @@ function custField(k,v){
     if(k==="priority"){if(v===c.priority)return null;return {changes:{priority:v},event:{action:"updated",detail:"Priority "+(TIERS[c.priority]||"Normal")+" → "+TIERS[v]}};}
     if(k==="allHours"){const b=v==="1";if(b===!!c.allHours)return null;return {changes:{allHours:b},event:{action:"updated",detail:b?"Support hours set to 24/7":"Support hours set to working hours"}};}
     if(k==="idPrefix"){v=v.trim().toUpperCase();if(v===(c.idPrefix||""))return null;
-      if(v&&!/^[A-Z0-9]{1,6}$/.test(v)){toast("The prefix can be 1 to 6 letters or numbers, like HD.","worried");return null;}
+      if(v&&!/^[A-Z0-9]{1,6}$/.test(v)){toast("The prefix can be 1 to 6 letters or numbers, like FAI.","worried");return null;}
       const dup=v&&S.customers.find(x=>x.id!==c.id&&(x.idPrefix||"")===v);if(dup){toast(dup.name+" already uses "+v+". Each customer needs its own prefix.","worried");return null;}
       return {changes:{idPrefix:v||null},event:{action:"updated",detail:v?"Ticket ID prefix "+(c.idPrefix?c.idPrefix+" → ":"set to ")+v:"Ticket ID prefix removed"}};}
     if(k==="idStart"){if(!c.idPrefix)return null;const n=parseInt(String(v).trim(),10);
@@ -1637,7 +1681,7 @@ async function saveCfg(next){
   if(a.requireShift!==b.requireShift)ch.push(b.requireShift?"Clock-in required to take tickets":"Clock-in no longer required");
   if(!ch.length){toast("Nothing has changed.");return;}
   try{if(db)await withRetry(()=>db.doc("config/settings").set(b));else saveCol("config",b);
-    setCfg(b);logEvent({type:"settings",detail:ch.join("; ")});refresh();toast("Saved.","happy");}
+    S.cfgExists=true;setCfg(b);logEvent({type:"settings",detail:ch.join("; ")});refresh();toast("Saved.","happy");}
   catch(e){toast(e&&e.code==="invalid_argument"?"Only managers can change these settings.":"Settings weren't saved. Check your connection and try again.","worried");}
 }
 /* ---------- queue ---------- */
@@ -2006,10 +2050,10 @@ function renderCustPanel(el){
     '<label style="grid-column:1/-1"><span class="lbl">Name</span><input class="field" id="cf-name" data-cf="name" maxlength="80" autocomplete="off"'+ro+"></label>"+
     '<label><span class="lbl">Customer priority</span><select class="field" id="cf-pri" data-cf="priority"'+ro+">"+opts(Object.keys(TIERS),c.priority||"N",k=>k+", "+TIERS[k])+"</select></label>"+
     '<label><span class="lbl">Support hours</span><select class="field" id="cf-hrs" data-cf="allHours"'+ro+'><option value="">Working hours</option><option value="1"'+(c.allHours?" selected":"")+">Around the clock (24/7)</option></select></label>"+
-    '<label><span class="lbl">Ticket ID prefix</span><input class="field" id="cf-pre" data-cf="idPrefix" maxlength="6" placeholder="e.g. HD" autocomplete="off" style="text-transform:uppercase"'+ro+"></label>"+
+    '<label><span class="lbl">Ticket ID prefix</span><input class="field" id="cf-pre" data-cf="idPrefix" maxlength="6" placeholder="e.g. FAI" autocomplete="off" style="text-transform:uppercase"'+ro+"></label>"+
     '<label><span class="lbl">Next ticket number</span><input class="field" id="cf-start" data-cf="idStart" inputmode="numeric" maxlength="7" autocomplete="off"'+(c.idPrefix?"":" disabled")+ro+"></label>"+
     '<p class="muted" style="grid-column:1/-1;font-size:12.5px;margin-top:-6px">'+(c.idPrefix?"New tickets for this customer are numbered <b class=\"tid\">"+esc(c.idPrefix+nextIdNum(c))+"</b>, <b class=\"tid\">"+esc(c.idPrefix+(nextIdNum(c)+1))+"</b> and so on. Existing tickets keep their IDs."
-      :"Leave blank to use the workspace prefix ("+esc(S.cfg.idPrefix)+"-…). Set one, like HD, to number this customer's tickets HD1, HD2 and so on.")+"</p>"+
+      :"Leave blank to use the workspace prefix ("+esc(S.cfg.idPrefix)+"-…). Set one, like FAI, to number this customer's tickets FAI1, FAI2 and so on.")+"</p>"+
     '<div style="grid-column:1/-1"><span class="lbl" style="display:block;margin-bottom:6px">Resolution targets in hours</span><div class="slagrid">'+
       Object.keys(SEV).map(k=>'<label><span class="lbl">'+k+'</span><input class="field" id="cs-'+k+'" inputmode="decimal" data-cs="'+k+'" placeholder="'+S.cfg.targets[k].hours+'"'+ro+"></label>").join("")+
       '</div><span class="muted" style="font-size:12.5px">Leave blank to use the workspace default shown in grey.</span></div>'+
@@ -2590,7 +2634,7 @@ function adminSwap(sig,html,after){
 }
 function renderAdmin(){
   document.querySelectorAll("#ad-tabs button").forEach(b=>b.setAttribute("aria-pressed",String(S.adTab===b.dataset.t)));
-  ({routing:adRouting,emails:adEmails,general:adGeneral,requests:adRequests,agents:adAgents,teams:adTeamsTab,shifts:adShifts,rules:adRules,lists:adLists,hours:adHours,access:adAccess}[S.adTab]||adGeneral)();
+  ({routing:adRouting,emails:adEmails,general:adGeneral,requests:adRequests,agents:adAgents,teams:adTeamsTab,shifts:adShifts,rules:adRules,lists:adLists,hours:adHours,access:adAccess,system:adSystem}[S.adTab]||adGeneral)();
 }
 function shiftCell(m){const sh=shiftOf(m.uid,m.label),on=!!(sh&&sh.on);
   return '<span>'+(on?'<span class="pill on">On since '+esc(hm(sh.since))+"</span>":'<span class="pill">Off shift</span>')+"</span>"+
@@ -2827,11 +2871,19 @@ function adHours(){
 function adAccess(){
   const n=S.tickets.filter(t=>t.sample).length+S.customers.filter(c=>c.sample).length+S.staff.filter(m=>m.sample).length;
   adminSwap("access"+n+S.confirmSample+!!S.downloads,
-    '<div class="card adcard" style="margin-bottom:20px"><h3>Who can do what</h3><p class="muted">Roles come from the Share menu for this page, so there are no separate helpdesk accounts to manage.</p><div class="roles">'+
-      '<div><b>Manager</b><span class="muted" style="font-size:12.5px">Editor or Owner in Share</span><ul><li>Everything agents can do</li><li>Assign and reassign tickets to anyone on shift</li><li>Clock others in or out</li><li>Change the team, lists, hours and SLA targets</li></ul></div>'+
-      '<div><b>Agent</b><span class="muted" style="font-size:12.5px">Contributor in Share</span><ul><li>Clock in and out</li><li>Take unassigned tickets while on shift, and hand back their own</li><li>Work tickets, log time and notes</li><li>Manage customers and contacts</li></ul></div>'+
-      '<div><b>Viewer</b><span class="muted" style="font-size:12.5px">Viewer or Commenter in Share</span><ul><li>See the queue, reports and audit log</li><li>No changes</li></ul></div></div></div>'+
-    (S.downloads?'<div class="card adcard" style="margin-bottom:20px"><h3>Export</h3><p class="muted">CSV files for backups or billing.</p><div class="actions"><button class="btn" data-act="export-tickets">Tickets</button><button class="btn" data-act="export-time">Time entries</button><button class="btn" data-act="export-audit">Audit log</button></div></div>':"")+
+    '<div class="card adcard" style="margin-bottom:20px"><h3>Who can do what</h3><p class="muted">Roles come from your sign-in system, so there are no separate helpdesk accounts to manage. Whoever hosts the helpdesk maps people to these three roles.</p><div class="roles">'+
+      '<div><b>Manager</b><span class="muted" style="font-size:12.5px">Runs the helpdesk</span><ul><li>Everything agents can do</li><li>Assign and reassign tickets to anyone on shift</li><li>Clock others in or out</li><li>Change the team, lists, hours and SLA targets</li></ul></div>'+
+      '<div><b>Agent</b><span class="muted" style="font-size:12.5px">Works tickets</span><ul><li>Clock in and out</li><li>Take unassigned tickets while on shift, and hand back their own</li><li>Work tickets, log time and notes</li><li>Manage customers and contacts</li></ul></div>'+
+      '<div><b>Viewer</b><span class="muted" style="font-size:12.5px">Read only</span><ul><li>See the queue, reports and audit log</li><li>No changes</li></ul></div></div></div>'+
+    '<div class="adgrid" style="margin-bottom:20px">'+
+    '<div class="card adcard"><h3>Backup and restore</h3><p class="muted">One file with every ticket, customer, agent, setting and audit entry. Keep one before upgrading, or use it to move to another server.</p>'+
+      '<div class="actions" style="justify-content:flex-start"><button class="btn dark" data-act="bk-make">Download full backup</button><label class="btn" style="cursor:pointer">Restore from backup<input type="file" accept=".json,application/json" data-act-file="restore" hidden></label></div>'+
+      '<p class="muted" style="font-size:12.5px;margin-top:10px">Restoring adds records and replaces ones with the same ID. Anything not in the file is left alone.</p></div>'+
+    '<div class="card adcard"><h3>Import from a spreadsheet</h3><p class="muted">Bring customers, contacts and old tickets across from another system as CSV. You\'ll see a preview before anything is saved.</p>'+
+      '<div class="lrow"><span class="nm" style="flex:1">Customers and contacts</span><button class="linkbtn" data-act="imp-tpl" data-k="customers">Template</button><label class="btn" style="cursor:pointer">Choose CSV<input type="file" accept=".csv,text/csv" data-act-file="imp-customers" hidden></label></div>'+
+      '<div class="lrow"><span class="nm" style="flex:1">Tickets</span><button class="linkbtn" data-act="imp-tpl" data-k="tickets">Template</button><label class="btn" style="cursor:pointer">Choose CSV<input type="file" accept=".csv,text/csv" data-act-file="imp-tickets" hidden></label></div></div>'+
+    "</div>"+
+    '<div class="card adcard" style="margin-bottom:20px"><h3>Export</h3><p class="muted">CSV files for reporting or billing.</p><div class="actions" style="justify-content:flex-start"><button class="btn" data-act="export-tickets">Tickets</button><button class="btn" data-act="export-time">Time entries</button><button class="btn" data-act="export-audit">Audit log</button><button class="btn" data-act="export-history">Closed tickets</button></div></div>'+
     (n?'<div class="card adcard"><h3>Sample data</h3><p class="muted">'+n+' sample tickets, customers and team members are loaded. Removing them can\'t be undone.</p><div class="actions">'+
       (S.confirmSample?'<button class="btn dark" data-act="sample-yes">Remove sample data</button><button class="btn" data-act="sample-no">Keep it</button>':'<button class="btn" data-act="sample-ask">Remove sample data</button>')+"</div></div>":""));
 }
@@ -3174,6 +3226,7 @@ function refresh(){
   ({queue:renderQueue,mine:renderMine,dispatch:renderDispatch,history:renderHistory,customers:renderCustomers,admin:renderAdmin,reports:renderReports,audit:renderAudit})[S.view]();
   renderDetail();
   hydrate();
+  maybeSetup();
 }
 function setView(v){S.view=v;refresh();window.scrollTo(0,0);}
 function openTicket(id){S.noteMin="";S.noteBill=true;S.tl={text:"",phase:"",at:""};S.noteDraft="";S.noteInternal=P.noteInternal;S.sel=id;detailSig="";refresh();}
@@ -3374,6 +3427,17 @@ document.addEventListener("click",e=>{
     case "export-tickets":exportTickets();break;
     case "export-audit":exportAudit();break;
     case "export-history":exportHistory();break;
+    case "bk-make":el.disabled=true;makeBackup().finally(()=>{el.disabled=false;});break;
+    case "bk-go":runRestore();break;
+    case "bk-cancel":case "im-cancel":closeDlg("bk");break;
+    case "imp-tpl":importTemplate(el.dataset.k);break;
+    case "im-go":runImport();break;
+    case "diag-copy":copyDiagnostics();break;
+    case "su-skip":setupSkip();break;
+    case "su-save":setupSave();break;
+    case "su-sample":setupSkip();if(typeof loadDemo==="function")loadDemo();break;
+    case "su-restore":setupSkip();S.view="admin";S.adTab="access";refresh();break;
+    case "su-day":el.setAttribute("aria-pressed",String(el.getAttribute("aria-pressed")!=="true"));break;
     case "hist-more":S.hist.limit+=150;refresh();break;
     case "hist-older":loadOlderClosed();break;
     case "hist-clear":Object.assign(S.hist,{text:"",customer:"",category:"",who:"",sev:"",range:0,limit:150});$("h-text").value="";refresh();break;
@@ -3387,6 +3451,8 @@ document.addEventListener("change",e=>{
   if(t.dataset.cf&&S.selCust){custField(t.dataset.cf,t.value);return;}
   if(t.dataset.cs&&S.selCust){custSla(t.dataset.cs,t.value);return;}
   if(t.dataset.sf){const m=S.staff.find(x=>x.id===t.dataset.sid);if(m)updateStaff(m,t.dataset.sf,t.type==="checkbox"?t.checked:t.value);return;}
+  if(t.dataset.actFile==="restore"){const f=t.files&&t.files[0];t.value="";if(f)readRestore(f);return;}
+  if(t.dataset.actFile==="imp-customers"||t.dataset.actFile==="imp-tickets"){const f=t.files&&t.files[0],k=t.dataset.actFile.slice(4);t.value="";if(f)readImport(k,f);return;}
   if(t.dataset.actFile==="logo"){uploadLogo(t.files&&t.files[0]);t.value="";return;}
   if(t.dataset.actFile==="agphoto"){uploadStaffPhoto(S.staff.find(x=>x.id===t.dataset.sid),t.files&&t.files[0]);t.value="";return;}
   if(t.dataset.actFile==="myphoto"){uploadStaffPhoto(staffOf(S.meId),t.files&&t.files[0]);t.value="";return;}
@@ -3423,6 +3489,7 @@ document.addEventListener("input",e=>{
   else if(t.id==="f-subject"||t.id==="f-desc"){renderSimilar();}
   else if(t.id&&t.id.startsWith("sf-")&&S.siteForm){S.siteForm.f[t.id.slice(3)]=t.value;}
   else if(t.id==="ag-q"){S.agQ=t.value.trim();renderAdmin();}
+  else if(t.id==="su-prefix"){$("su-prev").textContent=(t.value.trim()||"?").toUpperCase()+"-7K2QM";}
   else if(t.id==="g-prefix"){$("g-preview").textContent=(t.value.trim()||"?").toUpperCase()+"-7K2QM";}
   else if(t.id==="tl-t"){S.tl.text=t.value;}
   else if(t.id==="cu-text"){S.cuText=t.value.trim();refresh();}
@@ -3561,11 +3628,347 @@ function loadDemo(){
   S.staff=d.staff;saveCol("staff",S.staff);
   index(d.tickets);saveLocal();refresh();toast("Sample data loaded. Remove it any time from Admin.","party");
 }
+/* ---------- dialogs ---------- */
+function openDlg(id){const d=$(id);if(d.open)return;if(d.showModal)d.showModal();else d.setAttribute("open","");}
+function closeDlg(id){const d=$(id);if(d.close)d.close();else d.removeAttribute("open");}
+
+/* ---------- CSV ---------- */
+function parseCSV(text){
+  text=String(text).replace(/^﻿/,"");
+  const first=text.split(/\r?\n/,1)[0]||"",cnt=c=>first.split(c).length-1,dl=[",",";","\t"].sort((a,b)=>cnt(b)-cnt(a))[0];
+  const rows=[];let row=[],f="",q=false;
+  for(let i=0;i<text.length;i++){const c=text[i];
+    if(q){if(c==='"'){if(text[i+1]==='"'){f+='"';i++;}else q=false;}else f+=c;}
+    else if(c==='"')q=true;
+    else if(c===dl){row.push(f);f="";}
+    else if(c==="\n"||c==="\r"){if(c==="\r"&&text[i+1]==="\n")i++;row.push(f);f="";if(row.some(x=>x.trim()!==""))rows.push(row);row=[];}
+    else f+=c;}
+  row.push(f);if(row.some(x=>x.trim()!==""))rows.push(row);
+  return rows;
+}
+function csvObjects(text,cols){
+  const rows=parseCSV(text);if(!rows.length)return {head:[],list:[],unknown:[]};
+  const norm=h=>String(h).toLowerCase().replace(/[^a-z0-9]/g,""),map={};
+  for(const [key,names] of Object.entries(cols))for(const n of names)map[norm(n)]=key;
+  const head=rows[0].map(h=>map[norm(h)]||null),unknown=rows[0].filter((h,i)=>!head[i]&&String(h).trim());
+  const list=rows.slice(1).map((r,n)=>{const o={_row:n+2};head.forEach((k,i)=>{if(k&&r[i]!=null&&String(r[i]).trim()!=="")o[k]=String(r[i]).trim();});return o;});
+  return {head,list,unknown};
+}
+const IMP_COLS={
+  customers:{customer:["Customer","Company","Customer name","Organisation","Organization","Client"],contact:["Contact","Contact name","Name","Full name"],email:["Email","Email address","E-mail"],
+    phone:["Phone","Telephone","Phone number","Mobile"],role:["Role","Job title","Title","Position"],site:["Site","Location","Office","Site name"],address:["Site address","Address"],
+    priority:["Priority","Tier","Customer priority"],prefix:["Ticket ID prefix","Prefix","ID prefix","Ticket prefix"],notes:["Notes","Customer notes"]},
+  tickets:{id:["ID","Ticket","Ticket ID","Ticket number","Reference","Ref"],subject:["Subject","Title","Summary"],description:["Description","Details","Body","Problem"],
+    customer:["Customer","Company","Client","Organisation","Organization"],requester:["Requester","Requester name","Contact","Caller","Reported by"],email:["Requester email","Email","Contact email"],
+    phone:["Requester phone","Phone","Contact phone"],category:["Category","Type"],team:["Team","Group","Queue"],severity:["Severity","Priority","Urgency"],status:["Status","State"],
+    assignee:["Assignee","Assigned to","Agent","Owner","Technician"],channel:["Channel","Source"],site:["Site","Location"],opened:["Opened","Created","Created at","Date opened","Logged"],
+    resolved:["Resolved","Resolved at","Date resolved"],closed:["Closed","Closed at","Date closed"],resolution:["Resolution","Resolution note","Solution","Fix"]}};
+function importTemplate(k){
+  const rows=k==="customers"?[["Customer","Contact name","Email","Phone","Role","Site","Site address","Priority","Ticket ID prefix"],
+      ["Acme Ltd","Jo Bloggs","jo@acme.example","01632 960000","Office manager","Head office","1 High Street, Anytown","High","ACME"]]
+    :[["ID","Subject","Description","Customer","Requester","Requester email","Category","Team","Severity","Status","Assignee","Channel","Opened","Resolved","Closed","Resolution"],
+      ["ACME1","Printer offline","Reception printer shows offline","Acme Ltd","Jo Bloggs","jo@acme.example",S.cfg.categories[0]||"Hardware",S.cfg.teams[0]||"Service desk","S3","Closed","Sam Smith","Email","2026-01-12 09:30","2026-01-12 11:05","2026-01-15 09:00","Re-added the printer queue"]];
+  save("helpdesk-"+k+"-template.csv",csv(rows));
+}
+function sevFrom(v){v=String(v||"").toLowerCase().trim();if(!v)return null;const m=v.match(/^s?([1-4])\b/);if(m)return "S"+m[1];
+  if(/crit|urgent|p1/.test(v))return "S1";if(/high|p2/.test(v))return "S2";if(/med|normal|moderate|p3/.test(v))return "S3";if(/low|minor|p4|p5/.test(v))return "S4";return null;}
+function statusFrom(v){v=String(v||"").toLowerCase().trim();if(!v)return null;
+  if(/clos|done|complete|cancel/.test(v))return "closed";if(/resol|fixed/.test(v))return "resolved";if(/pend|wait|hold/.test(v))return "pending";if(/new|unassigned/.test(v))return "new";if(/open|progress|assigned|active|working/.test(v))return "open";return null;}
+function tierFrom(v){v=String(v||"").toLowerCase().trim();if(!v)return null;if(/^c|crit/.test(v))return "C";if(/^h|high/.test(v))return "H";if(/^l|low/.test(v))return "L";if(/^n|norm|med/.test(v))return "N";return null;}
+function chanFrom(v){v=String(v||"").toLowerCase();if(!v)return null;if(/mail/.test(v))return "email";if(/phone|call|tel/.test(v))return "phone";if(/portal|web|form/.test(v))return "portal";if(/chat|teams|slack/.test(v))return "chat";if(/monit|alert|rmm/.test(v))return "monitoring";return null;}
+function dateFrom(v){if(!v)return null;let s=String(v).trim();const uk=s.match(/^(\d{1,2})[\/.](\d{1,2})[\/.](\d{4})(.*)$/);if(uk)s=uk[3]+"-"+uk[2].padStart(2,"0")+"-"+uk[1].padStart(2,"0")+uk[4];
+  const d=new Date(s.replace(" ","T"));return isNaN(d)?null:d.toISOString();}
+
+let IMP=null;
+function readImport(k,f){
+  if(!isMgr()){toast("Only managers can import.","worried");return;}
+  f.text().then(text=>{
+    const {list,unknown}=csvObjects(text,IMP_COLS[k]);
+    IMP=k==="customers"?planCustomers(list):planTickets(list);IMP.kind=k;IMP.unknown=unknown;IMP.file=f.name;showImport();
+  }).catch(()=>toast("That file couldn't be read. Save it as CSV and try again.","worried"));
+}
+function planCustomers(list){
+  const warn=[],by=new Map(),prefixes=new Map(S.customers.filter(c=>c.idPrefix).map(c=>[c.idPrefix,c.id]));
+  let contacts=0,sites=0,skipped=0;
+  for(const r of list){
+    if(!r.customer){skipped++;warn.push("Row "+r._row+": no customer name, skipped.");continue;}
+    const key=r.customer.toLowerCase();let g=by.get(key);
+    if(!g){const ex=S.custByName.get(key);g={name:r.customer.slice(0,80),existing:ex||null,contacts:[],sites:[],priority:null,prefix:null,notes:null};by.set(key,g);}
+    if(r.site&&!g.sites.some(x=>x.name.toLowerCase()===r.site.toLowerCase())&&!(g.existing&&(g.existing.sites||[]).some(x=>x.name.toLowerCase()===r.site.toLowerCase()))){g.sites.push({name:r.site.slice(0,80),address:(r.address||"").slice(0,300)});sites++;}
+    if(r.contact||r.email){
+      if(r.email&&!/^\S+@\S+\.\S+$/.test(r.email))warn.push("Row "+r._row+": "+r.email+" doesn't look like an email address; kept anyway.");
+      const same=k=>(r.email&&k.email&&k.email.toLowerCase()===r.email.toLowerCase())||(!r.email&&k.name&&r.contact&&k.name.toLowerCase()===r.contact.toLowerCase());
+      if(!g.contacts.some(same)&&!(g.existing&&(g.existing.contacts||[]).some(same))){g.contacts.push({name:(r.contact||r.email).slice(0,80),email:(r.email||"").slice(0,200),phone:(r.phone||"").slice(0,40),role:(r.role||"").slice(0,80),site:r.site||""});contacts++;}}
+    if(r.priority){const t=tierFrom(r.priority);if(t)g.priority=t;else warn.push("Row "+r._row+": priority "+r.priority+" isn't Critical, High, Normal or Low; ignored.");}
+    if(r.prefix){const pf=r.prefix.toUpperCase();
+      if(!/^[A-Z0-9]{1,6}$/.test(pf))warn.push("Row "+r._row+": prefix "+r.prefix+" must be 1 to 6 letters or numbers; ignored.");
+      else if(prefixes.has(pf)&&prefixes.get(pf)!==(g.existing&&g.existing.id)&&prefixes.get(pf)!==key)warn.push("Row "+r._row+": prefix "+pf+" is already used by another customer; ignored.");
+      else if(g.existing&&g.existing.idPrefix&&g.existing.idPrefix!==pf)warn.push(g.name+" already has the prefix "+g.existing.idPrefix+"; kept it.");
+      else{g.prefix=pf;prefixes.set(pf,g.existing?g.existing.id:key);}}
+    if(r.notes&&!g.notes)g.notes=r.notes.slice(0,2000);
+  }
+  const all=[...by.values()],groups=all.filter(g=>!g.existing||g.contacts.length||g.sites.length||(g.priority&&g.priority!==g.existing.priority)||(g.prefix&&!g.existing.idPrefix)),nw=groups.filter(g=>!g.existing).length;
+  if(all.length&&!groups.length)warn.unshift("Everything in this file is already here, so there's nothing new to import.");
+  return {groups,warn,skipped,sum:[[nw,"new customer"],[groups.length-nw,"existing customer with new details","existing customers with new details"],[contacts,"contact"],[sites,"site"]],
+    preview:{head:["Customer","","Contacts","Sites","Prefix"],rows:groups.slice(0,50).map(g=>[g.name,g.existing?"Existing":"New",String(g.contacts.length),String(g.sites.length),g.prefix||(g.existing&&g.existing.idPrefix)||""])}};
+}
+function planTickets(list){
+  const warn=[],out=[],ids=new Set(),newCust=new Set(),unknownCat=new Set(),unknownTeam=new Set();let skipped=0;
+  const staffBy=new Map(S.staff.map(m=>[staffName(m).toLowerCase(),m]));
+  for(const r of list){
+    if(!r.subject){skipped++;warn.push("Row "+r._row+": no subject, skipped.");continue;}
+    let id=r.id?r.id.replace(/\s+/g,""):null;
+    if(id&&!/^[A-Za-z0-9-]{1,40}$/.test(id)){warn.push("Row "+r._row+": ID "+r.id+" has characters IDs can't use; a new ID will be given.");id=null;}
+    if(id&&(S.byId.has(id)||ids.has(id))){skipped++;warn.push("Row "+r._row+": "+id+" already exists, skipped.");continue;}
+    if(id)ids.add(id);
+    const sev=sevFrom(r.severity),st=statusFrom(r.status)||(r.closed?"closed":r.resolved?"resolved":"open");
+    if(r.severity&&!sev)warn.push("Row "+r._row+": severity "+r.severity+" not recognised; set to S3.");
+    if(r.status&&!statusFrom(r.status))warn.push("Row "+r._row+": status "+r.status+" not recognised; set to "+ST_LABEL[st]+".");
+    const opened=dateFrom(r.opened)||new Date().toISOString();if(r.opened&&!dateFrom(r.opened))warn.push("Row "+r._row+": opened date "+r.opened+" not recognised; set to now.");
+    const done=st==="resolved"||st==="closed",resolvedAt=done?(dateFrom(r.resolved)||dateFrom(r.closed)||opened):null,closedAt=st==="closed"?(dateFrom(r.closed)||resolvedAt):null;
+    const c=r.customer?S.custByName.get(r.customer.toLowerCase()):null;if(r.customer&&!c)newCust.add(r.customer.slice(0,80));
+    const cat=r.category||S.cfg.categories[0]||"General",team=r.team||S.cfg.defaults.team||S.cfg.teams[0]||"Service desk";
+    if(!S.cfg.categories.includes(cat))unknownCat.add(cat);if(!S.cfg.teams.includes(team))unknownTeam.add(team);
+    let asg=null;if(r.assignee){const a=r.assignee.toLowerCase(),m=staffBy.get(a),known=Object.keys(S.names).find(k=>String(S.names[k]).toLowerCase()===a);
+      asg=m?{uid:m.uid||null,label:m.uid?null:m.label}:known?{uid:known,label:null}:{uid:null,label:r.assignee.slice(0,80)};}
+    out.push({id,r,sev:sev||"S3",st,opened,resolvedAt,closedAt,customer:r.customer||"",cat,team,asg,chan:chanFrom(r.channel)});
+  }
+  if(newCust.size)warn.unshift(newCust.size+" customer"+(newCust.size===1?"":"s")+" not found will be created: "+[...newCust].slice(0,6).join(", ")+(newCust.size>6?"…":"")+".");
+  if(unknownCat.size)warn.unshift("Categories not in your list, kept as written: "+[...unknownCat].slice(0,8).join(", ")+". Add them in Admin, Categories if you want them in the menus.");
+  if(unknownTeam.size)warn.unshift("Teams not in your list, kept as written: "+[...unknownTeam].slice(0,8).join(", ")+".");
+  const unmatched=new Set(out.filter(x=>x.asg&&!x.asg.uid&&!S.staff.some(m=>m.label===x.asg.label)).map(x=>x.asg.label));
+  if(unmatched.size)warn.unshift("Assignees not on your team list are kept as names: "+[...unmatched].slice(0,6).join(", ")+(unmatched.size>6?"…":"")+". Add them in Admin, Agents to link them.");
+  const by=k=>out.filter(x=>x.st===k).length;
+  return {rows:out,newCust:[...newCust],warn,skipped,sum:[[out.length,"ticket"],[by("closed"),"closed","closed"],[out.length-by("closed"),"open or resolved","open or resolved"],[newCust.size,"new customer"]],
+    preview:{head:["ID","Subject","Customer","Status","Opened"],rows:out.slice(0,50).map(x=>[x.id||"New ID",x.r.subject,x.customer,ST_LABEL[x.st],abs(x.opened).slice(0,10)])}};
+}
+function showImport(){
+  const I=IMP,count=I.kind==="customers"?I.groups.length:I.rows.length;
+  $("bk-k").textContent="Import";$("bk-h").textContent=I.kind==="customers"?"Import customers and contacts":"Import tickets";$("bk-err").textContent="";
+  $("bk-body").innerHTML='<p class="muted">From <b>'+esc(I.file)+"</b>. Nothing is saved until you choose Import.</p>"+
+    '<div class="imp-sum">'+I.sum.filter(x=>x[0]).map(x=>'<span class="pill">'+x[0]+" "+esc(x[0]===1?x[1]:(x[2]||x[1]+"s"))+"</span>").join("")+(I.skipped?'<span class="pill">'+I.skipped+" skipped</span>":"")+"</div>"+
+    (I.preview.rows.length?'<div class="imp-tbl"><table><thead><tr>'+I.preview.head.map(h=>"<th>"+esc(h)+"</th>").join("")+"</tr></thead><tbody>"+I.preview.rows.map(r=>"<tr>"+r.map(v=>'<td class="wrap">'+esc(v)+"</td>").join("")+"</tr>").join("")+"</tbody></table></div>"+(count>50?'<p class="muted" style="font-size:12.5px;margin-top:6px">Showing the first 50 of '+count+".</p>":""):"")+
+    (I.unknown.length?'<div class="imp-warn">Columns ignored: '+esc(I.unknown.join(", "))+". Rename them to match the template if you need them.</div>":"")+
+    (I.warn.length?'<div class="imp-warn">'+I.warn.slice(0,12).map(esc).join("<br>")+(I.warn.length>12?"<br>…and "+(I.warn.length-12)+" more.":"")+"</div>":"")+
+    '<div class="bk-prog" id="bk-prog" hidden><i></i></div>';
+  $("bk-acts").innerHTML='<button class="btn" data-act="im-cancel">Cancel</button><button class="btn primary" data-act="im-go"'+(count?"":" disabled")+">Import "+count+"</button>";
+  openDlg("bk");
+}
+function progress(done,total,label){const p=$("bk-prog");if(!p)return;p.hidden=false;p.firstChild.style.width=Math.round(done*100/Math.max(1,total))+"%";$("bk-err").textContent=label||"";}
+async function runImport(){
+  const I=IMP;if(!I)return;const go=$("bk-acts").querySelector('[data-act="im-go"]');if(go)go.disabled=true;
+  try{
+    if(I.kind==="customers"){let n=0;
+      for(const g of I.groups){
+        if(g.existing){const ch={},cur=S.custById.get(g.existing.id)||g.existing,sites=(cur.sites||[]).slice();
+          for(const st of g.sites)sites.push({id:newId("s"),name:st.name,address:st.address});
+          const sid=n=>{const x=sites.find(y=>y.name.toLowerCase()===String(n||"").toLowerCase());return x?x.id:"";};
+          if(g.sites.length)ch.sites=sites;
+          if(g.contacts.length)ch.contacts=(cur.contacts||[]).concat(g.contacts.map(k=>({id:newId("k"),name:k.name,email:k.email,phone:k.phone,role:k.role,siteId:sid(k.site)})));
+          if(g.priority&&g.priority!==cur.priority)ch.priority=g.priority;
+          if(g.prefix&&!cur.idPrefix)ch.idPrefix=g.prefix;
+          if(Object.keys(ch).length)await updateCustomer(cur.id,()=>({changes:ch,event:{action:"updated",detail:"Imported: "+[g.contacts.length&&g.contacts.length+" contacts",g.sites.length&&g.sites.length+" sites"].filter(Boolean).join(", ")||"details"}}));
+        }else{
+          const id=newCustId(g.name),now=new Date().toISOString(),sites=g.sites.map(st=>({id:newId("s"),name:st.name,address:st.address}));
+          const sid=n=>{const x=sites.find(y=>y.name.toLowerCase()===String(n||"").toLowerCase());return x?x.id:"";};
+          const body={name:g.name,priority:g.priority||"N",allHours:false,sla:{},notes:g.notes||"",logoId:null,createdAt:now,updatedAt:now,sites,
+            contacts:g.contacts.map(k=>({id:newId("k"),name:k.name,email:k.email,phone:k.phone,role:k.role,siteId:sid(k.site)})),imported:true};
+          if(g.prefix)body.idPrefix=g.prefix;
+          await putDoc("customers",id,body);logEvent({type:"customer",action:"created",ref:id,name:g.name,detail:"Imported from CSV"});
+        }
+        progress(++n,I.groups.length,"Saving "+n+" of "+I.groups.length);
+      }
+      closeDlg("bk");IMP=null;toast("Imported "+plural(I.groups.length,"customer")+".","party");
+    }else{
+      for(const name of I.newCust)if(!S.custByName.get(name.toLowerCase()))await createCustomer(name);
+      const made=[];let n=0;
+      for(const x of I.rows){
+        const c=x.customer?S.custByName.get(x.customer.toLowerCase()):null;
+        let id=x.id;if(!id)id=await allocId(c?c.id:null);
+        const ev=[{at:x.opened,type:"created",byLabel:"Import",imported:true}];
+        if(x.st!=="new")ev.push({at:x.resolvedAt||x.opened,type:"status",from:"new",to:x.st==="closed"&&x.resolvedAt?"resolved":x.st,byLabel:"Import",auto:true,reason:"Imported"});
+        if(x.st==="closed")ev.push({at:x.closedAt||x.resolvedAt||x.opened,type:"status",from:"resolved",to:"closed",byLabel:"Import",auto:true,reason:"Imported"});
+        const notes=x.r.resolution?[{at:x.resolvedAt||x.opened,text:x.r.resolution.slice(0,6000),internal:false,minutes:0,byLabel:"Import"}]:[];
+        const site=c&&x.r.site?(c.sites||[]).find(s=>s.name.toLowerCase()===x.r.site.toLowerCase()):null;
+        const body={subject:x.r.subject.slice(0,200),description:(x.r.description||"").slice(0,20000),customer:c?c.name:x.customer,customerId:c?c.id:null,contactId:null,
+          requesterName:(x.r.requester||"").slice(0,80),requesterEmail:(x.r.email||"").slice(0,200),requesterPhone:(x.r.phone||"").slice(0,40),channel:x.chan,siteId:site?site.id:null,site:site?site.name:(x.r.site||""),
+          team:x.team,category:x.cat,severity:x.sev,status:x.st,assigneeId:x.asg?x.asg.uid:null,assigneeLabel:x.asg?x.asg.label:null,
+          createdAt:x.opened,updatedAt:x.closedAt||x.resolvedAt||x.opened,resolvedAt:x.resolvedAt,closedAt:x.closedAt||null,createdBy:S.meId,notes,timeline:[],incident:false,history:ev,imported:true};
+        if(db)await withRetry(()=>col.doc(id).set(body));
+        made.push(Object.assign({id},body));S.byId.set(id,Object.assign({id},body));
+        progress(++n,I.rows.length,"Saving "+n+" of "+I.rows.length);
+      }
+      if(!db){index(made.concat(S.tickets));saveLocal();}
+      logEvent({type:"settings",detail:"Imported "+made.length+" tickets from CSV"});
+      closeDlg("bk");IMP=null;refresh();toast("Imported "+plural(made.length,"ticket")+".","party");
+    }
+  }catch(e){writeFailed(e);if(go)go.disabled=false;}
+}
+
+/* ---------- backup and restore ---------- */
+async function fetchAll(name,field){
+  if(!db)return null;const out=new Map();let before=null;
+  for(let i=0;i<200;i++){
+    let q=db.collection(name);if(before&&typeof q.where==="function")q=q.where(field,"<",before);
+    const sn=await q.orderBy(field,"desc").limit(1000).get();
+    for(const d of sn.docs)out.set(d.id,d.data());
+    if(sn.docs.length<1000||typeof db.collection(name).where!=="function")break;
+    const last=sn.docs[sn.docs.length-1].data()[field];if(!last||last===before)break;before=last;
+  }
+  return Object.fromEntries(out);
+}
+const objOf=list=>Object.fromEntries(list.map(x=>{const o=Object.assign({},x);delete o.id;return [x.id,o];}));
+async function makeBackup(){
+  if(!isMgr()){toast("Only managers can make a backup.","worried");return;}
+  toast("Gathering everything for the backup…","happy");
+  try{
+    let tickets,events;
+    if(db){tickets=await fetchAll("tickets","createdAt");events=await fetchAll("events","at");}
+    else{tickets=objOf([...S.byId.values()]);events=objOf(S.events);}
+    for(const t of S.byId.values())if(!tickets[t.id]){const o=Object.assign({},t);delete o.id;tickets[t.id]=o;}
+    const data={format:"helpdesk-backup",formatVersion:1,app:APP_VERSION,exportedAt:new Date().toISOString(),exportedBy:whoText(S.meId,null,"Unknown"),
+      collections:{config:S.cfgExists?{settings:S.cfg}:{},tickets,customers:objOf(S.customers),staff:objOf(S.staff),queues:objOf(S.queues),shifts:objOf(S.shifts),events,
+        counters:Object.fromEntries(Object.entries(S.counters||{}).map(([k,v])=>{const o=Object.assign({},v);delete o.id;return [k,o];})),
+        requests:objOf(S.reqDocs||[]),decisions:Object.assign({},S.decisions||{})}};
+    const n=Object.keys(tickets).length;
+    await save("helpdesk-backup-"+new Date().toISOString().slice(0,10)+".json",JSON.stringify(data,null,1));
+    logEvent({type:"settings",detail:"Full backup downloaded ("+n+" tickets)"});
+  }catch(e){toast("The backup couldn't be made. Try again in a moment.","worried");}
+}
+let RESTORE=null;
+const BK_COLS=["config","customers","staff","queues","shifts","counters","requests","decisions","events","tickets"];
+const BK_NAMES={config:"settings",customers:"customers",staff:"agents",queues:"Dispatch orders",shifts:"shifts",counters:"ID counters",requests:"requests",decisions:"decisions",events:"audit entries",tickets:"tickets"};
+function readRestore(f){
+  if(!isMgr()){toast("Only managers can restore a backup.","worried");return;}
+  f.text().then(text=>{
+    let d;try{d=JSON.parse(text);}catch(e){toast("That isn't a helpdesk backup file.","worried");return;}
+    if(!d||d.format!=="helpdesk-backup"||!d.collections||typeof d.collections!=="object"){toast("That isn't a helpdesk backup file.","worried");return;}
+    RESTORE=d;const C=d.collections,cnt=k=>C[k]&&typeof C[k]==="object"?Object.keys(C[k]).length:0;
+    $("bk-k").textContent="Restore";$("bk-h").textContent="Restore from backup";$("bk-err").textContent="";
+    $("bk-body").innerHTML='<p class="muted">Made '+esc(abs(d.exportedAt||""))+(d.exportedBy?" by "+esc(d.exportedBy):"")+(d.app?", helpdesk "+esc(d.app):"")+".</p>"+
+      '<div class="imp-sum">'+BK_COLS.filter(k=>cnt(k)&&(db||!["requests","decisions"].includes(k))).map(k=>'<span class="pill">'+cnt(k)+" "+esc(BK_NAMES[k])+"</span>").join("")+"</div>"+
+      '<div class="secnote" style="margin-top:12px"><b>Before you restore</b>Records in the file replace ones with the same ID here, and everything else here stays. If you\'re not sure, download a backup of what\'s here first.</div>'+
+      '<div class="bk-prog" id="bk-prog" hidden><i></i></div>';
+    $("bk-acts").innerHTML='<button class="btn" data-act="bk-cancel">Cancel</button><button class="btn primary" data-act="bk-go">Restore</button>';
+    openDlg("bk");
+  }).catch(()=>toast("That file couldn't be read.","worried"));
+}
+async function runRestore(){
+  const d=RESTORE;if(!d)return;const go=$("bk-acts").querySelector('[data-act="bk-go"]');if(go)go.disabled=true;
+  const C=d.collections,jobs=[];
+  for(const k of BK_COLS){const o=C[k];if(!o||typeof o!=="object")continue;if(!db&&(k==="requests"||k==="decisions"))continue;
+    for(const [id,body] of Object.entries(o))if(body&&typeof body==="object"&&/^[A-Za-z0-9_.~:@+-]{1,200}$/.test(id))jobs.push([k,id,body]);}
+  try{
+    let n=0;const localT=[];
+    for(const [k,id,body] of jobs){
+      if(db){const ref=k==="config"?db.doc("config/"+id):db.collection(k).doc(id);await withRetry(()=>ref.set(body));}
+      else if(k==="tickets")localT.push(Object.assign({},body,{id}));
+      else if(k==="config"){if(id==="settings"){saveCol("config",body);S.cfgExists=true;setCfg(body);}}
+      else if(k==="counters")S.counters[id]=body;
+      else if(LS_COL[k])applyCol(k,id,body,false);
+      if(++n%20===0||n===jobs.length)progress(n,jobs.length,"Restoring "+n+" of "+jobs.length);
+    }
+    if(!db&&localT.length){const ids=new Set(localT.map(t=>t.id));index(localT.concat(S.tickets.filter(t=>!ids.has(t.id))));saveLocal();}
+    logEvent({type:"settings",detail:"Restored from a backup made "+(d.exportedAt||"")+" ("+jobs.length+" records)"});
+    closeDlg("bk");RESTORE=null;refresh();toast("Restored "+jobs.length+" records.","party");
+  }catch(e){writeFailed(e);if(go)go.disabled=false;}
+}
+
+/* ---------- system diagnostics ---------- */
+function diagInfo(){
+  const ref=db?db.collection("tickets"):null,docRef=ref?ref.doc("x"):null;
+  return {version:APP_VERSION,mode:S.mode,services:{db:!!db,user:!!S.user,assets:!!S.assets,downloads:S.downloads?(S.downloads.browser?"browser":"adapter"):"none"},
+    extras:{leases:!!(docRef&&typeof docRef.acquire==="function"),filters:!!(ref&&typeof ref.where==="function")},
+    signedIn:!!S.meId,role:!S.canWrite?"viewer":isMgr()?"manager":"agent",settingsSaved:!!S.cfgExists,
+    counts:{tickets:S.tickets.length,olderLoaded:S.arch.size,customers:S.customers.length,agents:S.staff.length,auditEntries:S.events.length},
+    jobs:{autoCloseDays:S.cfg.rules.autoCloseDays,graceDays:S.cfg.rules.graceDays,maxShiftHours:S.cfg.rules.maxShiftHours,autoAssignRetry:!!(S.cfg.routing&&S.cfg.routing.on&&S.cfg.routing.retry)},
+    browser:{userAgent:navigator.userAgent,timeZone:(Intl.DateTimeFormat().resolvedOptions().timeZone||""),online:navigator.onLine!==false}};
+}
+function copyDiagnostics(){
+  const txt="helpdesk diagnostics\n"+JSON.stringify(diagInfo(),null,2);
+  const done=()=>toast("Diagnostics copied. Paste them into your issue or message.","happy");
+  if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(txt).then(done).catch(fallback);else fallback();
+  function fallback(){const ta=document.createElement("textarea");ta.value=txt;document.body.appendChild(ta);ta.select();try{document.execCommand("copy");done();}catch(e){toast("Couldn't copy. Your browser blocked it.","worried");}ta.remove();}
+}
+function adSystem(){
+  const D=diagInfo(),yes='<span class="ok">✓</span>',no='<span class="no">–</span>',wn='<span class="wn">!</span>';
+  const row=(mark,name,txt)=>'<div class="svc">'+mark+"<b>"+esc(name)+'</b><span class="muted">'+txt+"</span></div>";
+  const modeTxt={shared:"Connected to shared storage. Everyone sees the same tickets live.",local:"Running on its own. Data is saved in this browser only, because no backend is connected.",connecting:"Connecting…",error:"Lost the connection to shared storage. Reload the page to reconnect."}[S.mode]||S.mode;
+  const full=db&&S.tickets.length>=1000;
+  adminSwap("system"+JSON.stringify(D.services)+S.mode+D.counts.tickets+D.counts.customers+D.counts.agents+S.cfgVer+D.role,
+   '<div class="adgrid">'+
+   '<div class="card adcard"><h3>Connection</h3><p class="muted">'+esc(modeTxt)+"</p>"+
+     row(D.services.db?yes:wn,"Database",D.services.db?"Tickets, customers and settings are shared.":"Not connected. Connect a backend to share one helpdesk across a team.")+
+     row(D.services.user?yes:wn,"Sign-in",D.services.user?(D.signedIn?"Signed in as "+esc(whoText(S.meId,null,"you"))+", "+D.role+".":"Connected, but no one is signed in."):"Not connected. Everyone has full access in this mode.")+
+     row(D.services.assets?yes:no,"File storage",D.services.assets?"Logos and profile photos can be uploaded.":"Not connected. Logo and photo uploads are hidden.")+
+     row(yes,"Downloads",D.services.downloads==="adapter"?"Provided by your backend.":"Saved straight from the browser.")+
+     (db?row(D.extras.leases?yes:no,"Locking",D.extras.leases?"Supported, so two browsers never hand out the same ticket number.":"Not supported. Rarely, two browsers could act on the same ticket at once."):"")+
+     (db?row(D.extras.filters?yes:wn,"Filtered queries",D.extras.filters?"Supported, so older closed tickets can be loaded in History.":"Not supported. History can only show the newest 1,000 tickets."):"")+
+     '<div class="actions" style="justify-content:flex-start;margin-top:14px"><button class="btn" data-act="diag-copy">Copy diagnostics</button></div>'+
+     '<p class="muted" style="font-size:12.5px;margin-top:8px">Copies version, connection and browser details with no names, emails or ticket content, for bug reports.</p></div>'+
+   '<div class="card adcard"><h3>This helpdesk</h3><dl class="kv">'+
+     "<dt>Version</dt><dd>"+esc(APP_VERSION)+"</dd>"+
+     "<dt>Settings</dt><dd>"+(S.cfgExists?"Saved":"Using defaults, nothing saved yet")+"</dd>"+
+     "<dt>Tickets loaded</dt><dd>"+D.counts.tickets.toLocaleString()+(full?' <span class="pill">Newest 1,000</span>':"")+(D.counts.olderLoaded?" plus "+D.counts.olderLoaded+" older":"")+"</dd>"+
+     "<dt>Customers</dt><dd>"+D.counts.customers+"</dd><dt>Agents</dt><dd>"+D.counts.agents+"</dd>"+
+     "<dt>Your role</dt><dd>"+esc(D.role[0].toUpperCase()+D.role.slice(1))+"</dd>"+
+     "<dt>Browser time zone</dt><dd>"+esc(D.browser.timeZone)+(D.browser.timeZone&&D.browser.timeZone!==S.cfg.tz?' <span class="muted">(helpdesk uses '+esc(S.cfg.tz)+")</span>":"")+"</dd></dl>"+
+     (full?'<p class="muted" style="font-size:12.5px;margin-top:10px">Only the newest 1,000 tickets stay live in the browser. Reports count those; History can load older closed tickets.</p>':"")+"</div>"+
+   '<div class="card adcard" style="grid-column:1/-1"><h3>Background jobs</h3><p class="muted">These run in the browser of whoever has the helpdesk open. If nobody does, they wait. When you host it yourself, move them to a scheduled job on your server; DEPLOYMENT.md explains how.</p>'+
+     row(S.cfg.rules.autoCloseDays>0?yes:no,"Auto-close",S.cfg.rules.autoCloseDays>0?"Resolved tickets close after "+plural(S.cfg.rules.autoCloseDays,"day")+". Needs a manager's browser.":"Off.")+
+     row(S.cfg.rules.graceDays>0?yes:no,"Closing grace period",S.cfg.rules.graceDays>0?"Tickets close for good "+plural(S.cfg.rules.graceDays,"day")+" after being closed.":"Off.")+
+     row(S.cfg.requireShift&&S.cfg.rules.maxShiftHours>0?yes:no,"Auto clock-out",S.cfg.requireShift&&S.cfg.rules.maxShiftHours>0?"People are clocked out after "+plural(S.cfg.rules.maxShiftHours,"hour")+".":"Off.")+
+     row(D.jobs.autoAssignRetry?yes:no,"Auto-assign retries",D.jobs.autoAssignRetry?"Waiting tickets are assigned when someone on the list becomes free.":"Off.")+
+   "</div></div>");
+}
+
+/* ---------- first-run setup ---------- */
+let setupShown=false;
+function setupSkipped(){try{return localStorage.getItem("helpdesk.setupSkipped")==="1";}catch(e){return false;}}
+function maybeSetup(){
+  if(setupShown||!S.cfgKnown||S.cfgExists||!S.loaded||S.tickets.length||!S.canWrite||!isMgr()||setupSkipped())return;
+  if(db&&!S.meId)return;
+  if(document.querySelector("dialog[open]"))return;
+  setupShown=true;const c=S.cfg;
+  $("su-m").innerHTML=P.mascot?mascot("party",true):"";
+  $("su-name").value=c.name;$("su-prefix").value=c.idPrefix;$("su-prev").textContent=c.idPrefix+"-7K2QM";
+  $("su-teams").value=c.teams.join("\n");$("su-cats").value=c.categories.join("\n");
+  const guess=Intl.DateTimeFormat().resolvedOptions().timeZone||c.tz,tzs=[...new Set([guess].concat(TZS))];
+  $("su-tz").innerHTML=tzs.map(z=>'<option value="'+esc(z)+'">'+esc(z.replace(/_/g," "))+"</option>").join("");$("su-tz").value=guess;
+  $("su-start").value=c.start;$("su-end").value=c.end;
+  $("su-days").innerHTML=[1,2,3,4,5,6,0].map(d=>'<button type="button" data-act="su-day" data-d="'+d+'" aria-pressed="'+c.days.includes(d)+'">'+DAYS[d]+"</button>").join("");
+  $("su-sample").hidden=!(!db&&typeof loadDemo==="function");$("su-err").textContent="";
+  openDlg("su");
+}
+function setupSkip(){try{localStorage.setItem("helpdesk.setupSkipped","1");}catch(e){}closeDlg("su");}
+async function setupSave(){
+  const err=$("su-err");err.textContent="";
+  const name=$("su-name").value.trim(),prefix=$("su-prefix").value.trim().toUpperCase();
+  const lines=id=>[...new Set($(id).value.split(/\n/).map(x=>x.trim()).filter(Boolean))];
+  const teams=lines("su-teams"),cats=lines("su-cats"),start=$("su-start").value,end=$("su-end").value;
+  const days=[...document.querySelectorAll("#su-days button")].filter(b=>b.getAttribute("aria-pressed")==="true").map(b=>+b.dataset.d);
+  if(!name){err.textContent="Give the helpdesk a name.";return;}
+  if(!/^[A-Z0-9]{1,6}$/.test(prefix)){err.textContent="The prefix needs 1 to 6 letters or numbers.";return;}
+  if(!teams.length){err.textContent="Add at least one team.";return;}
+  if(!cats.length){err.textContent="Add at least one category.";return;}
+  if(!days.length){err.textContent="Choose at least one working day.";return;}
+  if(!start||!end||start>=end){err.textContent="The working day has to end after it starts.";return;}
+  const b=normCfg(Object.assign({},S.cfg,{name,idPrefix:prefix,teams,categories:cats,tz:$("su-tz").value,days,start,end,defaults:Object.assign({},S.cfg.defaults,{team:teams.includes(S.cfg.defaults.team)?S.cfg.defaults.team:""})}));
+  try{if(db)await withRetry(()=>db.doc("config/settings").set(b));else saveCol("config",b);
+    S.cfgExists=true;setCfg(b);logEvent({type:"settings",detail:"First-run setup: "+b.name+", prefix "+b.idPrefix+", "+plural(b.teams.length,"team")+", "+plural(b.categories.length,"category")});
+    closeDlg("su");refresh();toast("All set. Create your first ticket whenever you're ready.","party");}
+  catch(e){writeFailed(e);}
+}
+
+/* ---------- browser download fallback ---------- */
+const BROWSER_DL={browser:true,async save({filename,data}){
+  const b=data instanceof Blob?data:new Blob([data],{type:/\.json$/.test(filename)?"application/json":/\.csv$/.test(filename)?"text/csv":"text/plain"});
+  const u=URL.createObjectURL(b),a=document.createElement("a");a.href=u;a.download=filename;document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(u),4000);return {status:"saved"};}};
 /* ---------- start ---------- */
 refresh();tickFooter();
 (async function boot(){
   const use=n=>{try{return window.claude&&window.claude.use?window.claude.use(n):Promise.resolve(null);}catch(e){return Promise.resolve(null);}};
-  use("downloads").then(d=>{S.downloads=d;refresh();});
+  use("downloads").then(d=>{S.downloads=d||BROWSER_DL;refresh();});
   use("assets").then(a=>{S.assets=a;refresh();});
   const [d,u]=await Promise.all([use("db"),use("user")]);
   if(u){S.user=u;
@@ -3574,7 +3977,7 @@ refresh();tickFooter();
       const cw=await u.can("data.write");if(cw===false)S.canWrite=false;S.isEditor=!!(await u.canEdit());}catch(e){}
   }
   if(P.mine&&S.meId)S.q.assignee="me";
-  if(!d){S.mode="local";S.shifts=loadCol("shifts")||[];S.queues=loadCol("queues")||[];S.customers=loadCol("customers")||[];indexCust();S.staff=loadCol("staff")||[];S.events=loadCol("events")||[];setCfg(loadCol("config"));index(loadLocal());refresh();return;}
+  if(!d){S.mode="local";S.shifts=loadCol("shifts")||[];S.queues=loadCol("queues")||[];S.customers=loadCol("customers")||[];indexCust();S.staff=loadCol("staff")||[];S.events=loadCol("events")||[];{const lc=loadCol("config");S.cfgExists=!!lc;S.cfgKnown=true;setCfg(lc);}index(loadLocal());refresh();return;}
   db=d;col=db.collection("tickets");S.mode="shared";refresh();
   if(S.meId){db.doc("data/users/"+S.meId+"/prefs").get().then(s=>{
     if(!s.exists)return;const startWas=P.start;Object.assign(P,cleanPrefs(s.data()));applyPrefs();
@@ -3591,7 +3994,7 @@ refresh();tickFooter();
   db.collection("shifts").onSnapshot(sn=>{S.shifts=docs(sn);resolveNames(S.shifts.map(x=>x.uid).filter(Boolean));refresh();sweep();},()=>{});
   db.collection("staff").onSnapshot(sn=>{S.staff=docs(sn);resolveNames(S.staff.map(m=>m.uid).filter(Boolean));refresh();},()=>{});
   db.collection("events").orderBy("at","desc").limit(1000).onSnapshot(sn=>{S.events=docs(sn);if(S.view==="audit"||S.view==="admin")refresh();},()=>{});
-  db.doc("config/settings").onSnapshot(sn=>{setCfg(sn.exists?sn.data():null);refresh();},()=>{});
+  db.doc("config/settings").onSnapshot(sn=>{S.cfgExists=sn.exists;S.cfgKnown=true;setCfg(sn.exists?sn.data():null);refresh();},()=>{});
   col.orderBy("createdAt","desc").limit(1000).onSnapshot(snap=>{
     index(snap.docs.map(x=>Object.assign({},x.data(),{id:x.id})));
     if(S.sel&&!S.byId.has(S.sel))S.sel=null;
