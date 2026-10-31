@@ -31,14 +31,21 @@ On its own like this, it's a single-user demo: there's no sign-in, so you have f
 3. Pick `main` and `/ (root)`, then save.
 4. The page appears at `https://<your-username>.github.io/<repo-name>/` after a minute or so.
 
-## Running it for a team
+## Hosting it for your team
 
-The page talks to its backend through one small function, `window.claude.use(name)`, which returns four services: a database, the signed-in user, file storage and downloads. [`PLATFORM.md`](PLATFORM.md) documents each one, the data the app stores and the access rules the server must enforce.
+This project is the app only. It doesn't ship a server, database or sign-in, so to share one helpdesk across a team you host it yourself, on whatever you already run.
 
-There are two ways to provide them:
+The page reaches its backend through one function, `window.claude.use(name)` (the name comes from where the app started), which returns four services: a database, the signed-in user, file storage and downloads. [`PLATFORM.md`](PLATFORM.md) describes each one, the data the app stores and the access rules your server must enforce. Write a short adapter script that provides those four services from your own systems, load it before the app, and nothing in `index.html` needs to change.
 
-- **Your own backend.** Write a short adapter script (`platform.js`) that implements those four services against your own API, database and sign-in (for example Microsoft Entra ID), and load it before the app. Nothing in `index.html` needs to change.
-- **As a Claude artifact.** The same file runs as a published artifact on claude.ai, which provides all four services, sign-in and sharing. Declare the access rules listed in `PLATFORM.md` when you publish.
+**Some starting points** (suggestions, not requirements):
+
+- **Microsoft 365 shops:** Entra ID for sign-in and roles, an API on Azure App Service or Functions, Cosmos DB for data, Blob Storage for logos and photos, and Web PubSub for live updates.
+- **Firebase or Supabase:** their auth, document or Postgres database and storage map closely onto the four services, and both push live changes to the browser.
+- **Self-hosted:** a small Node or Python server with Postgres or SQLite, your existing SSO (OIDC or SAML), and WebSockets for live updates.
+
+Whatever you choose, enforce the access rules on the server. The page only hides controls a person can't use.
+
+If you get stuck, open an issue with what you're running and we'll try to help.
 
 ## Customising
 
