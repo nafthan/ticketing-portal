@@ -53,10 +53,6 @@ Everything lives in `index.html`. The name, ticket ID prefix, teams, categories,
 
 The only external requests are Google Fonts (Bricolage Grotesque, Geist and Geist Mono), and the page falls back to system fonts without them.
 
-## Contributing
-
-Issues and pull requests are welcome. See [`CONTRIBUTING.md`](CONTRIBUTING.md).
-
 ## Licence
 
 [MIT](LICENSE)
