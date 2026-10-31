@@ -1,0 +1,49 @@
+name: Check
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Install
+        run: npm ci --no-audit --no-fund
+
+      - name: Type-check
+        run: npm run typecheck
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: Single-file edition syntax
+        run: |
+          node -e '
+            const fs = require("fs");
+            for (const f of ["single-file/index.html", "public/adapter-test.html"]) {
+              const html = fs.readFileSync(f, "utf8");
+              const scripts = [...html.matchAll(/<script(?![^>]*(?:application\/json|src=))[^>]*>([\s\S]*?)<\/script>/g)].map(m => m[1]);
+              scripts.forEach((s, i) => fs.writeFileSync(`/tmp/${f.replace(/\W/g, "_")}.${i}.js`, s));
+            }'
+          for f in /tmp/*.js public/platform.example.js; do node --check "$f"; done
+
+      - name: Smoke test in a browser
+        run: |
+          npm install --no-save playwright@1.56.0
+          npx playwright install --with-deps chromium
+          npm run smoke
