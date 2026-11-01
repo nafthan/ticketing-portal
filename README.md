@@ -16,6 +16,19 @@ Both have the same features, look the same and use the same backend adapter. Pic
 
 The app keeps its dependencies to the minimum: React to run, and Vite and TypeScript to build. See [`ARCHITECTURE.md`](ARCHITECTURE.md).
 
+## Styles
+
+Both editions come in four styles. The features are identical; only the look and layout change.
+
+| Style | Look | Single-file | App (after `npm run build`) |
+|---|---|---|---|
+| **default** | Warm and friendly, with rounded cards and five colour themes | `single-file/index.html` | `dist/index.html` |
+| **sodium** | Night-shift control room: sodium-yellow on near-black, navigation docked at the bottom, a left rail beside every list, Dispatch as one lane per agent | `single-file/sodium/index.html` | `dist/sodium/index.html` |
+| **phosphor** | Server-rack terminal: a three-pane console with sidebar navigation and the open ticket always docked on the right | `single-file/phosphor/index.html` | `dist/phosphor/index.html` |
+| **dusk** | Calm evening workspace: frosted glass, a floating sidebar, tickets as cards, tickets opening as a floating sheet | `single-file/dusk/index.html` | `dist/dusk/index.html` |
+
+Each has light and dark themes and keeps Ping. [`styles/README.md`](styles/README.md) explains how styles work and how to make your own.
+
 ## Features
 
 - **Queue, My desk, Dispatch and History.** Every ticket by status; each agent's tickets in priority order; a board of who is working on what; and a searchable archive of closed tickets. My desk, Dispatch and History each switch between a board and a list.
@@ -44,14 +57,16 @@ On its own like this, it's a single-user demo: there's no sign-in, so you have f
 npm install
 npm run dev       # live-reloading development server
 npm test          # unit tests
-npm run build     # type-check and build dist/index.html
+npm run build     # type-check and build dist/ (every style)
+npm run styles    # remake the single-file style copies after changing single-file/index.html or a style
+npx vite --mode sodium   # develop in a particular style
 ```
 
 You'll need Node 22.6 or newer.
 
 ### GitHub Pages
 
-The repository includes a workflow that builds the app and publishes both editions: the app at the site root and the single-file edition at `/single-file/`.
+The repository includes a workflow that builds the app and publishes both editions in every style: the app at the site root (`/`, `/sodium/`, `/phosphor/`, `/dusk/`) and the single-file edition under `/single-file/`. GitHub Pages is free for public repositories.
 
 1. In the repository, go to **Settings → Pages**.
 2. Under **Build and deployment**, set **Source** to **GitHub Actions**.

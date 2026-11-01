@@ -2,7 +2,22 @@
 
 Notable changes to helpdesk. Versions follow [semantic versioning](https://semver.org): a new major version means something needs action when you update, so read its notes first.
 
-## 2.0.0 (2026-10-31)
+## 2.1.0 (2026-10-31)
+
+### Added
+
+- **Styles.** Both editions now come in four styles with the same features: **default** (as before), **sodium** (a control room: bottom navigation, a left rail beside every list, Dispatch lanes), **phosphor** (a three-pane console) and **dusk** (a floating sidebar, ticket cards and a floating ticket sheet), each with its own look and layout and light and dark themes. The single-file copies are in `single-file/<style>/index.html`; `npm run build` makes the app's in `dist/<style>/index.html`. GitHub Pages and the Docker image publish them all.
+- **Style packs** in `styles/`: a `style.json` and a `style.css` per style, documented in `styles/README.md`, so anyone can add one. `npm run styles` remakes the single-file copies, and `npx vite --mode <style>` develops the app in a style.
+- The GitHub check saves the built pages from every run for download, and fails if a single-file style copy is out of date.
+
+### Fixed
+
+- The small notes under the summary tiles (like "Waiting for an owner") were hidden behind the footer in both editions.
+- In the app, the settings, notifications and account menus didn't open when you clicked exactly on their icon, and the search boxes were missing their magnifier icon.
+- `platform.example.js` could occasionally miss a change made in another tab.
+- The default top bar made the page scroll sideways on laptop-width screens; its tabs now move to a second row when space runs out.
+
+## 2.0.0 (2026-10-24)
 
 helpdesk now comes in two editions with the same features.
 
@@ -25,7 +40,7 @@ helpdesk now comes in two editions with the same features.
 
 - Two Auto-assign layout rules in the stylesheet were being ignored because of a stray escape character (both editions).
 
-## 1.1.0 (2026-10-31)
+## 1.1.0 (2026-09-08)
 
 ### Added
 
@@ -37,7 +52,7 @@ helpdesk now comes in two editions with the same features.
 - Wording throughout the app now refers to "your organisation's sign-in" rather than a specific platform.
 - Without a backend, the "saved in this browser only" banner is gone; the footer still shows "This browser only".
 
-## 1.0.0 (2026-10-31)
+## 1.0.0 (2026-09-04)
 
 First public release.
 
