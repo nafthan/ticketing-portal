@@ -24,18 +24,25 @@ npm run build        # one self-contained page: dist/index.html
 
 Both editions have the same features and work with the same backend. Pick whichever suits you. The app depends only on React to run, and on Vite and TypeScript to build.
 
+## Sample data
+
+Every copy comes with or without sample data.
+
+- **With:** the paths above. Setup offers **Explore with sample data**: fictional customers, tickets and agents to look around with.
+- **Without:** the same paths inside `clean/`, for example `single-file/clean/index.html`, `dist/clean/index.html` or `single-file/clean/dusk/index.html`. These have no sample data inside and no option to load or remove it. Use one of these for a real helpdesk.
+
 ## Use
 
 ```sh
 npm run dev                # development server with live reload
-npm run dev -- --mode dusk # …in another style
+npm run dev -- --mode dusk # …in another style (add -clean for no sample data)
 npm test                   # unit tests
-npm run build              # type-check and build every style into dist/
-npm run styles             # remake the single-file style copies
+npm run build              # type-check and build every copy into dist/
+npm run styles             # remake the single-file copies
 npm run smoke              # browser test of both editions (needs Playwright)
 ```
 
-On first open, a short setup asks for your helpdesk's name, teams and hours. Or choose **Explore with sample data** to look around first.
+On first open, a short setup asks for your helpdesk's name, teams and hours.
 
 ## Styles
 
@@ -77,10 +84,10 @@ The included GitHub Pages workflow publishes every style for free on public repo
 
 ```
 src/               the app: core/ (no React), views/, panels/, dialogs/, shell/, ui/
-single-file/       the single-file edition, plus a generated copy per style
+single-file/       the single-file edition, plus generated copies per style and without sample data
 styles/            style packs: style.json and style.css each
 public/            example adapter and adapter test
-scripts/styles.mjs builds the style copies
+scripts/styles.mjs makes the style and no-sample-data copies
 tests/             unit tests (node:test) and the browser smoke test
 assets/logo/       the logo
 ```
