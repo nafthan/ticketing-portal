@@ -1,0 +1,487 @@
+/* Phosphor: a server-rack terminal. Hairline borders, 1px corners, no shadows,
+   monospace uppercase system text, one green status light. */
+
+/* ---------- themes ---------- */
+:root[data-skin="phosphor"]{
+  --bg:#0b0e12;--surface:#181a1d;--well:#1f2124;--line:#303235;--line2:#4a4c50;
+  --ink:#bababb;--hi:#dedede;--muted:#8b8c8e;--faint:#5d5e61;
+  --accent:#00d892;--accent-ink:#002923;--warn:#f0627e;--amber:#d9a54a;--good:#00d892;--violet:#c58aff;
+  --sun:#d9a54a;--blush:#c58aff;--led:#00d892;
+  --teal:#002923;--teal-hi:#005441;--teal-ink:#00d892;
+  --pop-line:#303235;--pop-shadow:none;--bar:#5d5e61;--grid:rgba(222,222,222,.045);
+  --m-body:#303235;--m-screen:#05080b;--m-glow:#00d892;--m-cheek:#ff6285;--m-ink:#0b0e12;--m-limb:#818284;
+  color-scheme:dark}
+:root[data-skin="phosphor-light"]{
+  --bg:#f3f3ef;--surface:#fbfbf9;--well:#ebebe6;--line:#d6d6d0;--line2:#a9aaa5;
+  --ink:#2e3033;--hi:#0f1114;--muted:#5c5e61;--faint:#8a8b8d;
+  --accent:#00744e;--accent-ink:#ffffff;--warn:#c2304f;--amber:#946000;--good:#00744e;--violet:#7a3fc0;
+  --sun:#c98a00;--blush:#7a3fc0;--led:#00b87a;
+  --teal:#002923;--teal-hi:#005441;--teal-ink:#00d892;
+  --pop-line:#d6d6d0;--pop-shadow:none;--bar:#a9aaa5;--grid:rgba(15,17,20,.05);
+  --m-body:#e4e4df;--m-screen:#0b1714;--m-glow:#00d892;--m-cheek:#ff6285;--m-ink:#1a1c1f;--m-limb:#1a1c1f;
+  color-scheme:light}
+:root[data-skin^="phosphor"]{
+  --display:'Inter','Inter Tight',system-ui,-apple-system,'Segoe UI',sans-serif;
+  --sans:'Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --mono:'JetBrains Mono','IBM Plex Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+
+/* ---------- base: one weight, square corners, hairlines ---------- */
+html[data-style="phosphor"] body{font:400 14px/1.5 var(--sans);letter-spacing:-.003em}
+html[data-style="phosphor"] body *:not(svg):not(svg *){font-weight:400!important}
+html[data-style="phosphor"] ::selection{background:var(--teal);color:var(--teal-ink)}
+html[data-style="phosphor"] :focus-visible{outline:2px solid var(--accent);outline-offset:2px}
+html[data-style="phosphor"] h1,html[data-style="phosphor"] h2,html[data-style="phosphor"] h3{color:var(--hi)}
+
+/* system text: monospace, uppercase, wide tracking */
+html[data-style="phosphor"] :is(nav.tabs button,.btn,.seg button,.pills button,th,.lbl,.chip,.pill,.badge,.badge2,.tier,.legend,.sq-hint,.phases span,.shift-time,.conn,.foot-in,.daypick button,.qtools,.d-top .lbl,.kv>dt,.cust .stats,.skin small){
+  font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em}
+html[data-style="phosphor"] .lbl{font-size:11px;color:var(--muted)}
+html[data-style="phosphor"] .tid{font:400 11.5px/1 var(--mono);letter-spacing:.04em;color:var(--muted)}
+html[data-style="phosphor"] .num{font-size:12px;letter-spacing:.02em}
+html[data-style="phosphor"] .muted{color:var(--muted)}
+html[data-style="phosphor"]:not([data-density="compact"]){--row:10px}
+
+/* ---------- top bar: unfilled, tabs like a terminal tab strip ---------- */
+html[data-style="phosphor"] .bar{background:var(--bg);border-bottom:1px solid var(--line)}
+html[data-style="phosphor"] .bar-in{max-width:1280px;min-height:56px;padding:0 24px;gap:28px;align-items:stretch}
+html[data-style="phosphor"] .brand{font:400 13px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--hi);gap:10px;align-self:center}
+html[data-style="phosphor"] .brand svg{width:30px;height:28px}
+html[data-style="phosphor"] .brand>span:last-child::after{content:"_" / "";color:var(--accent);margin-left:2px;animation:cur 1.1s steps(1) infinite}
+html[data-style="phosphor"] nav.tabs{gap:0;align-items:stretch}
+html[data-style="phosphor"] nav.tabs button{height:auto;min-height:56px;padding:0 14px;border-radius:0;font-size:11.5px;color:var(--muted);border-bottom:1px solid transparent;margin-bottom:-1px;position:relative}
+html[data-style="phosphor"] nav.tabs button:hover{color:var(--hi);background:none}
+html[data-style="phosphor"] nav.tabs button:focus-visible,html[data-style="phosphor"] .seg button:focus-visible,html[data-style="phosphor"] .pills button:focus-visible{outline-offset:-2px}
+html[data-style="phosphor"] nav.tabs button[aria-current="page"]{color:var(--accent);background:none;border-bottom-color:var(--accent)}
+html[data-style="phosphor"] .bar-right{gap:8px;align-self:center}
+html[data-style="phosphor"] .shift-time{font-size:11px;color:var(--muted)}
+html[data-style="phosphor"] .iconbtn{width:32px;height:32px;border-radius:1px;border:1px solid var(--line);background:transparent;color:var(--ink)}
+html[data-style="phosphor"] .iconbtn:hover{border-color:var(--line2);color:var(--hi)}
+html[data-style="phosphor"] .iconbtn svg.ic{width:16px;height:16px;stroke-width:1.6}
+html[data-style="phosphor"] .bell-n{border-radius:1px;background:var(--warn);color:var(--bg);font:400 10px/18px var(--mono);border:0;top:-6px;right:-6px}
+
+/* status dots: LEDs */
+html[data-style="phosphor"] .dot{width:6px;height:6px;border-radius:0}
+html[data-style="phosphor"] .dot.ok{background:var(--led);box-shadow:0 0 6px color-mix(in srgb,var(--led) 70%,transparent)}
+html[data-style="phosphor"] .dot.hot,html[data-style="phosphor"] .dot.bad{background:var(--warn);box-shadow:0 0 6px color-mix(in srgb,var(--warn) 60%,transparent)}
+
+/* ---------- buttons ---------- */
+html[data-style="phosphor"] .btn{height:32px;padding:0 12px;border-radius:1px;border:1px solid var(--line2);background:transparent;color:var(--ink);font-size:11px;gap:8px}
+html[data-style="phosphor"] .btn:hover{border-color:var(--hi);color:var(--hi)}
+html[data-style="phosphor"] .btn svg.ic{width:15px;height:15px;stroke-width:1.6}
+html[data-style="phosphor"] .btn.primary{background:var(--teal);color:var(--teal-ink);border:1px solid var(--teal);box-shadow:none}
+html[data-style="phosphor"] .btn.primary:hover{background:var(--teal-hi);border-color:var(--teal-hi);color:var(--teal-ink)}
+html[data-style="phosphor"] .btn.primary:active{transform:none;box-shadow:none;background:var(--teal)}
+html[data-style="phosphor"] .btn.dark{background:var(--well);border-color:var(--line2);color:var(--hi)}
+html[data-style="phosphor"] .btn.dark:hover{border-color:var(--hi)}
+html[data-style="phosphor"] .btn.teams{background:var(--well);color:var(--hi);border:1px solid var(--line2);box-shadow:none}
+html[data-style="phosphor"] .btn.teams:hover{background:var(--well);border-color:var(--hi)}
+html[data-style="phosphor"] .linkbtn{color:var(--ink);border-bottom:1px solid var(--line2)}
+html[data-style="phosphor"] .linkbtn:hover{color:var(--hi);border-bottom-color:var(--hi)}
+html[data-style="phosphor"] .x{width:32px;height:32px;border-radius:1px;border:1px solid var(--line);color:var(--ink)}
+html[data-style="phosphor"] .x:hover{border-color:var(--hi);color:var(--hi)}
+html[data-style="phosphor"] .x svg.ic{width:15px;height:15px}
+html[data-style="phosphor"] .d-top .btn.share{height:32px;border-radius:1px}
+
+/* ---------- page ---------- */
+html[data-style="phosphor"] main{max-width:1280px;padding:32px 24px 96px}
+html[data-style="phosphor"] main.wide{max-width:none}
+html[data-style="phosphor"] h1{font:400 24px/1.15 var(--display);letter-spacing:-.02em}
+html[data-style="phosphor"] .pagehead{margin-bottom:14px;padding-bottom:12px;border-bottom:1px dashed var(--line);align-items:flex-end;gap:12px 24px}
+html[data-style="phosphor"] .pagehead p{color:var(--muted);font-size:12.5px;margin-top:6px;max-width:72ch}
+/* path-style eyebrow over each page title */
+html[data-style="phosphor"] .pagehead h1::before{display:block;font:400 11px/1 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);margin-bottom:8px}
+html[data-style="phosphor"] #v-mine h1::before{content:"~/my-desk" / ""}
+html[data-style="phosphor"] #v-dispatch h1::before{content:"~/dispatch" / ""}
+html[data-style="phosphor"] #v-history h1::before{content:"~/history" / ""}
+html[data-style="phosphor"] #v-customers h1::before{content:"~/customers" / ""}
+html[data-style="phosphor"] #v-reports h1::before{content:"~/reports" / ""}
+html[data-style="phosphor"] #v-audit h1::before{content:"~/audit-log" / ""}
+html[data-style="phosphor"] #v-admin h1::before{content:"~/admin" / ""}
+
+/* greeting: a one-line shell prompt with a small Ping */
+html[data-style="phosphor"] .hero{gap:10px;margin-bottom:14px;padding:0 0 12px;border-bottom:1px dashed var(--line);align-items:center}
+html[data-style="phosphor"] .hero .mwrap{flex-direction:row}
+html[data-style="phosphor"] .hero .m{width:28px}
+html[data-style="phosphor"] .sq-hint{display:none!important}
+html[data-style="phosphor"] .hero>div:last-child{display:flex;align-items:baseline;flex-wrap:wrap;gap:2px 10px;min-width:0}
+html[data-style="phosphor"] #greet{font:400 13px/1.5 var(--mono);letter-spacing:.02em;text-transform:lowercase;color:var(--hi)}
+html[data-style="phosphor"] #greet::before{content:"$ " / "";display:inline;margin:0;font:inherit;letter-spacing:inherit;text-transform:none;color:var(--accent)}
+html[data-style="phosphor"] .bubble{margin:0;padding:0;border:0;background:none;border-radius:0;font:400 12px/1.5 var(--mono);letter-spacing:.02em;color:var(--muted);gap:4px 10px;max-width:none}
+html[data-style="phosphor"] .bubble::before{content:"//" / "";position:static;width:auto;height:auto;border:0;background:none;transform:none;color:var(--faint)}
+html[data-style="phosphor"] .hero.nomascot .bubble::before{display:inline}
+html[data-style="phosphor"] .bubble .linkbtn{font-size:12px}
+html[data-style="phosphor"] .note{border:1px dashed var(--line2);border-radius:1px;padding:6px 6px 6px 12px;font-size:12.5px;margin-bottom:12px}
+html[data-style="phosphor"] .note .btn{height:28px}
+html[data-style="phosphor"] .pins{margin-bottom:12px}
+
+/* cards; tiles become a one-line readout strip (label + value, hairline dividers) */
+html[data-style="phosphor"] .card{background:var(--surface);border:1px solid var(--line);border-radius:1px}
+html[data-style="phosphor"] .tiles,html[data-style="phosphor"] .tiles.t4{display:flex;flex-wrap:wrap;overflow:hidden;margin-bottom:12px}
+html[data-style="phosphor"] .tile,html[data-style="phosphor"] .tile:nth-child(n){flex:1 1 auto;flex-direction:row;align-items:baseline;gap:10px;padding:9px 14px;border:0;box-shadow:-1px -1px 0 var(--line);white-space:nowrap;min-width:0}
+html[data-style="phosphor"] button.tile:hover{background:var(--well)}
+html[data-style="phosphor"] .tile .lbl{font-size:10.5px}
+html[data-style="phosphor"] .tile .lbl::before{content:"";width:5px;height:5px;background:var(--faint);flex:none}
+html[data-style="phosphor"] .tile .val{font:400 15px/1 var(--mono);letter-spacing:.01em;color:var(--hi);font-variant-numeric:tabular-nums;display:inline-flex;align-items:baseline;gap:6px;white-space:nowrap;margin-left:auto}
+html[data-style="phosphor"] .tile .val small{margin-left:0;white-space:nowrap;font:400 10.5px var(--mono);letter-spacing:.04em;text-transform:uppercase;color:var(--muted)}
+html[data-style="phosphor"] .tile{position:relative}
+/* the caption under each value is kept for screen readers only, so the strip stays one line */
+html[data-style="phosphor"] .tile .foot{position:absolute;width:1px;height:1px;min-height:0;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+html[data-style="phosphor"] .tile svg.sp{display:none}
+html[data-style="phosphor"] .tile>span:empty{display:none}
+html[data-style="phosphor"] .tile .lbl+.val{margin-left:0}
+
+/* toolbar and fields */
+html[data-style="phosphor"] .toolbar{gap:8px;margin-bottom:12px}
+html[data-style="phosphor"] .field,html[data-style="phosphor"] select.field{height:32px;border-radius:1px;border:1px solid var(--line);background-color:var(--bg);color:var(--ink);font-size:13px;padding:0 10px}
+html[data-style="phosphor"] select.field{padding-right:28px}
+html[data-style="phosphor"] .field:hover{border-color:var(--line2)}
+html[data-style="phosphor"] .field:focus{border-color:var(--hi)}
+html[data-style="phosphor"] .field:focus-visible{outline:none;border-color:var(--accent);box-shadow:0 0 0 1px var(--accent)}
+html[data-style="phosphor"] textarea.field{padding:8px 10px;height:auto}
+html[data-style="phosphor"] select.field{background-position:calc(100% - 15px) 13px,calc(100% - 10px) 13px}
+html[data-style="phosphor"] .searchbox svg{top:7px;left:10px}
+html[data-style="phosphor"] .searchbox input{padding-left:34px}
+html[data-style="phosphor"] .props .field,html[data-style="phosphor"] .form .field,html[data-style="phosphor"] .composer textarea{background-color:var(--bg)}
+
+/* segmented filters: terminal tab strip with a green underline */
+html[data-style="phosphor"] .seg{gap:0;margin-bottom:0;border-bottom:1px solid var(--line);flex-wrap:wrap}
+html[data-style="phosphor"] .seg button{height:34px;padding:0 12px;border-radius:0;font-size:11px;color:var(--muted);border-bottom:1px solid transparent;margin-bottom:-1px;gap:8px}
+html[data-style="phosphor"] .seg button:hover{color:var(--hi)}
+html[data-style="phosphor"] .seg button[aria-pressed="true"]{background:none;color:var(--accent);border-bottom-color:var(--accent)}
+html[data-style="phosphor"] .seg .num{opacity:.8;color:var(--muted);font-size:11px}
+html[data-style="phosphor"] .seg button[aria-pressed="true"] .num{color:inherit}
+html[data-style="phosphor"] #q-seg+.card,html[data-style="phosphor"] .seg+.tablecard{border-top:0}
+html[data-style="phosphor"] #ad-tabs{margin-bottom:0}
+html[data-style="phosphor"] #acct-tabs{margin:12px 0 18px!important}
+
+/* pills: a bordered switch block */
+html[data-style="phosphor"] .pills{background:transparent;border:1px solid var(--line2);border-radius:1px;padding:2px;gap:2px}
+html[data-style="phosphor"] .pills button{height:26px;padding:0 12px;border-radius:0;font-size:11px;color:var(--muted)}
+html[data-style="phosphor"] .pills button:hover{color:var(--hi)}
+html[data-style="phosphor"] .pills button[aria-pressed="true"]{background:var(--well);color:var(--accent)}
+
+/* ---------- tables: dense CLI output ---------- */
+html[data-style="phosphor"] th{font-size:10.5px;letter-spacing:.064em;color:var(--muted);padding:10px 14px;border-bottom:1px solid var(--line);background:var(--surface)}
+html[data-style="phosphor"] th button:hover{color:var(--hi)}
+html[data-style="phosphor"] td{border-bottom:1px solid var(--line);font-size:13.5px}
+html[data-style="phosphor"] tbody tr.row:hover{background:var(--well)}
+html[data-style="phosphor"] tbody tr.row[aria-selected="true"]{background:var(--well)}
+html[data-style="phosphor"] tbody tr.row[aria-selected="true"]>td:first-child{box-shadow:inset 2px 0 0 var(--accent)}
+html[data-style="phosphor"] .subj{color:var(--hi)}
+html[data-style="phosphor"] .sub2{font-size:12px}
+html[data-style="phosphor"] td.c-sla{font-size:12px}
+html[data-style="phosphor"] .htable tr.grp td{background:var(--well);font:400 10.5px/1.2 var(--mono);text-transform:uppercase;letter-spacing:.064em;color:var(--muted)}
+html[data-style="phosphor"] .htable .hit mark{background:var(--teal);color:var(--teal-ink);border-radius:0}
+html[data-style="phosphor"] .empty b{font:400 17px var(--display);color:var(--hi)}
+
+/* category icons, avatars and logos: monochrome hardware */
+html[data-style="phosphor"] .cat{border-radius:1px;background:transparent;border:1px solid var(--line);color:color-mix(in srgb,var(--c,var(--accent)) 55%,var(--muted))}
+html[data-style="phosphor"] .cat svg.ic{stroke-width:1.5}
+html[data-style="phosphor"] .av{background:var(--well)!important;color:var(--ink)!important;box-shadow:inset 0 0 0 1px var(--line2);font:400 calc(var(--s)*.4)/1 var(--mono);letter-spacing:0}
+html[data-style="phosphor"] .logo{border-radius:1px;background:var(--well)!important;color:var(--ink)!important;border:1px solid var(--line)!important;font:400 calc(var(--s)*.38)/1 var(--mono)}
+html[data-style="phosphor"] .logo img{background:#fff}
+
+/* severity bars: square segments */
+html[data-style="phosphor"] .bars{gap:2px;height:12px}
+html[data-style="phosphor"] .bars i{width:3px;border-radius:0}
+html[data-style="phosphor"] .bars i:nth-child(1){height:3px}html[data-style="phosphor"] .bars i:nth-child(2){height:6px}html[data-style="phosphor"] .bars i:nth-child(3){height:9px}html[data-style="phosphor"] .bars i:nth-child(4){height:12px}
+html[data-style="phosphor"] .sev.S3 .bars i.on{background:var(--ink)}html[data-style="phosphor"] .sev.S4 .bars i.on{background:var(--faint)}
+html[data-style="phosphor"] .sev>span:last-child{font-size:13px}
+
+/* status chips: LED housings */
+html[data-style="phosphor"] .chip{height:22px;padding:0 8px;border-radius:1px;font-size:10.5px;gap:7px;background:var(--surface);color:color-mix(in srgb,var(--c) 70%,var(--hi));box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--c) 28%,transparent)}
+html[data-style="phosphor"] .chip::before{width:5px;height:5px;border-radius:0;box-shadow:0 0 5px color-mix(in srgb,var(--c) 70%,transparent)}
+html[data-style="phosphor"] .chip.new{--c:var(--violet)}
+html[data-style="phosphor"] .chip.pending{--c:var(--muted)}
+html[data-style="phosphor"] .chip.closed{--c:var(--faint);color:var(--muted)}
+html[data-style="phosphor"] .chip.closed::before,html[data-style="phosphor"] .chip.pending::before{box-shadow:none}
+html[data-style="phosphor"] .breach{color:var(--warn)}
+html[data-style="phosphor"] .pill{height:20px;padding:0 7px;border-radius:1px;font-size:10px;background:var(--surface);color:var(--muted);box-shadow:inset 0 0 0 1px var(--line)}
+html[data-style="phosphor"] .pill.on,html[data-style="phosphor"] .pill.oncall,html[data-style="phosphor"] .pill.ok{background:var(--surface);color:var(--good);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--good) 30%,transparent)}
+html[data-style="phosphor"] .pill.leave,html[data-style="phosphor"] .pill.no{background:var(--surface);color:var(--warn);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--warn) 30%,transparent)}
+html[data-style="phosphor"] .pill.wait{background:var(--surface);color:var(--amber);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--amber) 30%,transparent)}
+html[data-style="phosphor"] .chips .pill{height:20px;font-size:10px}
+html[data-style="phosphor"] .tier{border-radius:1px;font:400 10px/1 var(--mono);width:18px;height:18px}
+html[data-style="phosphor"] .tier.C{background:transparent;color:var(--warn);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--warn) 45%,transparent)}
+html[data-style="phosphor"] .tier.H{background:transparent;color:var(--amber);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--amber) 45%,transparent)}
+html[data-style="phosphor"] .tier.N{background:transparent;color:var(--muted);box-shadow:inset 0 0 0 1px var(--line2)}
+html[data-style="phosphor"] .tier.L{border:1px dashed var(--line2)}
+html[data-style="phosphor"] .badge{min-width:22px;height:20px;padding:0 6px;border-radius:1px;background:var(--well);color:var(--hi);box-shadow:inset 0 0 0 1px var(--line2);font:400 11px var(--mono)}
+html[data-style="phosphor"] .badge.hot{background:var(--surface);color:var(--warn);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--warn) 50%,transparent)}
+
+/* ---------- right pane (ticket / customer): hairline divider, no float ---------- */
+html[data-style="phosphor"] .detail{border:0;border-left:1px solid var(--line);border-radius:0;box-shadow:none;background:var(--surface);padding:18px 22px}
+html[data-style="phosphor"] .d-top{gap:10px;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+html[data-style="phosphor"] .detail h2,html[data-style="phosphor"] .dlg h2{font:400 24px/1.18 var(--display);letter-spacing:-.02em;color:var(--hi)}
+html[data-style="phosphor"] .req{border-bottom:1px dashed var(--line);padding-bottom:16px}
+html[data-style="phosphor"] .req b{color:var(--hi)}
+html[data-style="phosphor"] .props{gap:12px;margin:16px 0}
+html[data-style="phosphor"] .sect{border-top:1px solid var(--line);margin-top:20px;padding-top:16px}
+html[data-style="phosphor"] .sect>.lbl::before{content:"// " / "";color:var(--faint)}
+html[data-style="phosphor"] .n .b{background:var(--well);border-radius:1px;border-left:2px solid var(--line2)}
+html[data-style="phosphor"] .n .hd{font-size:12px}
+html[data-style="phosphor"] .n .hd b{color:var(--hi)}
+html[data-style="phosphor"] .hist time{font-size:11px}
+html[data-style="phosphor"] .pop{border:1px solid var(--line2);border-radius:1px;background:var(--surface);padding:6px;box-shadow:none}
+html[data-style="phosphor"] .pop .opt{border-radius:0;padding:7px 10px}
+html[data-style="phosphor"] .pop .opt:hover,html[data-style="phosphor"] .pop .opt:focus-visible{background:var(--well);color:var(--hi)}
+html[data-style="phosphor"] .check input{accent-color:var(--accent);border-radius:0}
+html[data-style="phosphor"] .em{border-radius:1px;background:var(--bg)}
+html[data-style="phosphor"] .em-body{border-radius:1px;font-family:var(--mono);font-size:12px}
+html[data-style="phosphor"] .simbox,html[data-style="phosphor"] .rq-sum,html[data-style="phosphor"] .secnote,html[data-style="phosphor"] .subform,html[data-style="phosphor"] .agedit,html[data-style="phosphor"] .roles>div{border-radius:1px;background:var(--bg);border:1px solid var(--line)}
+html[data-style="phosphor"] .sim .res,html[data-style="phosphor"] .rq-note{border-radius:1px}
+html[data-style="phosphor"] .tl{border-left:1px solid var(--line2)}
+html[data-style="phosphor"] .tl li::before{border-radius:0;width:8px;height:8px;left:-19px;border:1px solid var(--warn);background:var(--surface)}
+html[data-style="phosphor"] .phases span{border-radius:1px;font-size:10px;background:var(--well)}
+html[data-style="phosphor"] .phases span.done{background:transparent;color:var(--warn);box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--warn) 40%,transparent)}
+html[data-style="phosphor"] .phases span.now{background:var(--warn);color:var(--bg)}
+
+/* ---------- boards ---------- */
+html[data-style="phosphor"] .sec-h{font:400 11px/1.2 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin:28px 0 12px;padding-bottom:10px;border-bottom:1px dashed var(--line)}
+html[data-style="phosphor"] .sec-h .num{color:var(--muted)}
+html[data-style="phosphor"] .board{gap:8px}
+html[data-style="phosphor"] .colm{background:transparent;border:1px solid var(--line);border-radius:1px;padding:8px}
+html[data-style="phosphor"] .colm.un{border-style:dashed;border-color:var(--line2)}
+html[data-style="phosphor"] .colm.over{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 6%,transparent)}
+html[data-style="phosphor"] .colm>header{padding:4px 4px 10px;margin-bottom:8px;border-bottom:1px solid var(--line)}
+html[data-style="phosphor"] .colm>header b{font:400 14px/1.25 var(--display);color:var(--hi)}
+html[data-style="phosphor"] .colm>header small{font:400 10.5px/1.3 var(--mono);text-transform:uppercase;letter-spacing:.05em}
+html[data-style="phosphor"] .colm>header .hic{border-radius:1px;background:transparent}
+html[data-style="phosphor"] .colm .none{font:400 10.5px/1.4 var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--muted)}
+html[data-style="phosphor"] .tk{background:var(--surface);border:1px solid var(--line);border-left:2px solid var(--faint);border-radius:1px;padding:9px 10px;margin-bottom:6px}
+html[data-style="phosphor"] .tk:hover{border-color:var(--line2)}
+html[data-style="phosphor"] .tk.S1{border-left-color:var(--warn)}html[data-style="phosphor"] .tk.S2{border-left-color:var(--amber)}html[data-style="phosphor"] .tk.S3{border-left-color:var(--ink)}
+html[data-style="phosphor"] .tk:hover.S1{border-left-color:var(--warn)}html[data-style="phosphor"] .tk:hover.S2{border-left-color:var(--amber)}html[data-style="phosphor"] .tk:hover.S3{border-left-color:var(--ink)}
+html[data-style="phosphor"] .tk[aria-selected="true"]{background:var(--well);border-color:var(--line2)}
+html[data-style="phosphor"] .tk .r1 .cat{border-radius:1px}
+html[data-style="phosphor"] .tk .sj{color:var(--hi);font-size:13.5px}
+html[data-style="phosphor"] .tk .r3{border-top:1px dashed var(--line)}
+html[data-style="phosphor"] .tk .mv{border-radius:1px;background:var(--surface)}
+html[data-style="phosphor"] .tk .mv button,html[data-style="phosphor"] .rowacts .mvb,html[data-style="phosphor"] .rtcard .mvb{border-radius:1px;background:var(--surface)}
+html[data-style="phosphor"] .tk .mv button:hover:not(:disabled),html[data-style="phosphor"] .rowacts .mvb:hover:not(:disabled){border-color:var(--hi)}
+html[data-style="phosphor"] .rowacts select.field{height:28px;font-size:12px}
+html[data-style="phosphor"] .dropline{height:1px;border-radius:0;background:var(--accent);box-shadow:0 0 0 1px color-mix(in srgb,var(--accent) 35%,transparent)}
+html[data-style="phosphor"] .agent-h{padding:12px 16px}
+html[data-style="phosphor"] .agent-h b{font:400 15px/1.2 var(--display);color:var(--hi)}
+html[data-style="phosphor"] .qtools{font-size:10.5px}
+html[data-style="phosphor"] .qtools .linkbtn{font-size:10.5px}
+
+/* ---------- customers, admin, routing ---------- */
+html[data-style="phosphor"] .custgrid{gap:0;border-top:1px solid var(--line);border-left:1px solid var(--line)}
+html[data-style="phosphor"] .cust{border-radius:0;border:0;border-right:1px solid var(--line);border-bottom:1px solid var(--line);background:var(--surface);padding:18px 20px}
+html[data-style="phosphor"] .cust:hover{background:var(--well)}
+html[data-style="phosphor"] .cust[aria-selected="true"]{background:var(--well);box-shadow:inset 2px 0 0 var(--accent)}
+html[data-style="phosphor"] .cust .top b{font:400 15px/1.25 var(--display);color:var(--hi)}
+html[data-style="phosphor"] .cust .stats{font-size:10.5px}
+html[data-style="phosphor"] .cust .stats b{color:var(--hi)}
+html[data-style="phosphor"] .crow .meta b,html[data-style="phosphor"] .tline .meta b,html[data-style="phosphor"] .sim .meta b,html[data-style="phosphor"] .agrow .who b{color:var(--hi)}
+html[data-style="phosphor"] .tline:hover b{color:var(--accent)}
+html[data-style="phosphor"] .adgrid{gap:16px}
+html[data-style="phosphor"] .adcard{padding:20px}
+html[data-style="phosphor"] :is(.adcard,.teamcard,.rtcard) h3,html[data-style="phosphor"] .teamcard .th b,html[data-style="phosphor"] .rtcard .th b{font:400 15px/1.25 var(--display);color:var(--hi)}
+html[data-style="phosphor"] .roles b{font:400 11px var(--mono);text-transform:uppercase;letter-spacing:.06em;color:var(--hi)}
+html[data-style="phosphor"] .daypick button{border-radius:1px;font-size:10.5px;width:44px;height:30px}
+html[data-style="phosphor"] .daypick button[aria-pressed="true"]{background:var(--well);color:var(--accent);border-color:var(--line2)}
+html[data-style="phosphor"] .svc .ok{color:var(--good)}
+html[data-style="phosphor"] .imp-tbl{border-radius:1px}
+html[data-style="phosphor"] .bk-prog{height:4px;border-radius:0}
+html[data-style="phosphor"] .bk-prog i{background:var(--led)}
+
+/* pins and announcements */
+html[data-style="phosphor"] .pins-h .t{font:400 11px var(--mono);text-transform:uppercase;letter-spacing:.06em}
+html[data-style="phosphor"] .pin-add{font-size:13px}
+html[data-style="phosphor"] .pin{border-radius:1px;border-left-width:2px}
+html[data-style="phosphor"] .pin.t-warning{background:var(--surface)}html[data-style="phosphor"] .pin.t-critical{background:var(--surface)}
+html[data-style="phosphor"] .pin .ph b{color:var(--hi)}
+html[data-style="phosphor"] .announce{border-radius:1px;border:1px solid var(--line);border-left:2px solid var(--line2)}
+html[data-style="phosphor"] .announce.warning{border-color:color-mix(in srgb,var(--amber) 40%,var(--line));border-left-color:var(--amber);background:var(--surface)}
+html[data-style="phosphor"] .announce.critical{border-color:color-mix(in srgb,var(--warn) 40%,var(--line));border-left-color:var(--warn);background:var(--surface)}
+html[data-style="phosphor"] .announce .badge2{border-radius:1px;font-size:10px;background:var(--well)}
+html[data-style="phosphor"] .announce.warning .badge2{background:transparent;color:var(--amber);box-shadow:inset 0 0 0 1px var(--amber)}
+html[data-style="phosphor"] .announce.critical .badge2{background:transparent;color:var(--warn);box-shadow:inset 0 0 0 1px var(--warn)}
+
+/* ---------- reports ---------- */
+html[data-style="phosphor"] .grid2{gap:16px}
+html[data-style="phosphor"] .panel h3{font:400 11px/1.2 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);padding-bottom:12px;border-bottom:1px dashed var(--line);margin-bottom:18px}
+html[data-style="phosphor"] .panel.flush h3{margin-left:20px;margin-right:20px;padding-left:0;padding-right:0}
+html[data-style="phosphor"] .legend{font-size:10.5px;gap:14px}
+html[data-style="phosphor"] .legend i{height:2px;border-radius:0}
+html[data-style="phosphor"] .legend i[style*="--accent"]{background:var(--ink)!important}
+html[data-style="phosphor"] .chart polyline[stroke="var(--accent)"]{stroke:var(--ink)}
+html[data-style="phosphor"] .chart polyline{stroke-width:1.5}
+html[data-style="phosphor"] .chart .y,html[data-style="phosphor"] .xlab{font-size:11px;color:var(--muted)}
+html[data-style="phosphor"] .bl .track{height:6px;border-radius:0;background:var(--well)}
+html[data-style="phosphor"] .bl .fill{border-radius:0}
+html[data-style="phosphor"] .minibar{height:6px;border-radius:0}
+
+/* ---------- menus and dialogs ---------- */
+html[data-style="phosphor"] .menu{top:40px;border:1px solid var(--line2);border-radius:1px;box-shadow:none;background:var(--surface);padding:18px}
+html[data-style="phosphor"] .menu h3{font:400 17px/1.2 var(--display);letter-spacing:-.01em}
+html[data-style="phosphor"] .menu .grp{margin-top:16px;padding-top:14px;border-top:1px dashed var(--line)}
+html[data-style="phosphor"] .menu .lbl{margin-bottom:8px}
+html[data-style="phosphor"] .menu p.small{font-size:12px;border-top:1px dashed var(--line)}
+html[data-style="phosphor"] #modes{display:flex}
+html[data-style="phosphor"] .skin{border-radius:1px;border:1px solid var(--line);padding:8px 10px}
+html[data-style="phosphor"] .skin:hover{border-color:var(--line2)}
+html[data-style="phosphor"] .skin[aria-pressed="true"]{border-color:var(--accent);background:var(--well)}
+html[data-style="phosphor"] .skin small{font-size:9.5px}
+html[data-style="phosphor"] .skin .sw{border-radius:1px;border:1px solid var(--line2);width:24px;height:24px}
+html[data-style="phosphor"] .skin .sw i{border-radius:0;width:8px;height:8px;right:3px;bottom:3px}
+html[data-style="phosphor"] .who-card b{font:400 16px/1.2 var(--display);color:var(--hi)}
+/* toggle: a square rocker */
+html[data-style="phosphor"] .switch{font-size:13.5px}
+html[data-style="phosphor"] .switch input{width:34px;height:18px;border-radius:1px;background:var(--bg);box-shadow:inset 0 0 0 1px var(--line2)}
+html[data-style="phosphor"] .switch input::after{top:3px;left:3px;width:12px;height:12px;border-radius:0;background:var(--muted)}
+html[data-style="phosphor"] .switch input:checked{background:var(--teal);box-shadow:inset 0 0 0 1px var(--teal-hi)}
+html[data-style="phosphor"] .switch input:checked::after{background:var(--teal-ink);transform:translateX(16px)}
+html[data-style="phosphor"] dialog.dlg{border:1px solid var(--line2);border-radius:1px;box-shadow:none;background:var(--surface);padding:24px}
+html[data-style="phosphor"] dialog.dlg::backdrop{background:rgba(5,7,9,.72)}
+html[data-style="phosphor"][data-skin="phosphor-light"] dialog.dlg::backdrop{background:rgba(30,32,34,.45)}
+html[data-style="phosphor"] .dlg .d-top{margin-bottom:18px}
+html[data-style="phosphor"] .dlg h2{margin-bottom:8px}
+html[data-style="phosphor"] .dlg>p.muted{font-size:13.5px}
+html[data-style="phosphor"] .form{gap:14px 16px}
+html[data-style="phosphor"] .form .err{font-size:12px;color:var(--warn)}
+html[data-style="phosphor"] .routeline{font-size:12px}
+html[data-style="phosphor"] .kv>dt{font-size:10.5px;padding-top:12px}
+html[data-style="phosphor"] .prof b{font:400 20px/1.2 var(--display);color:var(--hi)}
+html[data-style="phosphor"] #sh-text{background:var(--bg);font-size:12px}
+html[data-style="phosphor"] .toast{border:1px solid var(--line2);border-radius:1px;box-shadow:none;background:var(--surface);left:24px;bottom:calc(48px + env(safe-area-inset-bottom,0px))}
+html[data-style="phosphor"] .sq-fx{color:var(--accent);font:400 12px/1 var(--mono)}
+html[data-style="phosphor"] .sq-fx.word{border:1px solid var(--line2);border-radius:1px;font-family:var(--mono);text-transform:uppercase;letter-spacing:.06em;font-size:calc(var(--fs,15px)*.8)}
+html[data-style="phosphor"] .rq-photo{border-radius:50%}
+html[data-style="phosphor"] .squishy{border-radius:1px}
+
+/* ---------- footer: terminal status line ---------- */
+html[data-style="phosphor"] footer.foot{background:var(--bg);border-top:1px solid var(--line)}
+html[data-style="phosphor"] .foot-in{max-width:1280px;height:34px;padding:0 24px;font-size:10.5px;color:var(--muted);gap:20px}
+html[data-style="phosphor"] .foot-in time{color:var(--hi);letter-spacing:.04em}
+html[data-style="phosphor"] .foot-in time::before{content:"$ " / "";color:var(--accent)}
+
+/* ---------- layout: three-pane console ----------
+   >=1100px: fixed left rail (brand, numbered nav, actions), list in the middle,
+   ticket/customer docked as the right pane, a status line across the bottom.
+   <1100px: the rail folds into a top strip and the right pane becomes an overlay. */
+:root[data-skin^="phosphor"]{--side:212px;--pane:clamp(380px,31vw,500px);--status:28px}
+
+/* command bar: the filter row of a list view */
+html[data-style="phosphor"] section>.toolbar{align-items:center;gap:6px;padding:6px;margin-bottom:10px;background:var(--surface);border:1px solid var(--line);border-radius:1px}
+html[data-style="phosphor"] section>.toolbar::before{content:">" / "";font:400 13px/1 var(--mono);color:var(--accent);padding:0 4px 0 6px}
+html[data-style="phosphor"] section>.toolbar .field{height:28px;font-size:12.5px}
+html[data-style="phosphor"] section>.toolbar select.field{background-position:calc(100% - 15px) 11px,calc(100% - 10px) 11px}
+html[data-style="phosphor"] section>.toolbar .searchbox svg{top:5px}
+html[data-style="phosphor"] section>.toolbar .btn{height:28px}
+
+/* customers: a list, not a grid of cards */
+html[data-style="phosphor"] .custgrid{grid-template-columns:minmax(0,1fr);border:1px solid var(--line);border-bottom:0}
+html[data-style="phosphor"] .cust{flex-direction:row;flex-wrap:wrap;align-items:center;gap:6px 18px;border-right:0;padding:12px 16px}
+html[data-style="phosphor"] .cust .top{flex:1 1 260px;min-width:0}
+html[data-style="phosphor"] .cust .stats{flex:0 1 auto}
+
+/* admin: sub-tabs as a second, narrower rail */
+@media (min-width:821px){
+  html[data-style="phosphor"] #v-admin:not([hidden]){display:grid;grid-template-columns:176px minmax(0,1fr);column-gap:24px;align-items:start}
+  html[data-style="phosphor"] #v-admin>.pagehead{grid-column:1/-1}
+  html[data-style="phosphor"] #ad-tabs{flex-direction:column;flex-wrap:nowrap;gap:0;border-bottom:0;border-left:1px solid var(--line);position:sticky;top:20px}
+  html[data-style="phosphor"] #ad-tabs button{height:32px;justify-content:flex-start;text-align:left;margin:0 0 0 -1px;border-bottom:0;border-left:1px solid transparent;padding:0 12px}
+  html[data-style="phosphor"] #ad-tabs button[aria-pressed="true"]{border-left-color:var(--accent);background:var(--well)}
+  html[data-style="phosphor"] #ad-body{margin-top:0!important;min-width:0}
+}
+
+/* dispatch: dense, full-height columns */
+html[data-style="phosphor"] main.wide .board{align-items:stretch;gap:6px;min-height:calc(100vh - 230px)}
+html[data-style="phosphor"] main.wide .colm{padding:6px}
+html[data-style="phosphor"] main.wide .tk{padding:7px 8px;margin-bottom:4px}
+html[data-style="phosphor"] main.wide .tk .r1{margin-bottom:6px}
+html[data-style="phosphor"] main.wide .tk .r3{margin-top:6px;padding-top:6px}
+html[data-style="phosphor"] main.wide .tk .sj{font-size:13px}
+
+@media (min-width:1100px){
+  html[data-style="phosphor"] body{padding-bottom:0}
+
+  /* left rail */
+  html[data-style="phosphor"] header.bar{position:fixed;top:0;left:0;bottom:0;width:var(--side);border-bottom:0;border-right:1px solid var(--line);background:var(--bg)}
+  html[data-style="phosphor"] .bar-in{max-width:none;height:100%;min-height:0;margin:0;padding:0 0 calc(var(--status) + 1px);flex-direction:column;align-items:stretch;gap:0;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin}
+  html[data-style="phosphor"] .brand{align-self:stretch;min-height:56px;padding:0 18px;border-bottom:1px solid var(--line);flex:none}
+  html[data-style="phosphor"] nav.tabs{flex-direction:column;align-items:stretch;padding:10px 0;counter-reset:tab;flex:none;order:0;width:auto}
+  html[data-style="phosphor"] nav.tabs button{min-height:34px;height:34px;padding:0 16px;margin:0;justify-content:flex-start;text-align:left;display:flex;align-items:center;gap:12px;border-bottom:0;border-left:2px solid transparent}
+  html[data-style="phosphor"] nav.tabs button::before{counter-increment:tab;content:counter(tab,decimal-leading-zero);content:counter(tab,decimal-leading-zero) / "";color:var(--faint);font-size:10.5px}
+  html[data-style="phosphor"] nav.tabs button:hover{background:var(--well)}
+  html[data-style="phosphor"] nav.tabs button[aria-current="page"]{border-left-color:var(--accent);background:var(--well)}
+  html[data-style="phosphor"] nav.tabs button[aria-current="page"]::before{color:var(--accent)}
+  html[data-style="phosphor"] .bar-right{margin:auto 0 0;align-self:stretch;flex-wrap:wrap;gap:8px;padding:14px 16px;border-top:1px solid var(--line)}
+  html[data-style="phosphor"] .shiftbox{flex:1 1 100%;justify-content:space-between;gap:8px}
+  html[data-style="phosphor"] .shiftbox:empty{display:none}
+  html[data-style="phosphor"] .shiftbox .btn{height:28px;padding:0 10px}
+  html[data-style="phosphor"] .shift-time{display:inline-flex}
+  html[data-style="phosphor"] #btn-new{flex:1 1 100%;justify-content:center}
+  /* menus open to the right of the rail, anchored to the bottom */
+  html[data-style="phosphor"] header.bar .menu{position:fixed;left:calc(var(--side) + 8px);right:auto;top:auto;bottom:calc(var(--status) + 8px);max-height:calc(100vh - var(--status) - 24px);overflow:auto}
+
+  /* status line across the bottom of the content */
+  html[data-style="phosphor"] footer.foot{left:var(--side)}
+  html[data-style="phosphor"] .foot-in{max-width:none;height:var(--status);padding:0 16px}
+  html[data-style="phosphor"] .toast{left:calc(var(--side) + 16px);bottom:calc(var(--status) + 12px)}
+
+  /* middle pane */
+  html[data-style="phosphor"] main,html[data-style="phosphor"] main.wide{max-width:none;margin:0 0 0 var(--side);padding:18px 24px calc(var(--status) + 24px)}
+  html[data-style="phosphor"] main:is(.has-detail,:has(>#v-queue:not([hidden])),:has(>#v-mine:not([hidden])),:has(>#v-history:not([hidden])),:has(>#v-customers:not([hidden]))){padding-right:calc(var(--pane) + 24px)}
+  html[data-style="phosphor"] main:is(:has(>#v-queue:not([hidden])),:has(>#v-mine:not([hidden])),:has(>#v-history:not([hidden]))) :is(.c-cat,.c-team){display:none}
+
+  /* right pane: always docked, full height */
+  html[data-style="phosphor"] .detail{top:0;bottom:var(--status);right:0;width:var(--pane);z-index:20}
+  html[data-style="phosphor"] main:not(.has-detail):is(:has(>#v-queue:not([hidden])),:has(>#v-mine:not([hidden])),:has(>#v-history:not([hidden])),:has(>#v-customers:not([hidden])))::after{
+    content:"no ticket open\A select a row to inspect it" / "";white-space:pre;position:fixed;z-index:20;top:0;right:0;bottom:var(--status);width:var(--pane);
+    display:flex;align-items:center;justify-content:center;text-align:center;font:400 11px/2 var(--mono);letter-spacing:.08em;text-transform:uppercase;color:var(--muted);
+    background-color:var(--surface);border-left:1px solid var(--line);
+    background-image:linear-gradient(var(--grid) 1px,transparent 1px),linear-gradient(90deg,var(--grid) 1px,transparent 1px);background-size:24px 24px}
+  html[data-style="phosphor"] main:not(.has-detail):has(>#v-customers:not([hidden]))::after{content:"no customer open\A select one to edit it" / ""}
+}
+@media (min-width:1100px) and (max-width:1600px){
+  html[data-style="phosphor"] main:is(:has(>#v-queue:not([hidden])),:has(>#v-mine:not([hidden])),:has(>#v-history:not([hidden]))) :is(.c-asg,.c-id){display:none}
+}
+/* denser list rows inside the middle pane */
+@media (min-width:1100px){
+  html[data-style="phosphor"] main:is(.has-detail,:has(>#v-queue:not([hidden])),:has(>#v-mine:not([hidden])),:has(>#v-history:not([hidden]))) :is(td,th){padding-left:10px;padding-right:10px}
+  html[data-style="phosphor"] main:is(.has-detail,:has(>#v-queue:not([hidden])),:has(>#v-mine:not([hidden])),:has(>#v-history:not([hidden]))) td.wrap{min-width:240px}
+  html[data-style="phosphor"] td.wrap .sub2>span:last-child{max-width:30ch;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  html[data-style="phosphor"] td.wrap .cat{width:28px;height:28px}
+  html[data-style="phosphor"] .tiles,html[data-style="phosphor"] .tiles.t4{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:thin}
+  html[data-style="phosphor"] .tile,html[data-style="phosphor"] .tile:nth-child(n){padding:8px 12px;gap:8px;flex-shrink:0}
+  html[data-style="phosphor"] .tile .lbl{font-size:10px;letter-spacing:.05em}
+  html[data-style="phosphor"] td.wrap .cat svg.ic{width:15px;height:15px}
+}
+@media (min-width:1100px) and (max-width:1360px){
+  html[data-style="phosphor"] main:is(.has-detail,:has(>#v-queue:not([hidden])),:has(>#v-mine:not([hidden])),:has(>#v-history:not([hidden]))) .c-id{display:none}
+}
+
+/* ---------- below 1100px: top strip, right pane as an overlay ---------- */
+@media (max-width:1099px){
+  html[data-style="phosphor"] .tile,html[data-style="phosphor"] .tile:nth-child(n){min-width:max-content;max-width:100%}
+  html[data-style="phosphor"] .bar-in{flex-wrap:wrap;gap:0 16px;min-height:52px;align-items:center}
+  html[data-style="phosphor"] .brand,html[data-style="phosphor"] .bar-right{min-height:52px}
+  html[data-style="phosphor"] nav.tabs{order:3;margin:0 -24px;width:calc(100% + 48px);padding:0 16px;border-top:1px solid var(--line);overflow-x:auto;scrollbar-width:none}
+  html[data-style="phosphor"] nav.tabs::-webkit-scrollbar{display:none}
+  html[data-style="phosphor"] nav.tabs button{min-height:40px;padding:0 12px}
+  html[data-style="phosphor"] .detail{inset:0 0 0 auto;width:min(520px,100%);z-index:40;border-left:1px solid var(--line2);padding-top:calc(18px + env(safe-area-inset-top,0px));padding-bottom:calc(18px + env(safe-area-inset-bottom,0px))}
+}
+@media (max-width:820px){
+  html[data-style="phosphor"] .bar-in{padding:0 16px;gap:10px 12px;min-height:52px;align-items:center}
+  html[data-style="phosphor"] .brand,html[data-style="phosphor"] .bar-right{align-self:center;min-height:52px}
+  html[data-style="phosphor"] nav.tabs{margin:0 -16px;width:calc(100% + 32px);padding:0 8px;border-top:1px solid var(--line)}
+  html[data-style="phosphor"] nav.tabs button{min-height:40px;padding:0 10px}
+  html[data-style="phosphor"] .detail{width:auto;inset:0;border-left:0}
+  html[data-style="phosphor"] main{padding:16px 16px 72px}
+  html[data-style="phosphor"] h1{font-size:22px}
+  html[data-style="phosphor"] .foot-in{padding:0 16px;gap:14px}
+  html[data-style="phosphor"] section>.toolbar::before{display:none}
+}
+@media (max-width:560px){
+  html[data-style="phosphor"] .seg{flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}
+  html[data-style="phosphor"] .seg::-webkit-scrollbar{display:none}
+  html[data-style="phosphor"] .seg button{flex:none}
+  html[data-style="phosphor"] .btn.primary.new{padding:0 10px}
+  html[data-style="phosphor"] .brand>span:last-child{display:none}
+  html[data-style="phosphor"] .tile,html[data-style="phosphor"] .tile:nth-child(n){padding:8px 12px}
+}
