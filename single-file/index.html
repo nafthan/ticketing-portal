@@ -47,7 +47,7 @@ svg.ic{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;str
 .bar-in{max-width:1440px;margin:0 auto;min-height:64px;padding:0 32px;display:flex;align-items:center;gap:24px}
 .brand{display:flex;align-items:center;gap:8px;font:700 22px/1 var(--display);letter-spacing:-.6px}
 .brand svg{width:38px;height:35px}
-nav.tabs{display:flex;gap:4px}
+nav.tabs{display:flex;gap:4px;min-width:0;flex:0 1 auto;overflow-x:auto;scrollbar-width:none}nav.tabs::-webkit-scrollbar{display:none}.bar-in>.brand,.bar-in>.bar-right{flex:none}
 nav.tabs button{white-space:nowrap;background:none;border:0;height:34px;padding:0 14px;border-radius:99px;color:var(--muted);font-weight:500;transition:color .15s var(--ease),background-color .15s var(--ease)}
 nav.tabs button:hover{color:var(--ink)}
 nav.tabs button[aria-current="page"]{color:var(--ink);background:var(--well)}
@@ -376,7 +376,7 @@ tbody tr.row[aria-selected="true"]{background:var(--well)}
 
 /* ---------- footer and announcements ---------- */
 body{padding-bottom:36px}
-.foot{position:fixed;left:0;right:0;bottom:0;z-index:25;background:var(--bg);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+footer.foot{position:fixed;left:0;right:0;bottom:0;z-index:25;background:var(--bg);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
 .foot-in{max-width:1440px;margin:0 auto;height:34px;padding:0 32px;display:flex;align-items:center;gap:24px;font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden}
 .foot-in time{color:var(--ink);font-variant-numeric:tabular-nums}
 .f-hours,.foot-in .conn{display:inline-flex;align-items:center;gap:7px;min-width:0}
@@ -646,9 +646,14 @@ td.r,th.r{text-align:right}
   .tile:nth-child(-n+2){border-top:0}
   .tiles:not(.t4) .tile:last-child{grid-column:1/-1}
 }
+@media (max-width:1380px){.shift-time{display:none}nav.tabs button{padding:0 10px}}
+@media (max-width:1180px){
+  .bar-in{gap:12px;flex-wrap:wrap}.bar-in>.bar-right{margin-left:auto}
+  nav.tabs{order:3;width:100%;flex:1 0 100%;padding-bottom:10px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}nav.tabs::-webkit-scrollbar{display:none}
+  .detail{top:calc(112px + env(safe-area-inset-top,0px))}
+}
 @media (max-width:820px){
-  .bar-in{padding:0 16px;gap:12px;flex-wrap:wrap}
-  nav.tabs{order:3;width:100%;padding-bottom:10px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}nav.tabs::-webkit-scrollbar{display:none}
+  .bar-in{padding:0 16px}
   main{padding:24px 16px 72px}
   .conn span:last-child,.c-asg,.c-id{display:none}
   .grid2{grid-template-columns:minmax(0,1fr)}
@@ -1040,9 +1045,11 @@ const ACTIVE=new Set(["new","open","pending"]);
 const TEAMS=["Service desk","Networking","Security","Infrastructure"];
 const CATEGORIES=["Access and accounts","Hardware","Software","Email","Network","VPN and remote access","Firewall","Security incident","Phishing","Endpoint and malware","Backup and recovery","Servers and cloud"];
 const EV_LABEL={created:"Ticket opened",status:"Status changed",severity:"Severity changed",assignee:"Assignment changed",team:"Team changed",category:"Category changed",note:"Note or time",channel:"Channel changed",timeline:"Incident timeline",customer:"Customer record",staff:"Team",settings:"Settings",shift:"Shift",request:"Request",queue:"Dispatch order",share:"Shared",email:"Email",pin:"Pinned message"};
-const APP_VERSION="2.0.0";
+const APP_VERSION="2.1.0";
 const LS_KEY="helpdesk.local.v1",LS_PREF="helpdesk.prefs.v1";
-const SKINS=[["daylight","Daylight","#F4F6FA","#2F5BEA","light"],["peach","Peach","#FFF1E3","#C2255C","light"],["matcha","Matcha","#EFF4E1","#2F6B3A","light"],["cocoa","Cocoa","#1E1512","#FF8FAB","dark"],["midnight","Midnight","#101010","#ee6018","dark"]];
+/* A style pack (styles/<name>) sets window.HELPDESK_STYLE before this script; the default style sets nothing. */
+const STYLE=window.HELPDESK_STYLE||null;
+const SKINS=STYLE&&STYLE.skins&&STYLE.skins.length?STYLE.skins:[["daylight","Daylight","#F4F6FA","#2F5BEA","light"],["peach","Peach","#FFF1E3","#C2255C","light"],["matcha","Matcha","#EFF4E1","#2F6B3A","light"],["cocoa","Cocoa","#1E1512","#FF8FAB","dark"],["midnight","Midnight","#101010","#ee6018","dark"]];
 const skinKind=id=>(SKINS.find(s=>s[0]===id)||[])[4];
 const CHANNELS={phone:"Phone",email:"Email",portal:"Portal",chat:"Chat",monitoring:"Monitoring alert"};
 const TIERS={C:"Critical",H:"High",N:"Normal",L:"Low"};
@@ -1149,7 +1156,7 @@ function mascot(mood,live){
 
 /* ---------- state ---------- */
 const VIEWS=["queue","mine","dispatch","history","customers","reports","audit","admin"],TICKET_VIEWS=["queue","mine","dispatch","history"];
-const P={mode:"system",lightTheme:"peach",darkTheme:"cocoa",board:"board",mineView:"list",histView:"list",histGroup:"month",density:"cosy",mascot:true,squeak:false,notifyDecisions:true,notifyNew:true,notifySound:false,avatars:true,exact:false,start:"queue",mine:false,team:"",noteInternal:true};
+const P={mode:STYLE&&STYLE.mode||"system",lightTheme:STYLE&&STYLE.light||"peach",darkTheme:STYLE&&STYLE.dark||"cocoa",board:"board",mineView:"list",histView:"list",histGroup:"month",density:"cosy",mascot:true,squeak:false,notifyDecisions:true,notifyNew:true,notifySound:false,avatars:true,exact:false,start:"queue",mine:false,team:"",noteInternal:true};
 const S={pins:[],pinRm:null,pinOpen:new Set(),pinEdit:null,counters:{},siteForm:null,rmSite:null,shareId:null,queues:[],reqDocs:[],decisions:{},rqDraft:null,rqDecline:null,acctTab:"profile",chForm:null,online:navigator.onLine!==false,hb:true,reqFilter:"pending",agEdit:null,agAdd:false,agQ:"",tmNew:false,tmRm:null,rsFor:null,heroMood:"happy",shifts:[],adTab:"general",adRm:null,customers:[],custById:new Map(),custByName:new Map(),staff:[],events:[],cfg:null,cfgVer:0,selCust:null,cuText:"",isEditor:false,assets:null,noteMin:"",noteBill:true,tl:{text:"",phase:"",at:""},wsTab:"team",staffQ:"",rmStaff:null,conForm:null,rmContact:null,view:"queue",tickets:[],byId:new Map(),loaded:false,mode:"connecting",sel:null,
   meId:null,meName:"",meAvatar:"",isOwner:false,canWrite:true,user:null,downloads:null,names:{},avatars:{},
   q:{text:"",status:"active",customer:"",sev:"",team:"",category:"",assignee:"",sla:"",sort:"sla",dir:"asc"},
