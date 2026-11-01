@@ -1,5 +1,7 @@
 import { defineConfig, type Plugin } from "vite";
 import react from "@vitejs/plugin-react";
+// @ts-ignore: plain JavaScript helper shared with the build script
+import { listStyles, applyStyle } from "./scripts/styles.mjs";
 
 /**
  * Inlines the built script and stylesheet into index.html, so the build is a
@@ -29,16 +31,49 @@ function singleFile(): Plugin {
     },
   };
 }
+/**
+ * `npx vite --mode <style>` previews a style pack from styles/ while developing.
+ * (Builds make every style's copy after the default build: see scripts/styles.mjs.)
+ */
+function stylePreview(style: string): Plugin {
+  return {
+    name: "helpdesk-style-preview",
+    apply: "serve",
+    transformIndexHtml(html) {
+      const pack = listStyles().find((s: { name: string }) => s.name === style);
+      return pack ? applyStyle(html, pack) : html;
+    },
+  };
+}
+/** In the no-sample-data build, the sample data file is replaced with nothing. */
+function noSampleData(): Plugin {
+  const empty = "\0helpdesk-no-sample-data";
+  return {
+    name: "helpdesk-no-sample-data",
+    enforce: "pre",
+    resolveId(source) { return /(^|\/)demo-data\.json$/.test(source) ? empty : null; },
+    load(id) { return id === empty ? "export default null;" : null; },
+  };
+}
 const escape = (s: string) => s.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 
-export default defineConfig({
-  base: "./",
-  plugins: [react(), singleFile()],
-  build: {
-    target: "es2022",
-    cssCodeSplit: false,
-    assetsInlineLimit: 100_000_000,
-    modulePreload: false,
-    rollupOptions: { output: { inlineDynamicImports: true } },
-  },
+/**
+ * Modes: `clean` builds the no-sample-data copy (`vite build --mode clean`), a
+ * style name previews that style, and `<style>-clean` does both while developing.
+ */
+export default defineConfig(({ mode }) => {
+  const clean = /(^|-)clean$/.test(mode);
+  const style = mode.replace(/-?clean$/, "");
+  return {
+    base: "./",
+    define: { __HELPDESK_SAMPLE__: JSON.stringify(!clean) },
+    plugins: [react(), singleFile(), stylePreview(style), ...(clean ? [noSampleData()] : [])],
+    build: {
+      target: "es2022",
+      cssCodeSplit: false,
+      assetsInlineLimit: 100_000_000,
+      modulePreload: false,
+      rollupOptions: { output: { inlineDynamicImports: true } },
+    },
+  };
 });
