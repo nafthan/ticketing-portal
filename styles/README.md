@@ -15,6 +15,7 @@ Every style has a light and a dark theme, follows the Light / Dark / System sett
 
 - **Single-file:** open or host `single-file/<style>/index.html`. These copies are committed to the repository, so there's nothing to build.
 - **App:** `npm run build` makes `dist/<style>/index.html` for every style, next to the default `dist/index.html`.
+- **Without sample data:** every style also has a copy in `clean/`: `single-file/clean/<style>/index.html` and `dist/clean/<style>/index.html`.
 - **While developing the app:** `npx vite --mode <style>` runs the development server in that style.
 
 Copies of the same helpdesk in different styles share their data when they're hosted on the same site, so people can each use the style they prefer.
@@ -65,8 +66,8 @@ A style is a folder in `styles/` with two files:
 
 1. Copy a folder in `styles/` and rename it.
 2. Edit `style.json` and `style.css`.
-3. Run `npm run styles` to make the single-file copy, and `npm run build` for the app.
-4. Commit the folder and the new `single-file/<name>/index.html`.
+3. Run `npm run styles` to make the single-file copies, and `npm run build` for the app.
+4. Commit the folder, `single-file/<name>/index.html` and `single-file/clean/<name>/index.html`.
 
 The GitHub check fails if a single-file copy is out of date, so remember step 3 after changing either a style or `single-file/index.html`.
 
