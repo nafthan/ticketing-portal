@@ -20,6 +20,14 @@ Kept deliberately small. Runtime: `react`, `react-dom`. Build: `vite`, `@vitejs/
 
 Please don't add a dependency without discussing it in an issue first.
 
+## Styles
+
+Every edition is also produced in each style in `styles/` (see [styles/README.md](styles/README.md)). A style is a stylesheet loaded after `src/styles.css` plus a small `style.json` with its colour themes and fonts; it changes look and layout with CSS only, so both editions need no code changes for a new style. `scripts/styles.mjs` makes the copies: `dist/<style>/index.html` after each build, and the committed `single-file/<style>/index.html` with `npm run styles`. A copy sets `window.HELPDESK_STYLE` before the app starts, which `SKINS` and the default preferences read (`constants.ts`, `state.ts`, and the same names in the single-file edition).
+
+## Without sample data
+
+Every copy also comes without sample data, in `clean/`. The app's is a second build, `vite build --mode clean` into `dist/clean/`: it sets `SAMPLE_DATA` (`constants.ts`) to `false` and swaps `demo-data.json` for nothing, so the sample data and every option to load or remove it are left out. The single-file edition's is made by `scripts/styles.mjs`, which removes the `demo-data` block, the section between the `standalone demo data` and `end of demo data` comments, and the setup link; `hasSampleData()` then turns the rest off. `npm run build` and `npm run styles` make the clean copies of every style too.
+
 ## Layout
 
 ```
@@ -37,7 +45,10 @@ src/
 tests/
   unit/               node --test, for src/core
   smoke.mjs           browser smoke test for both editions
-single-file/          the single-file edition
+single-file/          the single-file edition, and generated copies per style (single-file/<style>/) and
+                      without sample data (single-file/clean/, single-file/clean/<style>/)
+styles/               style packs: style.json + style.css per style
+scripts/styles.mjs    makes the style and no-sample-data copies (Node only, no packages)
 public/               copied as-is into dist/: platform.example.js, adapter-test.html
 ```
 

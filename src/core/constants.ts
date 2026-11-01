@@ -13,12 +13,29 @@ export const RUN: Set<string> = new Set(["new", "open"]);
 export const TEAMS = ["Service desk", "Networking", "Security", "Infrastructure"];
 export const CATEGORIES = ["Access and accounts", "Hardware", "Software", "Email", "Network", "VPN and remote access", "Firewall", "Security incident", "Phishing", "Endpoint and malware", "Backup and recovery", "Servers and cloud"];
 export const EV_LABEL: Record<string, string> = { created: "Ticket opened", status: "Status changed", severity: "Severity changed", assignee: "Assignment changed", team: "Team changed", category: "Category changed", note: "Note or time", channel: "Channel changed", timeline: "Incident timeline", customer: "Customer record", staff: "Team", settings: "Settings", shift: "Shift", request: "Request", queue: "Dispatch order", share: "Shared", email: "Email", pin: "Pinned message" };
-export const APP_VERSION = "2.0.0";
+export const APP_VERSION = "2.2.0";
+
+declare const __HELPDESK_SAMPLE__: boolean | undefined;
+/**
+ * Whether this build includes the sample data. `vite build --mode clean` makes the
+ * no-sample-data copy (dist/clean/), which leaves out the sample data and every
+ * option to load or remove it. Unset (in tests, for example) means true.
+ */
+export const SAMPLE_DATA: boolean = typeof __HELPDESK_SAMPLE__ === "boolean" ? __HELPDESK_SAMPLE__ : true;
 export const LS_KEY = "helpdesk.local.v1";
 export const LS_PREF = "helpdesk.prefs.v1";
 export const LS_COL: Record<string, string> = { pins: "helpdesk.local.pins", queues: "helpdesk.local.queues", shifts: "helpdesk.local.shifts", customers: "helpdesk.local.customers", staff: "helpdesk.local.staff", events: "helpdesk.local.events", config: "helpdesk.local.config" };
 /** [id, name, background, accent, kind] */
-export const SKINS: [string, string, string, string, "light" | "dark"][] = [["daylight", "Daylight", "#F4F6FA", "#2F5BEA", "light"], ["peach", "Peach", "#FFF1E3", "#C2255C", "light"], ["matcha", "Matcha", "#EFF4E1", "#2F6B3A", "light"], ["cocoa", "Cocoa", "#1E1512", "#FF8FAB", "dark"], ["midnight", "Midnight", "#101010", "#ee6018", "dark"]];
+/**
+ * The style pack this copy was built with (see styles/README.md). A pack sets
+ * window.HELPDESK_STYLE before the app loads; the default style sets nothing.
+ */
+export interface StylePack { name: string; label?: string; skins?: Skin[]; light?: string; dark?: string; mode?: "light" | "dark" | "system" }
+export type Skin = [id: string, label: string, background: string, accent: string, kind: "light" | "dark"];
+export const STYLE: StylePack | null = (typeof window !== "undefined" && (window as any).HELPDESK_STYLE) || null;
+
+/** Colour themes: [id, label, background swatch, accent swatch, light | dark]. A style pack brings its own. */
+export const SKINS: Skin[] = STYLE && STYLE.skins && STYLE.skins.length ? STYLE.skins : [["daylight", "Daylight", "#F4F6FA", "#2F5BEA", "light"], ["peach", "Peach", "#FFF1E3", "#C2255C", "light"], ["matcha", "Matcha", "#EFF4E1", "#2F6B3A", "light"], ["cocoa", "Cocoa", "#1E1512", "#FF8FAB", "dark"], ["midnight", "Midnight", "#101010", "#ee6018", "dark"]];
 export const skinKind = (id: any): "light" | "dark" | undefined => (SKINS.find((s) => s[0] === id) || ([] as any))[4];
 export const CHANNELS: Record<string, string> = { phone: "Phone", email: "Email", portal: "Portal", chat: "Chat", monitoring: "Monitoring alert" };
 export const TIERS: Record<string, string> = { C: "Critical", H: "High", N: "Normal", L: "Low" };

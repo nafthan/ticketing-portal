@@ -2,6 +2,12 @@
 
 Notable changes to helpdesk. Versions follow [semantic versioning](https://semver.org): a new major version means something needs action when you update, so read its notes first.
 
+## 2.2.0 (2026-11-01)
+
+### Added
+
+- **Copies without sample data.** Every edition and style now also comes without sample data, in `clean/`: `single-file/clean/index.html`, `dist/clean/index.html` and a copy per style inside each. They leave out the sample data, the **Explore with sample data** and **Load sample data** options, and the Sample data section in Admin, so they're ready for a real helpdesk. `npm run build` and `npm run styles` make them, and the smoke test checks them.
+
 ## 2.1.0 (2026-10-31)
 
 ### Added
@@ -17,7 +23,7 @@ Notable changes to helpdesk. Versions follow [semantic versioning](https://semve
 - `platform.example.js` could occasionally miss a change made in another tab.
 - The default top bar made the page scroll sideways on laptop-width screens; its tabs now move to a second row when space runs out.
 
-## 2.0.0 (2026-10-24)
+## 2.0.0 (2026-10-31)
 
 helpdesk now comes in two editions with the same features.
 
@@ -40,7 +46,7 @@ helpdesk now comes in two editions with the same features.
 
 - Two Auto-assign layout rules in the stylesheet were being ignored because of a stray escape character (both editions).
 
-## 1.1.0 (2026-09-08)
+## 1.1.0 (2026-10-31)
 
 ### Added
 
@@ -52,7 +58,7 @@ helpdesk now comes in two editions with the same features.
 - Wording throughout the app now refers to "your organisation's sign-in" rather than a specific platform.
 - Without a backend, the "saved in this browser only" banner is gone; the footer still shows "This browser only".
 
-## 1.0.0 (2026-09-04)
+## 1.0.0 (2026-10-31)
 
 First public release.
 
