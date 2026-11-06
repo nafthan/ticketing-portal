@@ -3,14 +3,14 @@
  */
 import { useEffect, useRef, useState, type ReactNode } from "react";
 import { S, P, commit } from "../core/state.ts";
-import { ACTIVE } from "../core/constants.ts";
+import { ACTIVE, SAMPLE_DATA } from "../core/constants.ts";
 import { fmtHrs, plural } from "../core/format.ts";
 import { mascot } from "../core/art.ts";
 import { isMgr } from "../core/people.ts";
 import { sla } from "../core/hours.ts";
 import { activeFilters, matchBase, matchStatus, sortTickets, perDay, customers, resetFilters } from "../core/queue.ts";
 import { loadDemo, removeSamples } from "../core/data.ts";
-import { useApp, Mascot, Spark } from "../ui/index.tsx";
+import { useApp, Icon, Mascot, Spark } from "../ui/index.tsx";
 import { TicketRow } from "../ui/tickets.tsx";
 import { Pins } from "../shell/Pins.tsx";
 import { squishes } from "../shell/squish.ts";
@@ -76,10 +76,10 @@ function Banner() {
   const n = S.tickets.filter((t) => t.sample).length;
   return (
     <div id="banner">
-      {S.mode === "local" && !S.tickets.length ? (
+      {SAMPLE_DATA && S.mode === "local" && !S.tickets.length ? (
         <div className="note"><span>No tickets yet. Want to look around first?</span><button className="btn" data-act="load-demo" onClick={() => loadDemo()}>Load sample data</button></div>
       ) : null}
-      {n && isMgr() ? (
+      {SAMPLE_DATA && n && isMgr() ? (
         <div className="note">
           <span>{n} sample tickets, plus sample customers and team members, are loaded so every page has something to show.</span>
           {S.confirmSample ? <>
@@ -158,7 +158,7 @@ export function Queue() {
         <QTile label="Resolved, 7 days" val={res} act="tile-res" sub="Resolved per day, 14 days" onClick={tileRes}><Spark vals={perDay("resolvedAt", 14)} color="var(--good)" /></QTile>
       </div>
       <div className="toolbar">
-        <div className="searchbox" id="q-sb">
+        <div className="searchbox" id="q-sb"><Icon name="search" />
           <input ref={inputRef} className="field" id="q-text" type="search" placeholder="Search ID, subject, customer, requester" aria-label="Search tickets"
             value={text} onChange={(e) => { setText(e.target.value); S.q.text = e.target.value.trim(); commit(); }} />
         </div>

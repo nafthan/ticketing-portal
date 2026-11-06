@@ -47,7 +47,7 @@ svg.ic{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:1.8;str
 .bar-in{max-width:1440px;margin:0 auto;min-height:64px;padding:0 32px;display:flex;align-items:center;gap:24px}
 .brand{display:flex;align-items:center;gap:8px;font:700 22px/1 var(--display);letter-spacing:-.6px}
 .brand svg{width:38px;height:35px}
-nav.tabs{display:flex;gap:4px}
+nav.tabs{display:flex;gap:4px;min-width:0;flex:0 1 auto;overflow-x:auto;scrollbar-width:none}nav.tabs::-webkit-scrollbar{display:none}.bar-in>.brand,.bar-in>.bar-right{flex:none}
 nav.tabs button{white-space:nowrap;background:none;border:0;height:34px;padding:0 14px;border-radius:99px;color:var(--muted);font-weight:500;transition:color .15s var(--ease),background-color .15s var(--ease)}
 nav.tabs button:hover{color:var(--ink)}
 nav.tabs button[aria-current="page"]{color:var(--ink);background:var(--well)}
@@ -376,7 +376,7 @@ tbody tr.row[aria-selected="true"]{background:var(--well)}
 
 /* ---------- footer and announcements ---------- */
 body{padding-bottom:36px}
-.foot{position:fixed;left:0;right:0;bottom:0;z-index:25;background:var(--bg);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
+footer.foot{position:fixed;left:0;right:0;bottom:0;z-index:25;background:var(--bg);border-top:1px solid var(--line);padding-bottom:env(safe-area-inset-bottom,0px)}
 .foot-in{max-width:1440px;margin:0 auto;height:34px;padding:0 32px;display:flex;align-items:center;gap:24px;font-size:12.5px;color:var(--muted);white-space:nowrap;overflow:hidden}
 .foot-in time{color:var(--ink);font-variant-numeric:tabular-nums}
 .f-hours,.foot-in .conn{display:inline-flex;align-items:center;gap:7px;min-width:0}
@@ -646,9 +646,14 @@ td.r,th.r{text-align:right}
   .tile:nth-child(-n+2){border-top:0}
   .tiles:not(.t4) .tile:last-child{grid-column:1/-1}
 }
+@media (max-width:1380px){.shift-time{display:none}nav.tabs button{padding:0 10px}}
+@media (max-width:1180px){
+  .bar-in{gap:12px;flex-wrap:wrap}.bar-in>.bar-right{margin-left:auto}
+  nav.tabs{order:3;width:100%;flex:1 0 100%;padding-bottom:10px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}nav.tabs::-webkit-scrollbar{display:none}
+  .detail{top:calc(112px + env(safe-area-inset-top,0px))}
+}
 @media (max-width:820px){
-  .bar-in{padding:0 16px;gap:12px;flex-wrap:wrap}
-  nav.tabs{order:3;width:100%;padding-bottom:10px;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}nav.tabs::-webkit-scrollbar{display:none}
+  .bar-in{padding:0 16px}
   main{padding:24px 16px 72px}
   .conn span:last-child,.c-asg,.c-id{display:none}
   .grid2{grid-template-columns:minmax(0,1fr)}
@@ -1040,9 +1045,13 @@ const ACTIVE=new Set(["new","open","pending"]);
 const TEAMS=["Service desk","Networking","Security","Infrastructure"];
 const CATEGORIES=["Access and accounts","Hardware","Software","Email","Network","VPN and remote access","Firewall","Security incident","Phishing","Endpoint and malware","Backup and recovery","Servers and cloud"];
 const EV_LABEL={created:"Ticket opened",status:"Status changed",severity:"Severity changed",assignee:"Assignment changed",team:"Team changed",category:"Category changed",note:"Note or time",channel:"Channel changed",timeline:"Incident timeline",customer:"Customer record",staff:"Team",settings:"Settings",shift:"Shift",request:"Request",queue:"Dispatch order",share:"Shared",email:"Email",pin:"Pinned message"};
-const APP_VERSION="2.0.0";
+const APP_VERSION="2.2.0";
 const LS_KEY="helpdesk.local.v1",LS_PREF="helpdesk.prefs.v1";
-const SKINS=[["daylight","Daylight","#F4F6FA","#2F5BEA","light"],["peach","Peach","#FFF1E3","#C2255C","light"],["matcha","Matcha","#EFF4E1","#2F6B3A","light"],["cocoa","Cocoa","#1E1512","#FF8FAB","dark"],["midnight","Midnight","#101010","#ee6018","dark"]];
+/** False in the no-sample-data copies, which leave out loadDemo() and the sample data itself. */
+const hasSampleData=()=>typeof loadDemo==="function";
+/* A style pack (styles/<name>) sets window.HELPDESK_STYLE before this script; the default style sets nothing. */
+const STYLE=window.HELPDESK_STYLE||null;
+const SKINS=STYLE&&STYLE.skins&&STYLE.skins.length?STYLE.skins:[["daylight","Daylight","#F4F6FA","#2F5BEA","light"],["peach","Peach","#FFF1E3","#C2255C","light"],["matcha","Matcha","#EFF4E1","#2F6B3A","light"],["cocoa","Cocoa","#1E1512","#FF8FAB","dark"],["midnight","Midnight","#101010","#ee6018","dark"]];
 const skinKind=id=>(SKINS.find(s=>s[0]===id)||[])[4];
 const CHANNELS={phone:"Phone",email:"Email",portal:"Portal",chat:"Chat",monitoring:"Monitoring alert"};
 const TIERS={C:"Critical",H:"High",N:"Normal",L:"Low"};
@@ -1149,7 +1158,7 @@ function mascot(mood,live){
 
 /* ---------- state ---------- */
 const VIEWS=["queue","mine","dispatch","history","customers","reports","audit","admin"],TICKET_VIEWS=["queue","mine","dispatch","history"];
-const P={mode:"system",lightTheme:"peach",darkTheme:"cocoa",board:"board",mineView:"list",histView:"list",histGroup:"month",density:"cosy",mascot:true,squeak:false,notifyDecisions:true,notifyNew:true,notifySound:false,avatars:true,exact:false,start:"queue",mine:false,team:"",noteInternal:true};
+const P={mode:STYLE&&STYLE.mode||"system",lightTheme:STYLE&&STYLE.light||"peach",darkTheme:STYLE&&STYLE.dark||"cocoa",board:"board",mineView:"list",histView:"list",histGroup:"month",density:"cosy",mascot:true,squeak:false,notifyDecisions:true,notifyNew:true,notifySound:false,avatars:true,exact:false,start:"queue",mine:false,team:"",noteInternal:true};
 const S={pins:[],pinRm:null,pinOpen:new Set(),pinEdit:null,counters:{},siteForm:null,rmSite:null,shareId:null,queues:[],reqDocs:[],decisions:{},rqDraft:null,rqDecline:null,acctTab:"profile",chForm:null,online:navigator.onLine!==false,hb:true,reqFilter:"pending",agEdit:null,agAdd:false,agQ:"",tmNew:false,tmRm:null,rsFor:null,heroMood:"happy",shifts:[],adTab:"general",adRm:null,customers:[],custById:new Map(),custByName:new Map(),staff:[],events:[],cfg:null,cfgVer:0,selCust:null,cuText:"",isEditor:false,assets:null,noteMin:"",noteBill:true,tl:{text:"",phase:"",at:""},wsTab:"team",staffQ:"",rmStaff:null,conForm:null,rmContact:null,view:"queue",tickets:[],byId:new Map(),loaded:false,mode:"connecting",sel:null,
   meId:null,meName:"",meAvatar:"",isOwner:false,canWrite:true,user:null,downloads:null,names:{},avatars:{},
   q:{text:"",status:"active",customer:"",sev:"",team:"",category:"",assignee:"",sla:"",sort:"sla",dir:"asc"},
@@ -1961,8 +1970,8 @@ function tile(label,val,extra,act,sub,hot){
 }
 function renderBanner(){
   const n=S.tickets.filter(t=>t.sample).length;let h="";
-  if(S.mode==="local"&&!S.tickets.length)h+='<div class="note"><span>No tickets yet. Want to look around first?</span><button class="btn" data-act="load-demo">Load sample data</button></div>';
-  if(n&&isMgr())h+='<div class="note"><span>'+n+' sample tickets, plus sample customers and team members, are loaded so every page has something to show.</span>'+
+  if(hasSampleData()&&S.mode==="local"&&!S.tickets.length)h+='<div class="note"><span>No tickets yet. Want to look around first?</span><button class="btn" data-act="load-demo">Load sample data</button></div>';
+  if(hasSampleData()&&n&&isMgr())h+='<div class="note"><span>'+n+' sample tickets, plus sample customers and team members, are loaded so every page has something to show.</span>'+
     (S.confirmSample?'<button class="btn dark" data-act="sample-yes">Remove all '+n+'</button><button class="btn" data-act="sample-no">Keep them</button>'
       :'<button class="btn" data-act="sample-ask">Remove sample tickets</button>')+"</div>";
   setHtml($("banner"),h);
@@ -2926,7 +2935,7 @@ function adAccess(){
       '<div class="lrow"><span class="nm" style="flex:1">Tickets</span><button class="linkbtn" data-act="imp-tpl" data-k="tickets">Template</button><label class="btn" style="cursor:pointer">Choose CSV<input type="file" accept=".csv,text/csv" data-act-file="imp-tickets" hidden></label></div></div>'+
     "</div>"+
     '<div class="card adcard" style="margin-bottom:20px"><h3>Export</h3><p class="muted">CSV files for reporting or billing.</p><div class="actions" style="justify-content:flex-start"><button class="btn" data-act="export-tickets">Tickets</button><button class="btn" data-act="export-time">Time entries</button><button class="btn" data-act="export-audit">Audit log</button><button class="btn" data-act="export-history">Closed tickets</button></div></div>'+
-    (n?'<div class="card adcard"><h3>Sample data</h3><p class="muted">'+n+' sample tickets, customers and team members are loaded. Removing them can\'t be undone.</p><div class="actions">'+
+    (n&&hasSampleData()?'<div class="card adcard"><h3>Sample data</h3><p class="muted">'+n+' sample tickets, customers and team members are loaded. Removing them can\'t be undone.</p><div class="actions">'+
       (S.confirmSample?'<button class="btn dark" data-act="sample-yes">Remove sample data</button><button class="btn" data-act="sample-no">Keep it</button>':'<button class="btn" data-act="sample-ask">Remove sample data</button>')+"</div></div>":""));
 }
 function wsSave(){
@@ -3465,7 +3474,7 @@ document.addEventListener("click",e=>{
     case "sample-ask":S.confirmSample=true;refresh();break;
     case "sample-no":S.confirmSample=false;refresh();break;
     case "sample-yes":el.disabled=true;removeSamples();break;
-    case "load-demo":loadDemo();break;
+    case "load-demo":if(hasSampleData())loadDemo();break;
     case "audit-more":S.aud.limit+=200;refresh();break;
     case "export-tickets":exportTickets();break;
     case "export-audit":exportAudit();break;
@@ -3487,7 +3496,7 @@ document.addEventListener("click",e=>{
     case "pin-more":{const id=el.dataset.id;if(S.pinOpen.has(id))S.pinOpen.delete(id);else S.pinOpen.add(id);refresh();break;}
     case "pin-hide":try{localStorage.setItem("helpdesk.pinsHidden",localStorage.getItem("helpdesk.pinsHidden")==="1"?"0":"1");}catch(e){}refresh();break;
     case "su-save":setupSave();break;
-    case "su-sample":setupSkip();if(typeof loadDemo==="function")loadDemo();break;
+    case "su-sample":setupSkip();if(hasSampleData())loadDemo();break;
     case "su-restore":setupSkip();S.view="admin";S.adTab="access";refresh();break;
     case "su-day":el.setAttribute("aria-pressed",String(el.getAttribute("aria-pressed")!=="true"));break;
     case "hist-more":S.hist.limit+=150;refresh();break;
@@ -3673,6 +3682,8 @@ setInterval(tickFooter,1000);
 setInterval(()=>{if(!document.hidden)sweep();},60000);
 
 /* ---------- standalone demo data ---------- */
+/* The no-sample-data copies (single-file/clean/) are made without this section, the
+   demo-data block and the setup link, so everything about sample data disappears. */
 function loadDemo(){
   const D=JSON.parse(document.getElementById("demo-data").textContent),off=Date.now()-new Date(D.base).getTime();
   const shift=v=>typeof v==="string"&&/^\d{4}-\d\d-\d\dT\d\d:\d\d/.test(v)?new Date(new Date(v).getTime()+off).toISOString():Array.isArray(v)?v.map(shift):v&&typeof v==="object"?Object.fromEntries(Object.entries(v).map(([k,x])=>[k,shift(x)])):v;
@@ -3681,6 +3692,7 @@ function loadDemo(){
   S.staff=d.staff;saveCol("staff",S.staff);
   index(d.tickets);saveLocal();refresh();toast("Sample data loaded. Remove it any time from Admin.","party");
 }
+/* ---------- end of demo data ---------- */
 /* ---------- dialogs ---------- */
 function openDlg(id){const d=$(id);if(d.open)return;if(d.showModal)d.showModal();else d.setAttribute("open","");}
 function closeDlg(id){const d=$(id);if(d.close)d.close();else d.removeAttribute("open");}
@@ -4042,7 +4054,7 @@ function maybeSetup(){
   $("su-tz").innerHTML=tzs.map(z=>'<option value="'+esc(z)+'">'+esc(z.replace(/_/g," "))+"</option>").join("");$("su-tz").value=guess;
   $("su-start").value=c.start;$("su-end").value=c.end;
   $("su-days").innerHTML=[1,2,3,4,5,6,0].map(d=>'<button type="button" data-act="su-day" data-d="'+d+'" aria-pressed="'+c.days.includes(d)+'">'+DAYS[d]+"</button>").join("");
-  $("su-sample").hidden=!(!db&&typeof loadDemo==="function");$("su-err").textContent="";
+  if($("su-sample"))$("su-sample").hidden=!(!db&&hasSampleData());$("su-err").textContent="";
   openDlg("su");
 }
 function setupSkip(){try{localStorage.setItem("helpdesk.setupSkipped","1");}catch(e){}closeDlg("su");}

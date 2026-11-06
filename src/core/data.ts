@@ -5,7 +5,7 @@
  * putDoc/delDoc here and patchTicket in tickets.ts.
  */
 import { S, P, svc, ref, commit, toast, type View } from "./state.ts";
-import { LS_KEY, LS_PREF, LS_COL } from "./constants.ts";
+import { LS_KEY, LS_PREF, LS_COL, SAMPLE_DATA } from "./constants.ts";
 import { setCfg } from "./config.ts";
 import { initPrefs, cleanPrefs, applyPrefs } from "./prefs.ts";
 import { resolveNames, hydrateNames } from "./people.ts";
@@ -119,6 +119,7 @@ export async function save(name: string, data: any): Promise<void> {
 /* ---------- sample data ---------- */
 /** Load the sample data into this browser, with its dates moved to now. */
 export function loadDemo(): void {
+  if (!SAMPLE_DATA || !demo) return;
   const D: any = JSON.parse(JSON.stringify(demo)), off = Date.now() - new Date(D.base).getTime();
   const shift = (v: any): any => typeof v === "string" && /^\d{4}-\d\d-\d\dT\d\d:\d\d/.test(v) ? new Date(new Date(v).getTime() + off).toISOString() : Array.isArray(v) ? v.map(shift) : v && typeof v === "object" ? Object.fromEntries(Object.entries(v).map(([k, x]) => [k, shift(x)])) : v;
   const d = shift(D);

@@ -84,9 +84,9 @@ Admin → **System** inside the app shows the same picture from the app's side: 
 
 ## 5. Serve the page
 
-Either edition is a static page: `dist/index.html` (after `npm run build`) or `single-file/index.html`, plus your `platform.js`. Any of these work:
+Either edition is a static page plus your `platform.js`. For a real helpdesk, use a copy without sample data: `dist/clean/index.html` (after `npm run build`), `single-file/clean/index.html`, or a style inside either `clean/` folder. Any of these work:
 
-- **Docker:** `docker build -t helpdesk . && docker run -p 8080:8080 helpdesk`. The image builds the app and serves it at `/`, with the single-file edition at `/single-file/`. It's nginx with the config in `nginx.conf`, which adds security headers from `security-headers.inc`, stops caching of `index.html` so updates show straight away, and hides `platform.example.js`.
+- **Docker:** `docker build -t helpdesk . && docker run -p 8080:8080 helpdesk`. The image builds the app and serves it at `/`, with the single-file edition at `/single-file/` and the copies without sample data at `/clean/` and `/single-file/clean/`. It's nginx with the config in `nginx.conf`, which adds security headers from `security-headers.inc`, stops caching of `index.html` so updates show straight away, and hides `platform.example.js`.
 - **Your existing web server or CDN:** copy the files across and add the headers from `security-headers.inc`.
 - **The same app as your API:** serve the page from your backend, which avoids cross-origin setup entirely.
 
@@ -121,7 +121,7 @@ The exact logic is in `runSweep()` (`src/core/tickets.ts`) and `routeWaiting()` 
 
 - **Back up your database** with its own tools on a schedule. Admin → Access and data → **Download full backup** is a handy extra: one portable JSON file you can restore into any helpdesk (format in [PLATFORM.md](PLATFORM.md#backup-file-format)).
 - **Before updating**, read [`CHANGELOG.md`](CHANGELOG.md) for anything that needs action, and take a backup.
-- **To update**, rebuild the app (or replace `single-file/index.html`) and keep your `platform.js`. The version shows in Admin → System.
+- **To update**, rebuild the app (or replace the single-file page you use) and keep your `platform.js`. The version shows in Admin → System.
 
 ## Self-hosting the fonts
 

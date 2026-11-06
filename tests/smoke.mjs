@@ -1,13 +1,14 @@
 // Smoke test for both editions. Serves the repository, then for the built app
 // (dist/index.html) and the single-file edition (single-file/index.html):
 // opens it without a backend, then on the example adapter with two tabs.
-// Also runs adapter-test.html against the example adapter.
+// Then checks every style copy, every no-sample-data copy (dist/clean/ and
+// single-file/clean/), and runs adapter-test.html against the example adapter.
 //
 //   npm run build
 //   npm install --no-save playwright && npx playwright install chromium
 //   npm run smoke
 import { createServer } from "node:http";
-import { readFile, access } from "node:fs/promises";
+import { readFile, access, readdir } from "node:fs/promises";
 import { extname, join, normalize } from "node:path";
 import { fileURLToPath } from "node:url";
 import { chromium } from "playwright";
@@ -78,7 +79,49 @@ try {
       await ctx.close();
     }
   }
-  // 3. Adapter checks, as manager and agent.
+  // 3. Every style's copy of both editions: loads, sample data, every tab, no errors.
+  const styles = (await readdir(join(root, "styles"), { withFileTypes: true })).filter((d) => d.isDirectory()).map((d) => d.name);
+  for (const style of styles) {
+    for (const [name, page] of [["app", `/dist/${style}/index.html`], ["single-file", `/single-file/${style}/index.html`]]) {
+      const p = await browser.newPage(), errors = [];
+      p.on("pageerror", (e) => errors.push(e.message));
+      const res = await p.goto(base + page);
+      if (!res || !res.ok()) { fail(`${style} ${name}: ${page} is missing`); await p.close(); continue; }
+      const styled = await p.evaluate(() => document.documentElement.dataset.style);
+      const opened = await p.waitForSelector("#su[open]", { timeout: 8000 }).then(() => true, () => false);
+      if (opened && await p.locator("#su-sample").isVisible()) { await p.click("#su-sample"); await p.waitForTimeout(500); }
+      const rows = await p.locator("#q-body tr").count();
+      for (const v of ["mine", "dispatch", "history", "customers", "reports", "audit", "admin", "queue"]) { await p.click(`[data-v=${v}]`); await p.waitForTimeout(100); }
+      const ok = styled === style && opened && rows > 0 && !errors.length;
+      ok ? pass(`${style} ${name}: styled, sample data, every tab`) : fail(`${style} ${name}: style=${styled} setup=${opened} rows=${rows} errors=${errors.join("; ")}`);
+      await p.close();
+    }
+  }
+  // 4. Every no-sample-data copy: no sample data anywhere, setup works, every tab, no errors.
+  for (const style of ["", ...styles]) {
+    for (const [name, page] of [["app", `/dist/clean/${style ? style + "/" : ""}index.html`], ["single-file", `/single-file/clean/${style ? style + "/" : ""}index.html`]]) {
+      const label = `no-sample ${style || "default"} ${name}`;
+      const p = await browser.newPage(), errors = [];
+      p.on("pageerror", (e) => errors.push(e.message));
+      const res = await p.goto(base + page);
+      if (!res || !res.ok()) { fail(`${label}: ${page} is missing`); await p.close(); continue; }
+      const styled = (await p.evaluate(() => document.documentElement.dataset.style)) || "";
+      const opened = await p.waitForSelector("#su[open]", { timeout: 8000 }).then(() => true, () => false);
+      const setupLink = await p.locator("#su-sample").count();
+      if (opened) { await p.click("[data-act=su-save]"); await p.waitForTimeout(300); }
+      const loadLink = await p.locator("[data-act=load-demo]").count();
+      for (const v of ["mine", "dispatch", "history", "customers", "reports", "audit", "admin"]) { await p.click(`[data-v=${v}]`); await p.waitForTimeout(100); }
+      await p.click("[data-act=ad-tab][data-t=access]");
+      await p.waitForTimeout(150);
+      const adminCard = await p.locator(".adcard h3", { hasText: "Sample data" }).count();
+      await p.click("[data-v=queue]");
+      const rows = await p.locator("#q-body tr").count();
+      const ok = styled === style && opened && !setupLink && !loadLink && !adminCard && rows === 0 && !errors.length;
+      ok ? pass(`${label}: no sample data, setup, every tab`) : fail(`${label}: style=${styled} setup=${opened} setupLink=${setupLink} loadLink=${loadLink} adminCard=${adminCard} rows=${rows} errors=${errors.join("; ")}`);
+      await p.close();
+    }
+  }
+  // 5. Adapter checks, as manager and agent.
   for (const role of ["manager", "agent"]) {
     const p = await browser.newPage();
     await p.goto(`${base}/public/adapter-test.html?adapter=platform.example.js&as=${role}&run=1`);

@@ -1,7 +1,7 @@
 /* First-run setup (#su: maybeSetup, setupSave, setupSkip). Opened by maybeSetup() for a manager on an empty helpdesk. */
 import { useState } from "react";
 import { S, ref, closeDialog, setView } from "../core/state.ts";
-import { DAYS, TZS } from "../core/constants.ts";
+import { DAYS, SAMPLE_DATA, TZS } from "../core/constants.ts";
 import { loadDemo } from "../core/data.ts";
 import { setupSave, setupSkip } from "../core/setup.ts";
 import { useApp, Dialog, Icon, Mascot } from "../ui/index.tsx";
@@ -59,7 +59,7 @@ export function SetupDialog() {
       <div className="actions" style={{ marginTop: 18, justifyContent: "space-between", flexWrap: "wrap" }}>
         <span style={{ display: "flex", gap: 14, flexWrap: "wrap" }}>
           <button className="linkbtn" data-act="su-restore" onClick={() => { skip(); S.adTab = "access"; setView("admin"); }}>Restore a backup instead</button>
-          <button className="linkbtn" data-act="su-sample" id="su-sample" hidden={!!ref.db} onClick={() => { skip(); loadDemo(); }}>Explore with sample data</button>
+          {SAMPLE_DATA ? <button className="linkbtn" data-act="su-sample" id="su-sample" hidden={!!ref.db} onClick={() => { skip(); loadDemo(); }}>Explore with sample data</button> : null}
         </span>
         <span style={{ display: "flex", gap: 10 }}>
           <button className="btn" data-act="su-skip" onClick={skip}>Skip for now</button>

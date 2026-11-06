@@ -1,0 +1,438 @@
+/* Sodium: night-shift control room. Warm near-black, one sodium-yellow accent,
+   ultra-light Archivo headings, hairline outlines instead of shadows, and the
+   navigation docked at the bottom of the screen. */
+
+/* ---------- themes ---------- */
+/* Extra variables used only by this style:
+   --hair      card and panel outlines (the reference's slate hairline)
+   --head      headline colour
+   --sodium    the yellow fill (CTA, active nav, accent tile) - same in both themes
+   --on-sodium text on the yellow fill */
+:root[data-skin="sodium"]{
+  --bg:#1f1d01;--surface:#282828;--well:#333333;--line:#45443b;--hair:#707070;
+  --ink:#d7d7d7;--head:#f2f2f2;--muted:#999999;--faint:#737373;
+  --accent:#ffe900;--accent-ink:#141300;--sodium:#ffe900;--on-sodium:#141300;
+  --warn:#ff6b4f;--amber:#ff9d2e;--good:#00ff1a;--sun:#ffe900;--blush:#ff9d2e;
+  --pop-line:#707070;--pop-shadow:none;--bar:#8a8770;
+  --m-body:#ffe900;--m-screen:#1f1d01;--m-glow:#ffe900;--m-cheek:#ff9d2e;--m-ink:#141300;--m-limb:#d7d7d7;
+  color-scheme:dark}
+:root[data-skin="sodium-light"]{
+  --bg:#f4f2e8;--surface:#fcfbf6;--well:#ebe8da;--line:#dcd8c6;--hair:#a9a590;
+  --ink:#2b2914;--head:#161500;--muted:#635f47;--faint:#8e8a72;
+  --accent:#756800;--accent-ink:#ffffff;--sodium:#ffe900;--on-sodium:#161500;
+  --warn:#c4341a;--amber:#b05600;--good:#12822a;--sun:#ffe900;--blush:#e8902a;
+  --pop-line:#a9a590;--pop-shadow:none;--bar:#b8b39b;
+  --m-body:#ffe900;--m-screen:#1f1d01;--m-glow:#ffe900;--m-cheek:#ff9d2e;--m-ink:#161500;--m-limb:#161500;
+  color-scheme:light}
+:root[data-skin^="sodium"]{
+  --display:'Archivo','Geist',system-ui,sans-serif;
+  --sans:'Geist','Inter',system-ui,-apple-system,'Segoe UI',Roboto,sans-serif;
+  --mono:'Geist Mono','JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+  --barh:68px;--striph:30px;
+  --rail:clamp(300px,26vw,380px);--drawer:clamp(460px,40vw,640px);
+  --fill:calc(100dvh - var(--striph) - var(--barh) - 72px - env(safe-area-inset-top,0px) - env(safe-area-inset-bottom,0px))}
+@media (max-width:1199px){:root[data-skin^="sodium"]{--barh:112px}}
+@media (max-width:359px){:root[data-skin^="sodium"]{--barh:136px}}
+
+/* ---------- base type ---------- */
+html[data-style="sodium"] body{font-size:14px;padding-top:calc(var(--striph) + env(safe-area-inset-top,0px));padding-bottom:calc(var(--barh) + env(safe-area-inset-bottom,0px))}
+html[data-style="sodium"] h1{font:200 56px/1 var(--display);letter-spacing:-1.5px;color:var(--head)}
+html[data-style="sodium"] .lbl{font:500 11px/1.3 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted)}
+html[data-style="sodium"] ::selection{background:var(--sodium);color:var(--on-sodium)}
+
+/* ---------- bottom navigation bar ---------- */
+html[data-style="sodium"] .bar{position:fixed;top:auto;bottom:0;left:0;right:0;z-index:30;background:var(--surface);border-bottom:0;border-top:1px solid var(--hair);padding-bottom:env(safe-area-inset-bottom,0px)}
+html[data-style="sodium"] .bar-in{max-width:1760px;min-height:var(--barh);padding:0 24px;gap:16px;justify-content:center}
+html[data-style="sodium"] .brand{font:300 20px/1 var(--display);letter-spacing:-.3px;color:var(--head);gap:10px}
+html[data-style="sodium"] .brand svg{width:34px;height:31px}
+html[data-style="sodium"] nav.tabs{gap:2px;margin:0 auto}
+html[data-style="sodium"] nav.tabs button{height:36px;padding:0 13px;border-radius:8px;border:1px solid transparent;color:var(--muted);font:500 12px/1 var(--sans);text-transform:uppercase;letter-spacing:.08em}
+html[data-style="sodium"] nav.tabs button:hover{color:var(--accent);border-color:var(--accent);background:none}
+html[data-style="sodium"] nav.tabs button[aria-current="page"]{background:var(--sodium);border-color:var(--sodium);color:var(--on-sodium);font-weight:600}
+html[data-style="sodium"] .bar-right{margin-left:0;gap:8px}
+html[data-style="sodium"] .shift-time{font:400 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.06em}
+html[data-style="sodium"] .iconbtn{border-radius:8px;border-color:var(--hair);background:transparent;color:var(--ink)}
+html[data-style="sodium"] .iconbtn:hover{border-color:var(--accent);color:var(--accent)}
+html[data-style="sodium"] .bell-n{border-color:var(--surface);font-family:var(--mono)}
+/* menus open upwards from the bar */
+html[data-style="sodium"] .bar .menu{top:auto;bottom:calc(100% + 16px);max-height:calc(100vh - var(--barh) - var(--striph) - 40px);overflow:auto}
+html[data-style="sodium"] .menu{border:1px solid var(--hair);border-radius:16px;padding:24px;box-shadow:none}
+html[data-style="sodium"] .menu h3{font:300 24px/1.1 var(--display);color:var(--head);margin-bottom:18px}
+html[data-style="sodium"] .menu p.small{border-top:1px solid var(--line)}
+html[data-style="sodium"] .who-card b,html[data-style="sodium"] .prof b{font-weight:400}
+html[data-style="sodium"] .skin{border:1px solid var(--line);border-radius:8px}
+html[data-style="sodium"] .skin[aria-pressed="true"]{border-color:var(--accent);background:var(--well)}
+html[data-style="sodium"] .skin .sw{border-radius:4px;border-color:var(--hair)}
+
+/* ---------- status strip (the footer, moved to the top) ---------- */
+html[data-style="sodium"] footer.foot{top:0;bottom:auto;background:var(--bg);border-top:0;border-bottom:1px solid var(--line);padding-bottom:0;padding-top:env(safe-area-inset-top,0px);z-index:31}
+html[data-style="sodium"] .foot-in{max-width:1760px;height:var(--striph);padding:0 24px;font:400 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.07em}
+html[data-style="sodium"] .foot-in time{color:var(--head)}
+html[data-style="sodium"] .conn{font:400 11px/1 var(--mono);text-transform:uppercase;letter-spacing:.07em}
+
+/* ---------- buttons, fields, segmented controls ---------- */
+html[data-style="sodium"] .btn{height:36px;padding:0 16px;border-radius:16px;border:1px solid var(--hair);background:transparent;color:var(--ink);font-weight:500}
+html[data-style="sodium"] .btn:hover{border-color:var(--head);color:var(--head)}
+html[data-style="sodium"] .btn.primary{background:var(--sodium);color:var(--on-sodium);border:1px solid var(--sodium);box-shadow:none;font-weight:600;text-transform:uppercase;letter-spacing:.06em;font-size:12.5px}
+html[data-style="sodium"] .btn.primary:hover{background:color-mix(in srgb,var(--sodium) 86%,#fff);color:var(--on-sodium)}
+html[data-style="sodium"] .btn.primary:active{transform:translateY(1px);box-shadow:none}
+/* outlined yellow: secondary emphasised actions */
+html[data-style="sodium"] .btn.dark{background:transparent;color:var(--accent);border-color:var(--accent);border-radius:8px;text-transform:uppercase;letter-spacing:.06em;font-size:12.5px}
+html[data-style="sodium"] .btn.dark:hover{background:var(--sodium);border-color:var(--sodium);color:var(--on-sodium)}
+html[data-style="sodium"] .field,html[data-style="sodium"] select.field{border-radius:8px;border-color:var(--line);background-color:var(--bg)}
+html[data-style="sodium"] .field:hover{border-color:var(--hair)}
+html[data-style="sodium"] .field:focus{border-color:var(--accent)}
+html[data-style="sodium"] .props .field,html[data-style="sodium"] .form .field,html[data-style="sodium"] .composer textarea{background-color:var(--bg)}
+html[data-style="sodium"] .seg{gap:6px}
+html[data-style="sodium"] .seg button{height:32px;border-radius:8px;border:1px solid transparent;font:500 12px/1 var(--sans);text-transform:uppercase;letter-spacing:.07em}
+html[data-style="sodium"] .seg button:hover{border-color:var(--hair)}
+html[data-style="sodium"] .seg button[aria-pressed="true"]{background:transparent;border-color:var(--accent);color:var(--accent)}
+html[data-style="sodium"] .seg .num{font-size:11px}
+html[data-style="sodium"] .pills{background:transparent;border:1px solid var(--line);border-radius:8px;padding:3px;gap:2px}
+html[data-style="sodium"] .pills button{border-radius:6px;height:28px;font:500 11.5px/1 var(--sans);text-transform:uppercase;letter-spacing:.07em}
+html[data-style="sodium"] .pills button[aria-pressed="true"]{background:var(--well);color:var(--head);box-shadow:inset 0 -2px 0 var(--accent)}
+html[data-style="sodium"] .switch input{background:var(--well);border:1px solid var(--hair)}
+html[data-style="sodium"] .switch input::after{top:2px;left:2px;background:var(--muted)}
+html[data-style="sodium"] .switch input:checked{background:var(--sodium);border-color:var(--sodium)}
+html[data-style="sodium"] .switch input:checked::after{background:var(--on-sodium)}
+html[data-style="sodium"] .linkbtn{border-bottom-color:var(--accent)}
+html[data-style="sodium"] .x{border-radius:8px;border-color:var(--hair)}
+html[data-style="sodium"] .x:hover{border-color:var(--accent);color:var(--accent)}
+html[data-style="sodium"] .daypick button{border-radius:8px}
+html[data-style="sodium"] .daypick button[aria-pressed="true"]{background:var(--sodium);border-color:var(--sodium);color:var(--on-sodium)}
+
+/* ---------- page ---------- */
+html[data-style="sodium"] main{max-width:1440px;padding:48px 32px 64px}
+html[data-style="sodium"] main.wide{max-width:none}
+html[data-style="sodium"] .pagehead{margin-bottom:32px;padding-bottom:24px;border-bottom:1px solid var(--line);align-items:flex-end}
+html[data-style="sodium"] .pagehead p{color:var(--muted);margin-top:14px}
+html[data-style="sodium"] .hero{gap:28px;margin-bottom:36px}
+html[data-style="sodium"] .hero h1{font-weight:100;font-size:72px;letter-spacing:-2.5px}
+html[data-style="sodium"] .hero .m{width:104px}
+html[data-style="sodium"] .bubble{background:var(--surface);border:1px solid var(--hair);border-radius:16px;padding:12px 16px;margin-top:16px}
+html[data-style="sodium"] .bubble::before{background:var(--surface);border-color:var(--hair);border-width:0 0 1px 1px}
+html[data-style="sodium"] .sq-hint{font:400 10.5px/1 var(--mono);text-transform:uppercase;letter-spacing:.06em}
+html[data-style="sodium"] .note{border:1px dashed var(--hair);border-radius:16px;padding:14px 20px}
+html[data-style="sodium"] .card{background:var(--surface);border:1px solid var(--hair);border-radius:16px}
+
+/* ---------- tiles: separate cards, one yellow accent tile ---------- */
+html[data-style="sodium"] .tiles,html[data-style="sodium"] .tiles.t4{background:none;border:0;border-radius:0;overflow:visible;gap:16px;margin-bottom:32px}
+html[data-style="sodium"] .tile,html[data-style="sodium"] .tile:nth-child(n){background:var(--surface);border:1px solid var(--hair);border-radius:16px;padding:22px 24px;gap:12px}
+html[data-style="sodium"] button.tile:hover{background:var(--well);border-color:var(--head)}
+html[data-style="sodium"] .tile .lbl{line-height:1.45}
+html[data-style="sodium"] .tile .val{font:200 42px/1 var(--display);letter-spacing:-1.5px;color:var(--head)}
+html[data-style="sodium"] .tiles:not(#q-tiles)>.tile:first-child .val{font-size:64px;font-weight:100;letter-spacing:-2.5px}
+html[data-style="sodium"] .tile .val small{display:block;margin:10px 0 0;font:400 11px/1.3 var(--mono);text-transform:uppercase;letter-spacing:.06em;white-space:normal}
+html[data-style="sodium"] .tile .foot{position:static;z-index:auto;background:none;border:0;padding:0;font-size:12.5px;color:var(--muted)}
+/* the first tile of each view is the accent */
+html[data-style="sodium"] .tiles>.tile:first-child{background:var(--sodium);border-color:var(--sodium);color:var(--on-sodium)}
+html[data-style="sodium"] .tiles>.tile:first-child .lbl,
+html[data-style="sodium"] .tiles>.tile:first-child .val,
+html[data-style="sodium"] .tiles>.tile:first-child .val small,
+html[data-style="sodium"] .tiles>.tile:first-child .foot{color:var(--on-sodium)}
+html[data-style="sodium"] .tiles>.tile:first-child svg.sp polyline{stroke:var(--on-sodium)}
+html[data-style="sodium"] .tiles>button.tile:first-child:hover{background:color-mix(in srgb,var(--sodium) 88%,#fff)}
+html[data-style="sodium"] .tiles>.tile:first-child:focus-visible{outline-color:var(--head)}
+/* ---------- toolbar and tables ---------- */
+html[data-style="sodium"] .toolbar{gap:8px;margin-bottom:16px}
+html[data-style="sodium"] .tablecard{border-radius:16px}
+html[data-style="sodium"] th{font:500 11px/1.2 var(--mono);text-transform:uppercase;letter-spacing:.07em;color:var(--muted);padding:14px;border-bottom-color:var(--hair)}
+html[data-style="sodium"] tbody tr.row:hover{background:color-mix(in srgb,var(--well) 70%,transparent)}
+html[data-style="sodium"] tbody tr.row[aria-selected="true"]{background:var(--well)}
+html[data-style="sodium"] tbody tr.row[aria-selected="true"]>td:first-child{box-shadow:inset 3px 0 0 var(--accent)}
+html[data-style="sodium"] .tid{font:400 11.5px/1 var(--mono);letter-spacing:.02em}
+html[data-style="sodium"] .htable tr.grp td{font:500 11px/1.2 var(--mono);text-transform:uppercase;letter-spacing:.08em}
+/* colour is rationed: category icons, initials and logos go neutral */
+html[data-style="sodium"] .cat{--c:var(--muted)!important;background:var(--well);color:var(--ink);border:1px solid var(--line);border-radius:8px}
+html[data-style="sodium"] .av[aria-hidden]{background:var(--well)!important;color:var(--ink)!important;box-shadow:inset 0 0 0 1px var(--hair)}
+html[data-style="sodium"] .av{background:var(--well);color:var(--muted)}
+html[data-style="sodium"] .logo[aria-hidden]{background:var(--well)!important;color:var(--ink)!important;border-color:var(--hair)!important}
+html[data-style="sodium"] .logo{border-radius:4px}
+
+/* ---------- chips, tags, severity ---------- */
+html[data-style="sodium"] .chip{height:22px;padding:0 8px;border-radius:4px;font:500 10.5px/1 var(--mono);text-transform:uppercase;letter-spacing:.07em;background:transparent;box-shadow:inset 0 0 0 1px color-mix(in srgb,var(--c) 55%,transparent);color:color-mix(in srgb,var(--c) 80%,var(--head))}
+html[data-style="sodium"] .chip.new{background:var(--sodium);box-shadow:none;color:var(--on-sodium)}
+html[data-style="sodium"] .chip.new::before{background:var(--on-sodium)}
+html[data-style="sodium"] .pill,html[data-style="sodium"] .chips .pill{border-radius:4px;font:500 10.5px/1 var(--mono);text-transform:uppercase;letter-spacing:.06em}
+html[data-style="sodium"] .badge{border-radius:4px;background:var(--well);color:var(--head);box-shadow:inset 0 0 0 1px var(--hair)}
+html[data-style="sodium"] .badge.hot{background:var(--warn);color:#fff;box-shadow:none}
+html[data-style="sodium"] .tier{border-radius:4px}
+html[data-style="sodium"] .bars i{border-radius:0;width:3px}
+html[data-style="sodium"] .announce{border-radius:16px;border-width:1px}
+html[data-style="sodium"] .announce .badge2{border-radius:4px;font:500 10.5px/1.6 var(--mono);text-transform:uppercase;letter-spacing:.06em}
+
+/* ---------- ticket panel ---------- */
+html[data-style="sodium"] .detail{top:calc(var(--striph) + 20px + env(safe-area-inset-top,0px));bottom:calc(var(--barh) + 20px + env(safe-area-inset-bottom,0px));right:max(24px,calc((100vw - 1440px)/2 + 24px));border:1px solid var(--hair);border-radius:24px;box-shadow:none;padding:28px}
+html[data-style="sodium"] .detail h2,html[data-style="sodium"] .dlg h2{font:300 30px/1.1 var(--display);letter-spacing:-.6px;color:var(--head)}
+html[data-style="sodium"] .req{border-bottom:1px solid var(--line)}
+html[data-style="sodium"] .n .b{background:var(--bg);border:1px solid var(--line);border-radius:4px 16px 16px 16px}
+html[data-style="sodium"] .hist time{font-size:11px}
+html[data-style="sodium"] .pop{border:1px solid var(--hair);border-radius:12px}
+html[data-style="sodium"] .pop .opt{border-radius:6px}
+html[data-style="sodium"] .d-top .btn.share{border-radius:8px}
+
+/* ---------- boards ---------- */
+html[data-style="sodium"] .sec-h{font:300 24px/1.1 var(--display);color:var(--head);margin:40px 0 16px}
+html[data-style="sodium"] .colm{background:transparent;border:1px solid var(--line);border-radius:16px}
+html[data-style="sodium"] .colm.un{border-color:var(--hair)}
+html[data-style="sodium"] .colm.over{border-color:var(--accent);background:color-mix(in srgb,var(--sodium) 8%,transparent)}
+html[data-style="sodium"] .colm>header b{font:400 14px/1.2 var(--display);color:var(--head)}
+html[data-style="sodium"] .colm>header .hic{border-radius:8px}
+html[data-style="sodium"] .tk{background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--faint);border-radius:12px}
+html[data-style="sodium"] .tk:hover{border-top-color:var(--hair);border-right-color:var(--hair);border-bottom-color:var(--hair)}
+html[data-style="sodium"] .tk[aria-selected="true"]{background:var(--well);border-top-color:var(--accent);border-right-color:var(--accent);border-bottom-color:var(--accent)}
+html[data-style="sodium"] .tk .r3{border-top:1px solid var(--line)}
+html[data-style="sodium"] .tk .mv,html[data-style="sodium"] .tk .mv button,html[data-style="sodium"] .rowacts .mvb,html[data-style="sodium"] .rtcard .mvb{border-radius:6px}
+html[data-style="sodium"] .dropline{background:var(--accent)}
+html[data-style="sodium"] .agent-h b{font:400 17px/1.2 var(--display);color:var(--head)}
+
+/* ---------- customers, admin, reports ---------- */
+html[data-style="sodium"] .custgrid{gap:16px}
+html[data-style="sodium"] .cust{border:1px solid var(--hair);border-radius:16px;padding:24px;gap:14px}
+html[data-style="sodium"] .cust:hover{border-color:var(--head)}
+html[data-style="sodium"] .cust[aria-selected="true"]{border-color:var(--accent);background:var(--well)}
+html[data-style="sodium"] .cust .top b,html[data-style="sodium"] .teamcard .th b,html[data-style="sodium"] .rtcard .th b,html[data-style="sodium"] .roles b{font-weight:400;color:var(--head)}
+html[data-style="sodium"] .cust .top b{font-size:18px}
+html[data-style="sodium"] .adgrid,html[data-style="sodium"] .grid2{gap:24px}
+html[data-style="sodium"] .adcard{padding:24px 28px}
+html[data-style="sodium"] .adcard h3,html[data-style="sodium"] .panel h3{font:300 22px/1.15 var(--display);color:var(--head)}
+html[data-style="sodium"] .panel{padding:24px 28px}
+html[data-style="sodium"] .panel.flush{padding:24px 0 4px}
+html[data-style="sodium"] .panel.flush h3{padding:0 28px}
+html[data-style="sodium"] .teamcard,html[data-style="sodium"] .rtcard{padding:20px 24px}
+html[data-style="sodium"] .roles>div,html[data-style="sodium"] .agedit,html[data-style="sodium"] .subform,html[data-style="sodium"] .secnote,html[data-style="sodium"] .rq-sum,html[data-style="sodium"] .simbox{border:1px solid var(--line);border-radius:16px}
+html[data-style="sodium"] .phases span{border-radius:4px;font:500 10.5px/1.2 var(--mono);text-transform:uppercase;letter-spacing:.05em}
+html[data-style="sodium"] .bl .track,html[data-style="sodium"] .bl .fill,html[data-style="sodium"] .minibar,html[data-style="sodium"] .bk-prog,html[data-style="sodium"] .bk-prog i{border-radius:2px}
+html[data-style="sodium"] .legend{font:400 11px var(--mono);text-transform:uppercase;letter-spacing:.06em}
+html[data-style="sodium"] .chart .y,html[data-style="sodium"] .xlab{font-family:var(--mono);font-size:11px}
+html[data-style="sodium"] .pin{border:1px solid var(--hair);border-left:3px solid var(--faint);border-radius:16px}
+html[data-style="sodium"] .pin.t-info{border-left-color:var(--accent)}
+html[data-style="sodium"] .pin.t-warning{border-left-color:var(--amber)}
+html[data-style="sodium"] .pin.t-critical{border-left-color:var(--warn)}
+html[data-style="sodium"] .empty b{font:300 22px/1.2 var(--display);color:var(--head)}
+html[data-style="sodium"] .em,html[data-style="sodium"] .imp-tbl{border-radius:12px}
+
+/* ---------- dialogs and toast ---------- */
+html[data-style="sodium"] dialog.dlg{border:1px solid var(--hair);border-radius:24px;box-shadow:none;padding:32px}
+html[data-style="sodium"] dialog.dlg::backdrop{background:rgba(12,11,0,.72)}
+:root[data-skin="sodium-light"] dialog.dlg::backdrop{background:rgba(31,29,1,.42)}
+html[data-style="sodium"] .toast{bottom:calc(var(--barh) + 16px + env(safe-area-inset-bottom,0px));border:1px solid var(--hair);border-radius:16px;box-shadow:none}
+html[data-style="sodium"] .sq-fx.word{border:1px solid var(--hair)}
+
+/* =====================================================================
+   CONTROL ROOM LAYOUT
+   From 1100px each tab becomes a left rail (title, stats, filters) and a
+   right work area. The ticket panel is a wide drawer on the right. Below
+   1100px everything stacks into one column again.
+   ===================================================================== */
+
+/* ---------- dispatch lanes (all widths): one row per agent ---------- */
+html[data-style="sodium"] #disp-body .board{display:flex;flex-direction:column;align-items:stretch;gap:12px;overflow:visible;padding:0}
+html[data-style="sodium"] #disp-body .colm{display:flex;flex-direction:row;align-items:stretch;gap:10px;overflow-x:auto;padding:10px 10px 10px 0;min-height:132px;background:var(--bg);scrollbar-width:thin;scrollbar-color:var(--hair) transparent}
+html[data-style="sodium"] #disp-body .colm>header{flex:0 0 250px;position:sticky;left:0;z-index:2;align-self:stretch;margin:-10px 0;padding:14px 14px 14px 16px;background:var(--bg);border-right:1px solid var(--line);border-radius:15px 0 0 15px;background:var(--surface)}
+html[data-style="sodium"] #disp-body .colm>header b{font-size:16px;-webkit-line-clamp:2}
+html[data-style="sodium"] #disp-body .colm.un>header b::after{content:"";display:block}
+html[data-style="sodium"] #disp-body .colm>.tk{flex:0 0 264px;margin:0}
+html[data-style="sodium"] #disp-body .colm>.none{flex:1;align-self:center;text-align:left;padding:0 8px;font:400 11px/1.4 var(--mono);text-transform:uppercase;letter-spacing:.06em}
+html[data-style="sodium"] #disp-body .colm>.qtools{flex:none;flex-direction:column;align-items:flex-start;justify-content:center;margin:0}
+html[data-style="sodium"] #disp-body .colm .dropline{flex:none;width:3px;height:auto;align-self:stretch;margin:0}
+/* in a lane, "move up/down" means left/right, so the arrows turn */
+html[data-style="sodium"] #disp-body .colm .tk .mv svg{transform:rotate(-90deg)}
+html[data-style="sodium"] #disp-body .colm.over>header{background:color-mix(in srgb,var(--sodium) 12%,var(--surface))}
+
+@media (min-width:1100px){
+  html[data-style="sodium"] main{max-width:1760px;padding:32px 24px 40px}
+
+  /* ---------- ticket drawer ---------- */
+  html[data-style="sodium"] main.has-detail{padding-right:calc(var(--drawer) + 48px)}
+  html[data-style="sodium"] .detail{width:var(--drawer);right:max(24px,calc((100vw - 1760px)/2 + 24px));padding:28px 32px}
+
+  /* ---------- shared rail pieces ---------- */
+  html[data-style="sodium"] :is(#v-mine,#v-history,#v-reports,#v-admin,#v-customers)>.pagehead{flex-direction:column;align-items:stretch;gap:18px;margin-bottom:24px;padding-bottom:22px}
+  html[data-style="sodium"] main.has-detail :is(#v-mine,#v-history)>.pagehead{flex-direction:row;align-items:flex-end}
+  html[data-style="sodium"] :is(#v-mine,#v-history,#v-reports,#v-admin,#v-customers)>.pagehead h1{font-size:46px;letter-spacing:-1.2px}
+  html[data-style="sodium"] :is(#v-mine,#v-history,#v-reports,#v-admin,#v-customers)>.pagehead p{max-width:none}
+  /* stats in a rail: the accent tile on top, the rest as a list */
+  html[data-style="sodium"] :is(#q-tiles,#r-tiles,main:not(.has-detail) #mine-tiles,main:not(.has-detail) #h-tiles){grid-template-columns:minmax(0,1fr);gap:0;margin-bottom:24px}
+  html[data-style="sodium"] :is(#q-tiles,#r-tiles,main:not(.has-detail) #mine-tiles,main:not(.has-detail) #h-tiles)>.tile:first-child{margin-bottom:12px;padding:24px 26px}
+  html[data-style="sodium"] :is(#q-tiles,#r-tiles,main:not(.has-detail) #mine-tiles,main:not(.has-detail) #h-tiles)>.tile:first-child .val{font-size:80px;font-weight:100;letter-spacing:-3.5px}
+  html[data-style="sodium"] :is(#q-tiles,#r-tiles,main:not(.has-detail) #mine-tiles,main:not(.has-detail) #h-tiles)>.tile:first-child svg.sp{height:34px}
+  html[data-style="sodium"] :is(#r-tiles,main:not(.has-detail) #mine-tiles,main:not(.has-detail) #h-tiles)>.tile:first-child .val{font-size:72px;letter-spacing:-3px}
+  html[data-style="sodium"] :is(#q-tiles,#r-tiles,main:not(.has-detail) #mine-tiles,main:not(.has-detail) #h-tiles)>.tile:not(:first-child){display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"lbl val" "foot val";column-gap:16px;row-gap:2px;align-items:center;padding:11px 20px;border-radius:0;border-top-width:0}
+  html[data-style="sodium"] :is(#q-tiles,#r-tiles,main:not(.has-detail) #mine-tiles,main:not(.has-detail) #h-tiles)>.tile:nth-child(2){border-top-width:1px;border-radius:16px 16px 0 0}
+  html[data-style="sodium"] :is(#q-tiles,#r-tiles,main:not(.has-detail) #mine-tiles,main:not(.has-detail) #h-tiles)>.tile:last-child{border-radius:0 0 16px 16px}
+  html[data-style="sodium"] :is(#q-tiles,#r-tiles,main:not(.has-detail) #mine-tiles,main:not(.has-detail) #h-tiles)>.tile:not(:first-child)>.lbl{grid-area:lbl;min-height:0}
+  html[data-style="sodium"] :is(#q-tiles,#r-tiles,main:not(.has-detail) #mine-tiles,main:not(.has-detail) #h-tiles)>.tile:not(:first-child)>.val{grid-area:val;font-size:32px;text-align:right}
+  html[data-style="sodium"] :is(#q-tiles,#r-tiles,main:not(.has-detail) #mine-tiles,main:not(.has-detail) #h-tiles)>.tile:not(:first-child)>.val small{margin-top:6px}
+  html[data-style="sodium"] :is(#q-tiles,#r-tiles,main:not(.has-detail) #mine-tiles,main:not(.has-detail) #h-tiles)>.tile:not(:first-child)>:nth-child(n+3){grid-area:foot;min-height:0}
+  html[data-style="sodium"] :is(#q-tiles,#r-tiles,main:not(.has-detail) #mine-tiles,main:not(.has-detail) #h-tiles)>.tile:not(:first-child) svg.sp{width:140px;height:22px}
+  html[data-style="sodium"] :is(#q-tiles,#r-tiles,main:not(.has-detail) #mine-tiles,main:not(.has-detail) #h-tiles)>.tile:not(:first-child)+.tile:hover{border-top-width:0}
+  /* the last rail item sticks while the work area scrolls */
+  html[data-style="sodium"] main:not(.has-detail) #v-mine>#mine-tiles,
+  html[data-style="sodium"] #v-reports>#r-tiles,
+  html[data-style="sodium"] #v-admin>#ad-tabs{position:sticky;top:calc(var(--striph) + 20px + env(safe-area-inset-top,0px));align-self:start}
+
+  /* ---------- queue: rail + a list that fills the screen ---------- */
+  html[data-style="sodium"] #v-queue{display:grid;grid-template-columns:var(--rail) minmax(0,1fr);column-gap:28px;
+    grid-template-rows:minmax(min-content,0) minmax(min-content,0) auto auto auto auto 1fr;min-height:var(--fill)}
+  html[data-style="sodium"] #v-queue>#hero{grid-area:1/1/4/2;align-self:start}
+  html[data-style="sodium"] #v-queue>#q-tiles{grid-area:4/1/5/2}
+  html[data-style="sodium"] #v-queue>#pins-q{grid-area:5/1/6/2}
+  html[data-style="sodium"] #v-queue>#banner{grid-area:6/1/7/2}
+  html[data-style="sodium"] #v-queue>.toolbar{grid-area:1/2/2/3;margin-bottom:12px}
+  html[data-style="sodium"] #v-queue>#q-seg{grid-area:2/2/3/3;margin-bottom:12px}
+  html[data-style="sodium"] #v-queue>.tablecard{grid-area:3/2/8/3;contain:size;min-height:420px}
+  html[data-style="sodium"] #v-queue>.tablecard>.scroll-x{height:100%;overflow:auto;scrollbar-width:thin;scrollbar-color:var(--hair) transparent}
+  html[data-style="sodium"] #v-queue thead th{position:sticky;top:0;z-index:1;background:var(--surface);border-bottom:0;box-shadow:inset 0 -1px 0 var(--hair)}
+  /* the accent tile: big number left, trend line right */
+  html[data-style="sodium"] #v-queue>#q-tiles>.tile:first-child{display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"lbl lbl" "val sp";column-gap:20px;row-gap:6px;align-items:end;padding:20px 24px 22px}
+  html[data-style="sodium"] #v-queue>#q-tiles>.tile:first-child>.lbl{grid-area:lbl}
+  html[data-style="sodium"] #v-queue>#q-tiles>.tile:first-child>.val{grid-area:val}
+  html[data-style="sodium"] #v-queue>#q-tiles>.tile:first-child>:nth-child(n+3){grid-column:1/-1}
+  html[data-style="sodium"] #v-queue>#q-tiles>.tile:first-child>:is(svg.sp,:has(>svg.sp)){grid-area:sp;align-self:end;margin-bottom:10px}
+  html[data-style="sodium"] #v-queue>#q-tiles>.tile:first-child svg.sp{height:40px}
+  html[data-style="sodium"] #v-queue #banner .note{margin-bottom:0;padding:12px 16px;font-size:12.5px;gap:10px}
+  html[data-style="sodium"] #v-queue #banner .note .btn{height:32px;font-size:12.5px}
+  html[data-style="sodium"] #v-queue>#pins-q{margin-bottom:14px}
+  html[data-style="sodium"] #v-queue .pin-grid{grid-template-columns:minmax(0,1fr)}
+  /* greeting in the rail: Ping and the name side by side, the bubble below */
+  html[data-style="sodium"] #v-queue>.hero{display:grid;grid-template-columns:auto minmax(0,1fr);grid-template-areas:"m h" "b b";gap:12px 16px;align-items:center;margin-bottom:18px}
+  html[data-style="sodium"] #v-queue>.hero.nomascot{grid-template-areas:"h h" "b b"}
+  html[data-style="sodium"] #v-queue>.hero>.mwrap{grid-area:m}
+  html[data-style="sodium"] #v-queue>.hero .m{width:64px}
+  html[data-style="sodium"] #v-queue>.hero>div:last-child{display:contents}
+  html[data-style="sodium"] #v-queue>.hero h1{grid-area:h;font-size:40px;letter-spacing:-1.2px}
+  html[data-style="sodium"] #v-queue>.hero .bubble{padding:10px 14px;gap:4px 12px}
+  html[data-style="sodium"] #v-queue>.hero .bubble{grid-area:b;margin-top:0;max-width:none;display:flex}
+  html[data-style="sodium"] #v-queue>.hero .bubble::before{left:30px;top:-7px;transform:rotate(135deg)}
+  /* drawer open: the rail steps aside so the list keeps its width (it returns when the drawer closes) */
+  html[data-style="sodium"] main.has-detail #v-queue{grid-template-columns:minmax(0,1fr)}
+  html[data-style="sodium"] main.has-detail #v-queue>:is(#hero,#q-tiles,#pins-q,#banner){display:none}
+  html[data-style="sodium"] main.has-detail #v-queue>:is(.toolbar,#q-seg,.tablecard){grid-column:1}
+
+  /* ---------- my desk ---------- */
+  html[data-style="sodium"] main:not(.has-detail) #v-mine{display:grid;grid-template-columns:var(--rail) minmax(0,1fr);grid-template-rows:auto 1fr;column-gap:28px}
+  html[data-style="sodium"] main:not(.has-detail) #v-mine>.pagehead{grid-area:1/1}
+  html[data-style="sodium"] main:not(.has-detail) #v-mine>#mine-tiles{grid-area:2/1}
+  html[data-style="sodium"] main:not(.has-detail) #v-mine>#mine-body{grid-area:1/2/3/3;min-width:0}
+  html[data-style="sodium"] main.has-detail #mine-tiles{display:none}
+  html[data-style="sodium"] #mine-body>.sec-h:first-child{margin-top:0}
+  /* dispatch: a slimmer header so more lanes fit */
+  html[data-style="sodium"] #v-dispatch>.pagehead{margin-bottom:20px;padding-bottom:18px}
+  html[data-style="sodium"] #v-dispatch>.pagehead h1{font-size:46px;letter-spacing:-1.2px}
+
+  /* ---------- history: filters in the rail ---------- */
+  html[data-style="sodium"] main:not(.has-detail) #v-history{display:grid;grid-template-columns:var(--rail) minmax(0,1fr);grid-template-rows:auto auto 1fr auto;column-gap:28px}
+  html[data-style="sodium"] main:not(.has-detail) #v-history>.pagehead{grid-area:1/1}
+  html[data-style="sodium"] main:not(.has-detail) #v-history>#h-tiles{grid-area:3/1}
+  html[data-style="sodium"] main:not(.has-detail) #v-history>.toolbar{grid-area:2/1;align-self:start}
+  html[data-style="sodium"] main:not(.has-detail) #v-history>.toolbar,html[data-style="sodium"] #v-audit>.toolbar{flex-direction:column;align-items:stretch;flex-wrap:nowrap;margin:0 0 24px;padding:18px;border:1px solid var(--line);border-radius:16px}
+  html[data-style="sodium"] main:not(.has-detail) #v-history>.toolbar::before,html[data-style="sodium"] #v-audit>.toolbar::before{content:"Filters";font:500 11px/1.3 var(--mono);text-transform:uppercase;letter-spacing:.08em;color:var(--muted);margin-bottom:4px}
+  html[data-style="sodium"] main:not(.has-detail) #v-history>.toolbar>*,html[data-style="sodium"] #v-audit>.toolbar>*{max-width:none;flex:none;width:100%}
+  html[data-style="sodium"] main:not(.has-detail) #v-history>.tablecard{grid-area:1/2/4/3;align-self:start}
+  html[data-style="sodium"] main:not(.has-detail) #v-history>.tablecard+div{grid-area:4/2}
+  html[data-style="sodium"] main.has-detail #h-tiles{display:none}
+
+  /* ---------- audit log: same shape as history ---------- */
+  html[data-style="sodium"] #v-audit{display:grid;grid-template-columns:var(--rail) minmax(0,1fr);grid-template-rows:auto 1fr auto;column-gap:28px}
+  html[data-style="sodium"] #v-audit>.pagehead{grid-area:1/1;flex-direction:column;align-items:flex-start;gap:18px;margin-bottom:24px;padding-bottom:22px}
+  html[data-style="sodium"] #v-audit>.pagehead h1{font-size:46px;letter-spacing:-1.2px}
+  html[data-style="sodium"] #v-audit>.toolbar{grid-area:2/1;align-self:start;position:sticky;top:calc(var(--striph) + 20px + env(safe-area-inset-top,0px))}
+  html[data-style="sodium"] #v-audit>.tablecard{grid-area:1/2/3/3;align-self:start}
+  html[data-style="sodium"] #v-audit>.tablecard+div{grid-area:3/2}
+  /* rail tables: give the subject room and leave secondary columns to the drawer */
+  html[data-style="sodium"] :is(#v-queue,#v-history) td.wrap{min-width:300px}
+
+  /* ---------- reports ---------- */
+  html[data-style="sodium"] #v-reports{display:grid;grid-template-columns:var(--rail) minmax(0,1fr);grid-template-rows:auto 1fr;column-gap:28px}
+  html[data-style="sodium"] #v-reports>.pagehead{grid-area:1/1}
+  html[data-style="sodium"] #v-reports>#r-tiles{grid-area:2/1}
+  html[data-style="sodium"] #v-reports>#r-body{grid-area:1/2/3/3;align-self:start}
+
+  /* ---------- admin: sections as a vertical list ---------- */
+  html[data-style="sodium"] #v-admin{display:grid;grid-template-columns:clamp(240px,20vw,290px) minmax(0,1fr);grid-template-rows:auto 1fr;column-gap:28px}
+  html[data-style="sodium"] #v-admin>.pagehead{grid-area:1/1}
+  html[data-style="sodium"] #v-admin>#ad-tabs{grid-area:2/1;flex-direction:column;flex-wrap:nowrap;gap:2px;margin:0;padding:8px;border:1px solid var(--line);border-radius:16px}
+  html[data-style="sodium"] #v-admin>#ad-tabs button{justify-content:flex-start;width:100%;height:38px;padding:0 14px;text-align:left}
+  html[data-style="sodium"] #v-admin>#ad-tabs button[aria-pressed="true"]{background:var(--well);border-color:transparent;color:var(--head);box-shadow:inset 3px 0 0 var(--accent)}
+  html[data-style="sodium"] #v-admin>#ad-body{grid-area:1/2/3/3;margin-top:0!important;align-self:start}
+
+  /* ---------- customers: list on the left, the open customer on the right ---------- */
+  html[data-style="sodium"] #v-customers{display:grid;grid-template-columns:var(--rail) minmax(0,1fr);grid-template-rows:auto 1fr;column-gap:28px}
+  html[data-style="sodium"] #v-customers>.pagehead{grid-area:1/1}
+  html[data-style="sodium"] #v-customers>.pagehead .toolbar{flex-direction:column;align-items:stretch}
+  html[data-style="sodium"] #v-customers>.pagehead .searchbox{max-width:none;flex:none}
+  html[data-style="sodium"] #v-customers>#cu-body{grid-area:1/2/3/3;align-self:start}
+  html[data-style="sodium"] main.has-detail:has(>#v-customers:not([hidden])){padding-right:24px}
+  html[data-style="sodium"] main.has-detail #v-customers>#cu-body{grid-area:2/1;grid-template-columns:minmax(0,1fr);gap:8px}
+  html[data-style="sodium"] main.has-detail #v-customers .cust{padding:14px 18px;gap:8px;border-radius:12px}
+  html[data-style="sodium"] main.has-detail #v-customers .cust .top b{font-size:16px}
+  html[data-style="sodium"] main.has-detail:has(>#v-customers:not([hidden])) .detail{width:auto;left:calc(max(0px,(100vw - 1760px)/2) + 48px + var(--rail) + 28px);
+    display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr);column-gap:40px;align-content:start;padding:32px 36px}
+  html[data-style="sodium"] main.has-detail:has(>#v-customers:not([hidden])) .detail>:not(.sect){grid-column:1/-1}
+  html[data-style="sodium"] main.has-detail:has(>#v-customers:not([hidden])) .detail>.actions+.sect{grid-column:1;grid-row:span 12}
+  html[data-style="sodium"] main.has-detail:has(>#v-customers:not([hidden])) .detail>.sect{grid-column:2;align-self:start}
+  html[data-style="sodium"] main.has-detail:has(>#v-customers:not([hidden])) .detail h2{font-size:40px;font-weight:200}
+}
+/* a wide rail fits the history filters two to a row */
+@media (min-width:1400px){
+  html[data-style="sodium"] main:not(.has-detail) #v-history>.toolbar{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr)}
+  html[data-style="sodium"] main:not(.has-detail) #v-history>.toolbar::before,html[data-style="sodium"] main:not(.has-detail) #v-history>.toolbar>.searchbox,
+  html[data-style="sodium"] main:not(.has-detail) #v-history>.toolbar>:is(#h-sort,#h-clear){grid-column:1/-1}
+}
+@media (min-width:1100px) and (max-width:1399px){
+  html[data-style="sodium"] main:not(.has-detail) #v-queue .c-id{display:none}
+}
+@media (min-width:1100px) and (max-width:1699px){
+  html[data-style="sodium"] main:not(.has-detail) #v-queue :is(.c-cat,.c-team),
+  html[data-style="sodium"] main:not(.has-detail) #v-history .c-cat{display:none}
+}
+/* phones: narrower lane labels */
+@media (max-width:700px){
+  html[data-style="sodium"] #disp-body .colm>header{flex-basis:150px;padding:12px 10px 12px 12px}
+  html[data-style="sodium"] #disp-body .colm>header b{font-size:14px}
+  html[data-style="sodium"] #disp-body .colm>.tk{flex-basis:232px}
+}
+
+/* tablets: stats become one compact strip instead of a 2-up grid of big cards */
+@media (min-width:821px) and (max-width:1099px){
+  html[data-style="sodium"] .tiles,html[data-style="sodium"] .tiles.t4{grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:10px}
+  html[data-style="sodium"] .tiles:not(.t4) .tile:last-child{grid-column:auto}
+  html[data-style="sodium"] .tile,html[data-style="sodium"] .tile:nth-child(n){padding:16px 18px;gap:8px}
+  html[data-style="sodium"] .tile .val,html[data-style="sodium"] .tiles:not(#q-tiles)>.tile:first-child .val{font-size:36px;letter-spacing:-1.2px}
+  html[data-style="sodium"] .tile svg.sp{height:26px}
+  html[data-style="sodium"] .tile .foot{min-height:0}
+}
+/* ---------- narrower screens: the panel goes full screen, the bar becomes two rows ---------- */
+@media (max-width:1099px){
+  html[data-style="sodium"] .detail{inset:0;z-index:40;border:0;border-radius:0;padding:calc(24px + env(safe-area-inset-top,0px)) 20px calc(24px + env(safe-area-inset-bottom,0px))}
+}
+/* a single row needs about 1300px: tighten it first, then wrap */
+@media (max-width:1439px){html[data-style="sodium"] .bar .shift-time{display:none}}
+@media (min-width:1200px) and (max-width:1439px){
+  html[data-style="sodium"] .brand>.squishy~span{display:none}
+  html[data-style="sodium"] nav.tabs button{padding:0 10px}
+  html[data-style="sodium"] .bar-in{gap:12px}
+}
+@media (max-width:1199px){
+  html[data-style="sodium"] .bar-in{flex-wrap:wrap;gap:8px 12px;padding:8px 16px 6px;justify-content:space-between}
+  html[data-style="sodium"] nav.tabs{order:3;width:100%;margin:0;justify-content:center;overflow-x:auto;scrollbar-width:none;padding-bottom:2px}
+  html[data-style="sodium"] nav.tabs::-webkit-scrollbar{display:none}
+  html[data-style="sodium"] .bar-right{margin-left:auto}
+}
+@media (max-width:820px){
+  html[data-style="sodium"] nav.tabs{justify-content:flex-start}
+  html[data-style="sodium"] main{padding:32px 16px 48px}
+  html[data-style="sodium"] h1{font-size:40px;letter-spacing:-1px}
+  html[data-style="sodium"] .hero h1{font-size:44px;letter-spacing:-1.2px}
+  html[data-style="sodium"] .foot-in{padding:0 16px}
+  html[data-style="sodium"] .tiles,html[data-style="sodium"] .tiles.t4{gap:10px}
+  html[data-style="sodium"] .tile,html[data-style="sodium"] .tile:nth-child(n){padding:16px 18px}
+  html[data-style="sodium"] .tile .val{font-size:36px}
+  html[data-style="sodium"] dialog.dlg{padding:24px 20px;border-radius:20px}
+}
+@media (max-width:560px){
+  html[data-style="sodium"] .brand>.squishy~span{display:none}
+  html[data-style="sodium"] .bar-right{gap:6px}
+  html[data-style="sodium"] nav.tabs button{padding:0 11px}
+}

@@ -1,6 +1,7 @@
 import { useState, type ChangeEvent } from "react";
 import { S, commit } from "../../core/state.ts";
 import { removeSamples } from "../../core/data.ts";
+import { SAMPLE_DATA } from "../../core/constants.ts";
 import { makeBackup, readRestore } from "../../core/backup.ts";
 import { importTemplate, readImport } from "../../core/csvimport.ts";
 import { exportTickets, exportTime, exportAudit, exportHistory } from "../../core/exports.ts";
@@ -54,7 +55,7 @@ export function Access() {
           <button className="btn" data-act="export-history" onClick={() => exportHistory()}>Closed tickets</button>
         </div>
       </div>
-      {n
+      {SAMPLE_DATA && n
         ? <div className="card adcard"><h3>Sample data</h3><p className="muted">{n} sample tickets, customers and team members are loaded. Removing them can't be undone.</p>
             <div className="actions">
               {S.confirmSample
